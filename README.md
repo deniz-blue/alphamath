@@ -1,5 +1,7 @@
 # alphamath
 
+A sandbox environment for exploring mathematics.
+
 Monorepo
 
 - [alphamath](./packages/alphamath)
