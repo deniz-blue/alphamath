@@ -4,7 +4,7 @@ Consider the equation $A = B$. The following actions produce equivalent ($\iff$)
 
 - Adding $C$ to both sides. $A + C = B + C$
 - Multiplying both sides by a nonzero quantity. $MA = MB$
-- Putting both sides through n *injective* function (like $x^3$ over real numbers). $f(A) = f(B)$
+- Putting both sides through an *injective* function (like $x^3$ over real numbers). $f(A) = f(B)$
 
 The following actions product non-equivalent ($\implies$) equations:
 

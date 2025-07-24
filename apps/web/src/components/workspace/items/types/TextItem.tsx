@@ -8,7 +8,7 @@ import { usePrevious, useResizeObserver } from "@mantine/hooks";
 
 const sizeOf = (s: string) => {
     let e = document.createElement("div");
-    e.innerText = s.split("\n").map(x => x+" ").join("\n");
+    e.innerText = s.split("\n").map(x => x + " ").join("\n");
     e.style.position = "fixed";
     e.style.overflow = "visible";
     e.style.whiteSpace = "pre";
@@ -25,20 +25,20 @@ const sizeOf = (s: string) => {
     return { w, h };
 }
 
-export const NoteItem: ItemComponent<"Note"> = ({
+export const TextItem: ItemComponent<"text"> = ({
     data,
     onChange,
     onFocus,
     onClose,
 }) => {
     const { tool } = useContext(ToolContext);
-    
+
     return (
         <PanelWindow
-            title="Note"
+            title="text"
             size={{
-                w: Math.max(200, data.size.w + 16),
-                h: Math.max(100 + 32, data.size.h + 32 + 28),
+                w: 200,
+                h: 132,
             }}
             onFocus={onFocus}
             onClose={onClose}
@@ -52,7 +52,6 @@ export const NoteItem: ItemComponent<"Note"> = ({
                     onChange={(e) => onChange({
                         ...data,
                         content: e.currentTarget.value,
-                        size: sizeOf(e.currentTarget.value),
                     })}
                     styles={{
                         wrapper: { height: "100%" },
