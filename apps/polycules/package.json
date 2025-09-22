@@ -18,9 +18,10 @@
     "@react-router/serve": "^7.7.1",
     "hono": "^4.9.6",
     "isbot": "^5.1.27",
-    "react": "^19.1.0",
+    "react": "^19.1.1",
     "react-dom": "^19.1.0",
-    "react-router": "^7.7.1"
+    "react-router": "^7.7.1",
+    "use-immer": "^0.11.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.7.1",

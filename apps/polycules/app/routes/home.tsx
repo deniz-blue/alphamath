@@ -1,13 +1,17 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
+import { Stack } from "@mantine/core";
+import { PolyculeContext } from "../contexts/PolyculeContext";
+import { useImmer } from "use-immer";
+import { createPolyculeManifest } from "../types/graph";
 
 export default function Home() {
-  return <Welcome />;
+	const [root, update] = useImmer(() => createPolyculeManifest());
+
+	return (
+		<PolyculeContext value={{
+			root,
+			update
+		}}>
+
+		</PolyculeContext>
+	);
 }
