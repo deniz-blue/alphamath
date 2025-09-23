@@ -88,7 +88,7 @@ export const useRelativeDrag = (
         e.preventDefault();
         e.stopPropagation();
 
-        let touches = Array(e.touches.length).fill(0).map((_,i) => e.touches[i]);
+        let touches = Array(e.touches.length).fill(0).map((_,i) => e.touches[i]!);
         setIsDragging(true);
         setStart(vec2average(touches.map(vec2client)));
         setStartDragPosition(position);
@@ -99,7 +99,7 @@ export const useRelativeDrag = (
         if (e.touches.length != 1 && !allowMultitouch) return setIsDragging(false);
         e.preventDefault();
 
-        let touches = Array(e.touches.length).fill(0).map((_,i) => e.touches[i]);
+        let touches = Array(e.touches.length).fill(0).map((_,i) => e.touches[i]!);
         onInputMove(vec2average(touches.map(vec2client)));
     }, [isDragging, position]);
 

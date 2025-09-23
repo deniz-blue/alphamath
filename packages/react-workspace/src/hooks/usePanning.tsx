@@ -57,26 +57,26 @@ export const usePanning = ({
     };
 
     const scalingProps: TouchEvents & MouseEvents = {
-        onWheel: useCallback((e) => {
+        onWheel: useCallback((e: React.WheelEvent<HTMLElement>) => {
             e.preventDefault();
             const scaleChange = (e.deltaY < 0 ? 1 : -1) * 0.1;
             const origin = wheelScaleOn == "cursor" ? mouse : getAbsolutePosition(vec2(window.innerWidth / 2, window.innerHeight / 2));
             handleScaleChange(scaleChange, origin);
         }, [mouse, position]),
 
-        onTouchStart: useCallback((e) => {
+        onTouchStart: useCallback((e: React.TouchEvent<HTMLElement>) => {
             if (e.touches.length !== 2) return;
             e.preventDefault();
             setStartScale(scale);
-            setStart(vec2average([vec2client(e.touches[0]), vec2client(e.touches[1])]));
+            setStart(vec2average([vec2client(e.touches[0]!), vec2client(e.touches[1]!)]));
             setStartDragPosition(position);
             setIsScaling(true);
         }, [scale, position]),
 
-        onTouchMove: useCallback((e) => {
+        onTouchMove: useCallback((e: React.TouchEvent<HTMLElement>) => {
             if (e.touches.length !== 2) return;
-            let a = vec2client(e.touches[0]);
-            let b = vec2client(e.touches[1]);
+            let a = vec2client(e.touches[0]!);
+            let b = vec2client(e.touches[1]!);
             const distance = vec2distance(a, b);
             let point = vec2average([a, b]);
     
@@ -95,7 +95,7 @@ export const usePanning = ({
             setLastPinchDistance(distance);
         }, [lastPinchDistance, position, start, startDragPosition]),
 
-        onTouchEnd: useCallback((e) => {
+        onTouchEnd: useCallback(() => {
             setLastPinchDistance(null);
             setIsScaling(false);
         }, []),

@@ -1,10 +1,9 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { JSX, useRef } from "react";
 import { useElementEvent } from "../hooks/index.js";
 
-export const NoPropagation = forwardRef<HTMLDivElement, JSX.IntrinsicElements["div"]>((props, fwd) => {
-    const ref = useRef<HTMLDivElement | null>(null);
-    useImperativeHandle(fwd, () => ref.current);
-
+export const NoPropagation = (props: JSX.IntrinsicElements["div"]) => {
+    const ref = useRef<HTMLDivElement>(null);
+    
     useElementEvent(ref, "mousedown", e => e.stopPropagation());
     useElementEvent(ref, "touchstart", e => e.stopPropagation());
     
@@ -14,4 +13,4 @@ export const NoPropagation = forwardRef<HTMLDivElement, JSX.IntrinsicElements["d
             ref={ref}
         />
     )
-});
+};

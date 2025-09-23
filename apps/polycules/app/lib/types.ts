@@ -8,9 +8,12 @@ export interface PolyculeManifest {
 
 export interface Person {
     id: string;
+    systemId?: string;
+
     name: string;
     avatarUrl?: string;
-    systemId?: string;
+    color?: string;
+    website?: string;
 };
 
 export interface System {

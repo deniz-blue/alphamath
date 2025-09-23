@@ -14,6 +14,7 @@ import "./app.css";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
+import { MODALS } from "./modals";
 
 export const links: Route.LinksFunction = () => [
 
@@ -41,9 +42,7 @@ export default function App() {
 	return (
 		<MantineProvider forceColorScheme="dark">
 			<Notifications />
-			<ModalsProvider>
-				<Outlet />
-			</ModalsProvider>
+			<Outlet />
 		</MantineProvider>
 	);
 }

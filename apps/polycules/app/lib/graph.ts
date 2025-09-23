@@ -1,7 +1,7 @@
 import type { Person, PolyculeManifest, Relationship, System } from "./types";
 
 export type New<T> = Omit<T, "id">;
-export type Patch<T> = Partial<Omit<T, "id">> & { id: string };
+export type Patch<T> = Partial<T> & { id: string };
 
 export const fromTo = (a: [string, string]) => {
     const [from, to] = a.sort();

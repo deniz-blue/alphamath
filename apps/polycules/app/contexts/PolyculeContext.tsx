@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { PolyculeManifest } from "../types/types";
+import type { PolyculeManifest } from "../lib/types";
 import type { Updater } from "use-immer";
 
 export interface IPolyculeContext {

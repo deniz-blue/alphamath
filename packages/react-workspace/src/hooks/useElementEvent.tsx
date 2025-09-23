@@ -4,16 +4,20 @@ export const useElementEvent = <
     Element extends HTMLElement,
     Event extends keyof HTMLElementEventMap,
 >(
-    ref: React.MutableRefObject<Element>,
+    ref: React.RefObject<Element | null>,
     eventName: Event,
     listener: (this: Element, e: HTMLElementEventMap[Event]) => any,
-    deps?: React.DependencyList,
-    extra?: AddEventListenerOptions,
+    deps: React.DependencyList = [],
+    extra?: Omit<AddEventListenerOptions, "signal">,
 ) => {
     useEffect(() => {
         let el = ref.current;
         if(!el) return;
-        el.addEventListener(eventName, listener, extra);
-        return () => el.removeEventListener(eventName, listener);
-    }, [ref, ...(deps || [])]);
+        const ctrl = new AbortController();
+        el.addEventListener(eventName, listener as any, {
+            ...extra,
+            signal: ctrl.signal,
+        });
+        return () => ctrl.abort();
+    }, [ref, ...deps]);
 };

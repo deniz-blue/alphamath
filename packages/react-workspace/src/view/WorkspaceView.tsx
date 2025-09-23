@@ -1,7 +1,7 @@
-import { forwardRef, PropsWithChildren, useContext } from "react";
+import React, { forwardRef, PropsWithChildren, useContext } from "react";
 import { GlobalTransform } from "../core/GlobalTransformContext.js";
 
-export type WorkspaceViewProps = PropsWithChildren & JSX.IntrinsicElements["div"];
+export type WorkspaceViewProps = PropsWithChildren & React.JSX.IntrinsicElements["div"];
 
 export const WorkspaceView = forwardRef<HTMLDivElement, WorkspaceViewProps>(({
     children,
