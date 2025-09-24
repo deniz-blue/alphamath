@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "mafs/core.css"
 import "./app.css";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
@@ -25,7 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 		<html lang="en">
 			<head>
 				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta name="viewport" content="width=device-width initial-scale=1, user-scalable=no" />
 				<Meta />
 				<Links />
 			</head>

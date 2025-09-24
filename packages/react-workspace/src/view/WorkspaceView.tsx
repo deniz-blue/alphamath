@@ -1,37 +1,35 @@
 import React, { forwardRef, PropsWithChildren, useContext } from "react";
 import { GlobalTransform } from "../core/GlobalTransformContext.js";
 
-export type WorkspaceViewProps = PropsWithChildren & React.JSX.IntrinsicElements["div"];
+export type WorkspaceViewProps = PropsWithChildren & React.JSX.IntrinsicElements["svg"];
 
-export const WorkspaceView = forwardRef<HTMLDivElement, WorkspaceViewProps>(({
+export const WorkspaceView = ({
     children,
+    ref,
     ...props
-}, ref) => {
+}: WorkspaceViewProps) => {
     const { position, scale } = useContext(GlobalTransform);
 
     return (
-        <div
+        <svg
             {...props}
             ref={ref}
+            width="100%"
+            height="100%"
             style={{
                 overflow: "hidden",
                 position: "fixed",
                 width: "100%",
                 height: "100%",
+                display: "block",
                 ...(props.style || {}),
             }}
         >
-            <div
-                style={{
-                    transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                    transformOrigin: '0 0',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                }}
+            <g
+                transform={`translate(${position.x}, ${position.y}) scale(${scale})`}
             >
                 {children}
-            </div>
-        </div>
+            </g>
+        </svg>
     )
-})
+};

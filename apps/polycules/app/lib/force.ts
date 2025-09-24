@@ -1,7 +1,8 @@
 // Force directed layout calculations
 
-import type { PolyculeManifest } from "./types";
+import type { Person, PolyculeManifest } from "./types";
 import { type Vec2, vec2, vec2sub, vec2mul, vec2add } from "@alan404/vec2";
+import { forceLink, forceManyBody, forceSimulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force";
 
 export interface ComputeResult {
     people: Record<string, Vec2>;
@@ -23,6 +24,38 @@ export const compute = (
         systems: {}
     };
 
+
+    // use D3 until we reimplement everything ourselves
+
+    type Datum = SimulationNodeDatum & { person: Person };
+    const sim = forceSimulation<Datum>()
+        .nodes(root.people.map(person => ({ person })))
+        .force("charge", forceManyBody().strength(-2000))
+        .force("link", forceLink<Datum, SimulationLinkDatum<Datum>>(
+            root.relationships.map(r => ({
+                source: r.from,
+                target: r.to,
+                strength: 0.1,
+            }))
+        )
+        .id(d => (d as any).person.id))
+        .stop();
+
+    sim.tick();
+
+    sim.nodes().forEach(n => {
+        if (!n.x || !n.y || !n.person.id) return;
+        result.people[n.person.id] = { x: n.x, y: n.y };
+    });
+
+    return result;
+
+
+
+
+
+    // REIMPLEMENTATION
+
     for (let i = 0; i < root.people.length; i++) {
         for (let j = i + 1; j < root.people.length; j++) {
             const p1 = root.people[i];
@@ -38,6 +71,6 @@ export const compute = (
         }
     }
 
-    throw new Error("TS wrong return type error prevention society");
+    return result;
 };
 

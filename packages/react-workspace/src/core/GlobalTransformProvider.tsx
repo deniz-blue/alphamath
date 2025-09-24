@@ -1,7 +1,7 @@
-import { PropsWithChildren, useCallback } from "react";
-import { Vec2, vec2round } from "@alan404/vec2";
+import { PropsWithChildren, useCallback, useLayoutEffect } from "react";
+import { vec2, Vec2, vec2round } from "@alan404/vec2";
 import { GlobalTransform, IGlobalTransform } from "./GlobalTransformContext.js";
-import { useUncontrolled } from "@mantine/hooks";
+import { useUncontrolled, useViewportSize } from "@mantine/hooks";
 
 export interface GlobalTransformProviderProps extends PropsWithChildren, Partial<IGlobalTransform> {};
 
@@ -23,16 +23,18 @@ export const GlobalTransformProvider = ({
         onChange: _setScale,
     });
 
-    const [position, setPosition] = useUncontrolled<Vec2>({
+    const viewport = useViewportSize();
+
+    const fallbackPosition = vec2(viewport.width/2, viewport.height/2);
+    const [positionMaybeNull, setPosition] = useUncontrolled<Vec2 | null>({
         value: _position,
         defaultValue: initialPosition,
-        finalValue: {
-            x: window.innerWidth/2,
-            y: window.innerHeight/2
-        },
-        onChange: _setPosition,
+        finalValue: null,
+        onChange: _setPosition ? (pos => _setPosition(pos ?? fallbackPosition)) : undefined,
     });
+    const position = positionMaybeNull ?? fallbackPosition;
 
+    // round position to avoid subpixel rendering issues
     const setPositionRounded = useCallback((pos: Vec2) => {
         setPosition(vec2round(pos));
     }, [setPosition]);

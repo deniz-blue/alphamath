@@ -10,9 +10,9 @@ export type DragHandleProps = {
     onDragEnd?: () => void;
     withCursor?: boolean;
     disabled?: boolean;
-} & Omit<JSX.IntrinsicElements["div"], "onDragStart" | "onDragEnd">;
+} & Omit<React.JSX.IntrinsicElements["g"], "onDragStart" | "onDragEnd">;
 
-export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(({
+export const DragHandle = ({
     children,
     style,
     withCursor,
@@ -21,8 +21,9 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(({
     onDragStart,
     onDragEnd,
     disabled,
+    ref,
     ...props
-}, ref) => {
+}: DragHandleProps) => {
     const { position, setPosition } = useTransform();
 
     const { isDragging, props: _props } = useRelativeDrag({
@@ -34,7 +35,7 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(({
     });
 
     return (
-        <div
+        <g
             {...mergeProps(
                 props,
                 _props
@@ -47,6 +48,6 @@ export const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(({
             }}
         >
             {children}
-        </div>
+        </g>
     )
-});
+};

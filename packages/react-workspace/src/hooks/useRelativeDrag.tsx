@@ -20,8 +20,8 @@ export interface UseRelativeDrag {
     props: MouseEvents & TouchEvents;
 };
 
-type MouseEv = React.MouseEventHandler<HTMLElement>;
-type TouchEv = React.TouchEventHandler<HTMLElement>;
+type MouseEv = React.MouseEventHandler<any>;
+type TouchEv = React.TouchEventHandler<any>;
 
 export const useRelativeDrag = (
     {

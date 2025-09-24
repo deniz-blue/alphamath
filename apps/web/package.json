@@ -1,7 +1,8 @@
 {
-  "name": "@repo/web",
+  "name": "@apps/alphamath",
   "version": "1.0.0",
   "description": "math (real)",
+  "private": true,
   "main": "index.js",
   "homepage": "https://thealan404.github.io/alphamath",
   "type": "module",

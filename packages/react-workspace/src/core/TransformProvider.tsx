@@ -11,16 +11,16 @@ export interface TransformProviderOptions {
 
 export type TransformProviderProps = TransformProviderOptions
     & PropsWithChildren
-    & Omit<JSX.IntrinsicElements["div"], keyof TransformProviderOptions>
+    & Omit<React.JSX.IntrinsicElements["g"], keyof TransformProviderOptions>
 
-export const TransformProvider = forwardRef<HTMLDivElement, TransformProviderProps>(({
+export const TransformProvider = ({
     children,
     initialPosition,
     onChange,
     position: _position,
     style,
     ...props
-}, ref) => {
+}: TransformProviderProps) => {
     let [position, setPosition] = useUncontrolled<Vec2>({
         value: _position,
         defaultValue: initialPosition,
@@ -33,18 +33,13 @@ export const TransformProvider = forwardRef<HTMLDivElement, TransformProviderPro
             position,
             setPosition,
         }}>
-            <div
-                style={{
-                    transform: `translate(${position.x}px, ${position.y}px)`,
-                    position: "absolute",
-                    ...style,
-                }}
+            <g
+                transform={`translate(${position.x}px, ${position.y}px)`}
                 {...props}
-                ref={ref}
             >
                 {children}
-            </div>
+            </g>
         </Transform.Provider>
     );
-})
+};
 

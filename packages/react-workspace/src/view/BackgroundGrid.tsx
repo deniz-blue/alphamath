@@ -24,21 +24,11 @@ export const BackgroundGrid = ({
             style={{
                 width: "100%",
                 height: "100%",
-                position: "fixed",
-                pointerEvents: "none",
-                zIndex: -10,
+                backgroundSize,
+                backgroundImage,
+                backgroundPosition,
+                position: "absolute",
             }}
-        >
-            <div
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundSize,
-                    backgroundImage,
-                    backgroundPosition,
-                    position: "absolute",
-                }}
-            />
-        </div>
+        />
     )
 }

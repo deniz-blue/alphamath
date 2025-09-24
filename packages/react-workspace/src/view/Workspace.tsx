@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithChildren, ReactNode, useImperativeHandle, useRef } from "react";
+import React, { forwardRef, PropsWithChildren, ReactNode, useImperativeHandle, useRef } from "react";
 import { BackgroundGrid } from "./BackgroundGrid.js";
 import { WorkspaceView } from "./WorkspaceView.js";
 import { usePanning } from "../hooks/index.js";
@@ -8,11 +8,12 @@ export interface WorkspaceProps extends PropsWithChildren {
     withCursor?: boolean;
 }
 
-export const Workspace = forwardRef<HTMLDivElement, WorkspaceProps>(({
+export const Workspace = ({
     background,
     children,
+    ref,
     withCursor = true,
-}, ref) => {
+}: WorkspaceProps & React.JSX.IntrinsicElements["svg"]) => {
     const { isPanning, props } = usePanning();
 
     return (
@@ -29,4 +30,4 @@ export const Workspace = forwardRef<HTMLDivElement, WorkspaceProps>(({
             </WorkspaceView>
         </div>
     )
-});
+};
