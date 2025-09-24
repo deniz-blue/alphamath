@@ -2,25 +2,25 @@ import { Button, Stack } from "@mantine/core";
 import { usePolycule } from "../../../contexts/PolyculeContext";
 import { modals, type ContextModalProps } from "@mantine/modals";
 
-export const PersonListModal = ({}: ContextModalProps) => {
-    return <PersonList />;
+export const SystemListModal = ({}: ContextModalProps) => {
+    return <SystemList />;
 };
 
-export const PersonList = () => {
+export const SystemList = () => {
     const { root } = usePolycule();
 
     return (
         <Stack>
-            {root.people.map(person => (
+            {root.systems.map(system => (
                 <Button
                     variant="light"
-                    key={person.id}
+                    key={system.id}
                     onClick={() => modals.openContextModal({
-                        modal: "PersonEditModal",
-                        innerProps: { id: person.id },
+                        modal: "SystemEditorModal",
+                        innerProps: { id: system.id },
                     })}
                 >
-                    Edit {person.name}
+                    Edit {system.name}
                 </Button>
             ))}
         </Stack>

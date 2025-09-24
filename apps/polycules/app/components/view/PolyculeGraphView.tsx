@@ -5,8 +5,10 @@ import { Coordinates, Mafs } from "mafs";
 import { useViewportSize } from "@mantine/hooks";
 import { compute, type ComputeResult } from "../../lib/force";
 import { Workspace } from "@alan404/react-workspace";
-import type { Person } from "../../lib/types";
+import type { NodeRef, Person } from "../../lib/types";
 import { modals } from "@mantine/modals";
+import { getPerson, getSystem } from "../../lib/graph";
+import { vec2 } from "@alan404/vec2";
 
 export const PolyculeGraphView = () => {
     const { root } = usePolycule();
@@ -18,12 +20,9 @@ export const PolyculeGraphView = () => {
     }, [root]);
 
     const renderCoords = useCallback(() => {
-        console.log("rendering coords", computed.current, ref.current);
-
         if (!computed.current) return;
         const svg = ref.current;
         if (!svg) return;
-
 
         const people = svg.querySelectorAll<SVGGElement>("g[data-type='person']");
         people.forEach(personEl => {
@@ -34,6 +33,25 @@ export const PolyculeGraphView = () => {
             const coords = computed.current?.people[person.id];
             if (!coords) return;
             personEl.setAttribute("transform", `translate(${coords.x}, ${coords.y})`);
+        });
+
+        const relationships = svg.querySelectorAll<SVGLineElement>("line[data-type='relationship']");
+        relationships.forEach(relEl => {
+            const id = relEl.dataset.id;
+            if (!id) return;
+            const rel = root.relationships.find(r => r.id === id);
+            if (!rel) return;
+
+            const getRefCoord = (n: NodeRef) =>
+                (n.type === "person" ? computed.current?.people[n.id] : computed.current?.systems[n.id]) ?? vec2();
+
+            const from = getRefCoord(rel.from);
+            const to = getRefCoord(rel.to);
+            
+            relEl.setAttribute("x1", from.x.toString());
+            relEl.setAttribute("y1", from.y.toString());
+            relEl.setAttribute("x2", to.x.toString());
+            relEl.setAttribute("y2", to.y.toString());
         });
     }, []);
 
@@ -50,13 +68,23 @@ export const PolyculeGraphView = () => {
             <Workspace
                 ref={ref}
             >
+                {root.relationships.map(rel => (
+                    <line
+                        key={rel.id}
+                        data-id={rel.id}
+                        data-type="relationship"
+                        stroke={OPTIONS.linkDefaultColor}
+                        strokeWidth={OPTIONS.linkDefaultWidth}
+                    />
+                ))}
+
                 {root.people.map(person => (
                     <g
                         data-type="person"
                         data-id={person.id}
                         key={person.id}
                         onClick={() => modals.openContextModal({
-                            modal: "PersonEditModal",
+                            modal: "PersonEditorModal",
                             title: `Edit ${person.name}`,
                             innerProps: {
                                 id: person.id,
@@ -76,6 +104,17 @@ export const PolyculeGraphView = () => {
                         >
                             {person.name}
                         </text>
+                        {person.systemId && (
+                            <text
+                                textAnchor="middle"
+                                y={OPTIONS.personRadius + OPTIONS.personNamePadding + OPTIONS.personNameFontSize + OPTIONS.systemNamePaddingTop}
+                                fontSize={OPTIONS.systemNameFontSize}
+                                fill={OPTIONS.systemNameColor}
+                                pointerEvents="none"
+                            >
+                                {getSystem(root, person.systemId)?.name}
+                            </text>
+                        )}
                     </g>
                 ))}
             </Workspace>

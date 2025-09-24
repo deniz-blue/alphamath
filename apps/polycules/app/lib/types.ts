@@ -6,6 +6,10 @@ export interface PolyculeManifest {
     groupRelationships: GroupRelationship[];
 };
 
+export type NodeRef =
+    | { type: "person"; id: string }
+    | { type: "system"; id: string };
+
 export interface Person {
     id: string;
     systemId?: string;
@@ -20,13 +24,15 @@ export interface System {
     id: string;
     name: string;
     avatarUrl?: string;
+    color?: string;
     memberIds: string[];
+    pluralkitId?: string;
 };
 
 export interface Relationship {
     id: string;
-    from: string;
-    to: string;
+    from: NodeRef;
+    to: NodeRef;
     label?: string;
 };
 

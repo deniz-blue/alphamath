@@ -1,45 +1,45 @@
 import { ColorInput, DEFAULT_THEME, Stack, TextInput } from "@mantine/core";
 import { usePolycule } from "../../../contexts/PolyculeContext";
-import { getPerson, updatePerson } from "../../../lib/graph";
-import type { Person } from "../../../lib/types";
+import { getSystem, updateSystem } from "../../../lib/graph";
+import type { System } from "../../../lib/types";
 import type { ContextModalProps } from "@mantine/modals";
 
-export const PersonEditorModal = ({
+export const SystemEditorModal = ({
     innerProps: { id },
 }: ContextModalProps<{ id: string }>) => {
-    return <PersonEditor id={id} />;
+    return <SystemEditor id={id} />;
 };
 
-export const PersonEditor = ({
+export const SystemEditor = ({
     id,
 }: {
     id: string;
 }) => {
     const { root, update } = usePolycule();
 
-    const person = getPerson(root, id);
-    if (!person) return null;
+    const system = getSystem(root, id);
+    if (!system) return null;
 
     return (
-        <PersonEditorForm
-            value={person}
-            onChange={(v) => update((r) => updatePerson(r, { ...v, id }))}
+        <SystemEditorForm
+            value={system}
+            onChange={(v) => update((r) => updateSystem(r, { ...v, id }))}
         />
     );
 };
 
-export const PersonEditorForm = ({
+export const SystemEditorForm = ({
     value,
     onChange,
 }: {
-    value: Person;
-    onChange: (v: Partial<Person>) => void;
+    value: System;
+    onChange: (v: Partial<System>) => void;
 }) => {
     return (
         <Stack>
             <TextInput
-                label="Name"
-                placeholder="Name"
+                label="System Name"
+                placeholder="System Name"
                 value={value.name}
                 onChange={e => onChange({ name: e.currentTarget.value })}
             />
@@ -55,8 +55,15 @@ export const PersonEditorForm = ({
             <TextInput
                 label="Avatar URL"
                 placeholder="<none>"
-                value={value.avatarUrl}
+                value={value.avatarUrl ?? ""}
                 onChange={e => onChange({ avatarUrl: e.currentTarget.value })}
+            />
+
+            <TextInput
+                label="Pluralkit ID"
+                placeholder="<none>"
+                value={value.pluralkitId ?? ""}
+                onChange={e => onChange({ pluralkitId: e.currentTarget.value })}
             />
         </Stack>
     )

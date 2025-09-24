@@ -8,15 +8,26 @@ export const MainLayout = () => {
             <PolyculeGraphView />
 
             <Affix position={{ left: 20, top: 20 }}>
-                <Button
-                    variant="light"
-                    onClick={() => modals.openContextModal({
-                        modal: "PersonListModal",
-                        innerProps: {},
-                    })}
-                >
-                    List People
-                </Button>
+                <Stack>
+                    <Button
+                        variant="light"
+                        onClick={() => modals.openContextModal({
+                            modal: "PersonListModal",
+                            innerProps: {},
+                        })}
+                    >
+                        List People
+                    </Button>
+                    <Button
+                        variant="light"
+                        onClick={() => modals.openContextModal({
+                            modal: "SystemListModal",
+                            innerProps: {},
+                        })}
+                    >
+                        List Systems
+                    </Button>
+                </Stack>
             </Affix>
         </Box>
     )

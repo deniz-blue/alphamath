@@ -11,18 +11,18 @@ import { GlobalTransformProvider } from "@alan404/react-workspace";
 const TEST_MANIFEST: PolyculeManifest = {
 	...createPolyculeManifest(),
 	people: [
-		{ id: "p_0", name: "deniz" },
-		{ id: "p_1", name: "bulut" },
-		{ id: "p_2", name: "ispik" },
-		{ id: "p_3", name: "kenn" },
-		{ id: "p_4", name: "remi" },
-		{ id: "p_5", name: "athenya" },
-		{ id: "p_6", name: "cyan" },
+		{ id: "p_0", name: "deniz", systemId: "s_0" },
+		{ id: "p_1", name: "bulut", systemId: "s_0" },
+		{ id: "p_2", name: "ispik", systemId: "s_1" },
+		{ id: "p_3", name: "kenn", systemId: "s_1" },
+		{ id: "p_4", name: "remi", systemId: "s_1" },
+		{ id: "p_5", name: "athenya", color: "orange" },
+		{ id: "p_6", name: "cyan", color: "cyan" },
 	],
 	relationships: [
-		{ id: "r_0", from: "p_0", to: "p_2" },
-		{ id: "r_1", from: "p_1", to: "p_2" },
-		{ id: "r_2", from: "p_5", to: "p_6" },
+		{ id: "r_0", from: { type: "person", id: "p_0" }, to: { type: "person", id: "p_2" } },
+		{ id: "r_1", from: { type: "person", id: "p_1" }, to: { type: "person", id: "p_2" } },
+		{ id: "r_2", from: { type: "person", id: "p_5" }, to: { type: "person", id: "p_6" } },
 	],
 	systems: [
 		{ id: "s_0", name: "C&", memberIds: ["p_0", "p_1"] },
