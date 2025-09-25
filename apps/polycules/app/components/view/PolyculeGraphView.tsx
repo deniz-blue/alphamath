@@ -45,7 +45,7 @@ export const PolyculeGraphView = () => {
 
             const from = getRefCoord(rel.from);
             const to = getRefCoord(rel.to);
-            
+
             relEl.setAttribute("x1", from.x.toString());
             relEl.setAttribute("y1", from.y.toString());
             relEl.setAttribute("x2", to.x.toString());
@@ -66,6 +66,14 @@ export const PolyculeGraphView = () => {
             <Workspace
                 ref={ref}
             >
+                <defs>
+                    <clipPath id="avatarClip">
+                        <circle
+                            r={OPTIONS.personRadius}
+                        />
+                    </clipPath>
+                </defs>
+
                 {root.relationships.map(rel => (
                     <line
                         key={rel.id}
@@ -93,6 +101,19 @@ export const PolyculeGraphView = () => {
                             fill={person.color ?? OPTIONS.personDefaultColor}
                             r={OPTIONS.personRadius}
                         />
+
+                        {person.avatarUrl && (
+                            <image
+                                href={person.avatarUrl}
+                                x={-OPTIONS.personRadius}
+                                y={-OPTIONS.personRadius}
+                                width={OPTIONS.personRadius * 2}
+                                height={OPTIONS.personRadius * 2}
+                                clip-path="url(#avatarClip)"
+                                preserveAspectRatio="xMidYMid slice"
+                            />
+                        )}
+
                         <text
                             textAnchor="middle"
                             y={OPTIONS.personRadius + OPTIONS.personNamePadding}
@@ -100,8 +121,9 @@ export const PolyculeGraphView = () => {
                             fill={OPTIONS.personNameColor}
                             pointerEvents="none"
                         >
-                            {person.name}
+                            {person.name || "(No name)"}
                         </text>
+
                         {person.systemId && (
                             <text
                                 textAnchor="middle"
@@ -110,7 +132,7 @@ export const PolyculeGraphView = () => {
                                 fill={OPTIONS.systemNameColor}
                                 pointerEvents="none"
                             >
-                                {getSystem(person.systemId)?.name}
+                                {getSystem(person.systemId)?.name || "(No system name)"}
                             </text>
                         )}
                     </g>

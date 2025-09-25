@@ -1,9 +1,10 @@
 import { Button, Stack } from "@mantine/core";
-import { modals, type ContextModalProps } from "@mantine/modals";
-import { addPerson } from "../../../lib/graph";
+import { type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
+import { openAppModal } from "../../../modals";
+import { DEFAULT_PERSON } from "../../../contexts/data";
 
-export const PersonListModal = ({ }: ContextModalProps) => {
+export const PersonListModal = ({}: ContextModalProps) => {
     return <PersonList />;
 };
 
@@ -17,10 +18,7 @@ export const PersonList = () => {
                 <Button
                     variant="light"
                     key={person.id}
-                    onClick={() => modals.openContextModal({
-                        modal: "PersonEditorModal",
-                        innerProps: { id: person.id },
-                    })}
+                    onClick={() => openAppModal("PersonEditorModal", { id: person.id })}
                 >
                     Edit {person.name}
                 </Button>
@@ -29,11 +27,8 @@ export const PersonList = () => {
             <Button
                 variant="light"
                 onClick={() => {
-                    const id = addPerson({ name: "New person" });
-                    modals.openContextModal({
-                        modal: "PersonEditorModal",
-                        innerProps: { id: id! },
-                    });
+                    const id = addPerson(DEFAULT_PERSON);
+                    openAppModal("PersonEditorModal", { id });
                 }}
             >
                 Add new person

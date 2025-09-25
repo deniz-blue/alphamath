@@ -15,7 +15,7 @@ export interface ViewOptions {
 
 export const OPTIONS: ViewOptions = {
     personRadius: 12,
-    personDefaultColor: "red",
+    personDefaultColor: "gray",
     personNameFontSize: 12,
     personNamePadding: 10,
     personNameColor: "white",

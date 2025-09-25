@@ -1,8 +1,18 @@
 import { Affix, Box, Button, Stack } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
 import { PolyculeGraphView } from "../view/PolyculeGraphView";
-import { modals } from "@mantine/modals";
+import { openAppModal } from "../../modals";
+import { usePolyculeStore } from "../../contexts/usePolyculeStore";
 
 export const MainLayout = () => {
+    const { undo, redo } = usePolyculeStore.temporal.getState();
+
+    useHotkeys([
+        ["mod+z", () => undo()],
+        ["mod+shift+z", () => redo()],
+        ["mod+y", () => redo()],
+    ]);
+
     return (
         <Box pos="relative">
             <PolyculeGraphView />
@@ -11,21 +21,27 @@ export const MainLayout = () => {
                 <Stack>
                     <Button
                         variant="light"
-                        onClick={() => modals.openContextModal({
-                            modal: "PersonListModal",
-                            innerProps: {},
-                        })}
+                        onClick={() => openAppModal("PersonListModal", {})}
                     >
                         List People
                     </Button>
                     <Button
                         variant="light"
-                        onClick={() => modals.openContextModal({
-                            modal: "SystemListModal",
-                            innerProps: {},
-                        })}
+                        onClick={() => openAppModal("SystemListModal", {})}
                     >
                         List Systems
+                    </Button>
+                    <Button
+                        variant="light"
+                        onClick={() => undo()}
+                    >
+                        UNDO
+                    </Button>
+                    <Button
+                        variant="light"
+                        onClick={() => redo()}
+                    >
+                        REDO
                     </Button>
                 </Stack>
             </Affix>

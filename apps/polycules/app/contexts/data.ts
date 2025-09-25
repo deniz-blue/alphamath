@@ -1,4 +1,4 @@
-import type { PolyculeManifest } from "../lib/types";
+import type { Person, PolyculeManifest, System } from "../lib/types";
 
 export const DEFAULT_MANIFEST: PolyculeManifest = {
     v: 1,
@@ -6,6 +6,17 @@ export const DEFAULT_MANIFEST: PolyculeManifest = {
     systems: [],
     relationships: [],
     groupRelationships: [],
+};
+
+export const DEFAULT_SYSTEM: System = {
+	id: "",
+	name: "",
+	memberIds: [],
+};
+
+export const DEFAULT_PERSON: Person = {
+	id: "",
+	name: "",
 };
 
 export const TEST_MANIFEST: PolyculeManifest = {
