@@ -1,8 +1,7 @@
 import { ColorInput, DEFAULT_THEME, Stack, TextInput } from "@mantine/core";
-import { usePolycule } from "../../../contexts/PolyculeContext";
-import { getPerson, updatePerson } from "../../../lib/graph";
 import type { Person } from "../../../lib/types";
 import type { ContextModalProps } from "@mantine/modals";
+import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
 
 export const PersonEditorModal = ({
     innerProps: { id },
@@ -15,15 +14,15 @@ export const PersonEditor = ({
 }: {
     id: string;
 }) => {
-    const { root, update } = usePolycule();
+    const person = usePolyculeStore(store => store.getPerson(id));
+    const updatePerson = usePolyculeStore(store => store.updatePerson);
 
-    const person = getPerson(root, id);
-    if (!person) return null;
+    if(!person) return null;
 
     return (
         <PersonEditorForm
             value={person}
-            onChange={(v) => update((r) => updatePerson(r, { ...v, id }))}
+            onChange={p => updatePerson({ ...p, id })}
         />
     );
 };

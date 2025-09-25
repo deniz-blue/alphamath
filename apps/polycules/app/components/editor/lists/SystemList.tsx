@@ -1,17 +1,17 @@
 import { Button, Stack } from "@mantine/core";
-import { usePolycule } from "../../../contexts/PolyculeContext";
 import { modals, type ContextModalProps } from "@mantine/modals";
+import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
 
 export const SystemListModal = ({}: ContextModalProps) => {
     return <SystemList />;
 };
 
 export const SystemList = () => {
-    const { root } = usePolycule();
+    const systems = usePolyculeStore(state => state.root.systems);
 
     return (
         <Stack>
-            {root.systems.map(system => (
+            {systems.map(system => (
                 <Button
                     variant="light"
                     key={system.id}

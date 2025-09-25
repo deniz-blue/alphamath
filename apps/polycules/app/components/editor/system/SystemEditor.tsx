@@ -1,8 +1,7 @@
 import { ColorInput, DEFAULT_THEME, Stack, TextInput } from "@mantine/core";
-import { usePolycule } from "../../../contexts/PolyculeContext";
-import { getSystem, updateSystem } from "../../../lib/graph";
 import type { System } from "../../../lib/types";
 import type { ContextModalProps } from "@mantine/modals";
+import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
 
 export const SystemEditorModal = ({
     innerProps: { id },
@@ -15,15 +14,15 @@ export const SystemEditor = ({
 }: {
     id: string;
 }) => {
-    const { root, update } = usePolycule();
+    const system = usePolyculeStore(store => store.getSystem(id));
+    const updateSystem = usePolyculeStore(store => store.updateSystem);
 
-    const system = getSystem(root, id);
     if (!system) return null;
 
     return (
         <SystemEditorForm
             value={system}
-            onChange={(v) => update((r) => updateSystem(r, { ...v, id }))}
+            onChange={p => updateSystem({ ...p, id })}
         />
     );
 };

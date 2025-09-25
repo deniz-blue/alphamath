@@ -37,5 +37,6 @@ export interface Relationship {
 };
 
 export interface GroupRelationship {
+    id: string;
     memberIds: string[];
 };

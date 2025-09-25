@@ -1,17 +1,19 @@
 import { Button, Stack } from "@mantine/core";
-import { usePolycule } from "../../../contexts/PolyculeContext";
 import { modals, type ContextModalProps } from "@mantine/modals";
+import { addPerson } from "../../../lib/graph";
+import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
 
-export const PersonListModal = ({}: ContextModalProps) => {
+export const PersonListModal = ({ }: ContextModalProps) => {
     return <PersonList />;
 };
 
 export const PersonList = () => {
-    const { root } = usePolycule();
+    const people = usePolyculeStore(state => state.root.people);
+    const addPerson = usePolyculeStore(state => state.addPerson);
 
     return (
         <Stack>
-            {root.people.map(person => (
+            {people.map(person => (
                 <Button
                     variant="light"
                     key={person.id}
@@ -23,6 +25,19 @@ export const PersonList = () => {
                     Edit {person.name}
                 </Button>
             ))}
+
+            <Button
+                variant="light"
+                onClick={() => {
+                    const id = addPerson({ name: "New person" });
+                    modals.openContextModal({
+                        modal: "PersonEditorModal",
+                        innerProps: { id: id! },
+                    });
+                }}
+            >
+                Add new person
+            </Button>
         </Stack>
     )
 };

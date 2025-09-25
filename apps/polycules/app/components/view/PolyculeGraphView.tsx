@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
-import { usePolycule } from "../../contexts/PolyculeContext";
 import { OPTIONS } from "./options";
-import { Coordinates, Mafs } from "mafs";
-import { useViewportSize } from "@mantine/hooks";
 import { compute, type ComputeResult } from "../../lib/force";
 import { Workspace } from "@alan404/react-workspace";
-import type { NodeRef, Person } from "../../lib/types";
+import type { NodeRef } from "../../lib/types";
 import { modals } from "@mantine/modals";
-import { getPerson, getSystem } from "../../lib/graph";
 import { vec2 } from "@alan404/vec2";
+import { usePolyculeStore } from "../../contexts/usePolyculeStore";
 
 export const PolyculeGraphView = () => {
-    const { root } = usePolycule();
+    const root = usePolyculeStore(store => store.root);
+    const getSystem = usePolyculeStore(store => store.getSystem);
     const ref = useRef<SVGSVGElement>(null);
     const computed = useRef<ComputeResult>(null);
 
@@ -112,7 +110,7 @@ export const PolyculeGraphView = () => {
                                 fill={OPTIONS.systemNameColor}
                                 pointerEvents="none"
                             >
-                                {getSystem(root, person.systemId)?.name}
+                                {getSystem(person.systemId)?.name}
                             </text>
                         )}
                     </g>

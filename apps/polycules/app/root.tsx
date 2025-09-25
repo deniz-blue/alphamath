@@ -10,12 +10,9 @@ import {
 import type { Route } from "./+types/root";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import "mafs/core.css"
 import "./app.css";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
-import { MODALS } from "./modals";
 
 export const links: Route.LinksFunction = () => [
 
@@ -27,6 +24,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width initial-scale=1, user-scalable=no" />
+				<meta name="color-scheme" content="dark" />
+                <meta name="theme-color" content="#242424" />
 				<Meta />
 				<Links />
 			</head>
