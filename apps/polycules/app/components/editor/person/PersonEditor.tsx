@@ -1,28 +1,37 @@
-import { ColorInput, DEFAULT_THEME, Stack, TextInput } from "@mantine/core";
+import { Button, CloseButton, ColorInput, DEFAULT_THEME, Stack, Text, TextInput } from "@mantine/core";
 import type { Person } from "../../../lib/types";
-import type { ContextModalProps } from "@mantine/modals";
-import { usePolyculeStore } from "../../../contexts/usePolyculeStore";
+import { modals, type ContextModalProps } from "@mantine/modals";
+import { usePolyculeStore } from "../../../store/usePolyculeStore";
+import { openAppModal } from "../../../modals";
 
 export const PersonEditorModal = ({
     innerProps: { id },
+    id: modalId,
 }: ContextModalProps<{ id: string }>) => {
-    return <PersonEditor id={id} />;
+    return <PersonEditor id={id} modalId={modalId} />;
 };
 
 export const PersonEditor = ({
     id,
+    modalId,
 }: {
     id: string;
+    modalId?: string;
 }) => {
     const person = usePolyculeStore(store => store.getPerson(id));
     const updatePerson = usePolyculeStore(store => store.updatePerson);
+    const removePerson = usePolyculeStore(store => store.removePerson);
 
-    if(!person) return null;
+    if (!person) return null;
 
     return (
         <PersonEditorForm
             value={person}
             onChange={p => updatePerson({ ...p, id })}
+            onDelete={() => {
+                if (modalId) modals.close(modalId);
+                removePerson(id);
+            }}
         />
     );
 };
@@ -30,13 +39,16 @@ export const PersonEditor = ({
 export const PersonEditorForm = ({
     value,
     onChange,
+    onDelete,
 }: {
     value: Person;
     onChange: (v: Partial<Person>) => void;
+    onDelete?: () => void;
 }) => {
     return (
         <Stack>
             <TextInput
+                data-autofocus
                 label="Name"
                 placeholder="Name"
                 value={value.name}
@@ -45,8 +57,10 @@ export const PersonEditorForm = ({
 
             <ColorInput
                 label="Color"
+                placeholder="Default color"
+                rightSection={value.color && <CloseButton onClick={() => onChange({ color: null })} />}
                 format="hex"
-                value={value.color}
+                value={value.color ?? undefined}
                 onChange={color => onChange({ color })}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
             />
@@ -54,9 +68,43 @@ export const PersonEditorForm = ({
             <TextInput
                 label="Avatar URL"
                 placeholder="<none>"
-                value={value.avatarUrl}
+                value={value.avatarUrl ?? undefined}
                 onChange={e => onChange({ avatarUrl: e.currentTarget.value })}
             />
+
+            <Button
+                variant="light"
+                onClick={() => openAppModal("LinksListModal", { target: { type: "person", id: value.id } })}
+            >
+                Edit Relationships
+            </Button>
+
+            {!!value.systemId && (
+                <Button
+                    variant="light"
+                    onClick={() => openAppModal("SystemEditorModal", { id: value.systemId! })}
+                >
+                    Edit System
+                </Button>
+            )}
+
+            <Button
+                variant="light"
+                color="red"
+                onClick={() => modals.openConfirmModal({
+                    onConfirm: onDelete,
+                    title: "Are you sure?",
+                    children: (
+                        <Text>
+                            Are you sure you want to delete <Text inline span inherit fw="bold">{value.name}</Text>?
+                        </Text>
+                    ),
+                    labels: { confirm: "Delete", cancel: "Cancel" },
+                    confirmProps: { color: "red" },
+                })}
+            >
+                Remove
+            </Button>
         </Stack>
     )
 };

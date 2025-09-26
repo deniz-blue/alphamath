@@ -2,30 +2,38 @@ import { Avatar, Button, Combobox, Group, Stack, Text, TextInput, useCombobox } 
 import { type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
-import { DEFAULT_SYSTEM } from "../../../store/data";
 import { useState } from "react";
 import { OPTIONS } from "../../view/options";
-import { SystemCard } from "../../cards/SystemCard";
 
-export const SystemListModal = ({ }: ContextModalProps) => {
-    return <SystemList />;
+export const SystemMembersListModal = ({
+    innerProps: { id },
+}: ContextModalProps<{ id: string }>) => {
+    return <SystemMembersList id={id} />;
 };
 
-export const SystemList = () => {
-    const systems = usePolyculeStore(state => state.root.systems);
-    const addSystem = usePolyculeStore(state => state.addSystem);
+export const SystemMembersList = ({
+    id
+}: {
+    id: string;
+}) => {
+    const system = usePolyculeStore(state => state.getSystem(id));
+    if(!system) return null;
+    
+    const getMembersOfSystem = usePolyculeStore(state => state.getMembersOfSystem);
+    const members = getMembersOfSystem(id);
+    
     const [search, setSearch] = useState("");
-    const filteredSystems = systems.filter(s => (
-        s.name.toLowerCase().includes(search.toLowerCase())
+    const filteredMembers = members.filter(m => (
+        m.name.toLowerCase().includes(search.toLowerCase())
     ));
-
+    
     const combobox = useCombobox();
 
     return (
         <Stack>
             <Combobox
                 store={combobox}
-                onOptionSubmit={id => openAppModal("SystemEditorModal", { id })}
+                onOptionSubmit={id => openAppModal("PersonEditorModal", { id })}
             >
                 <Group justify="space-between" align="center">
                     <Combobox.EventsTarget>
@@ -41,7 +49,7 @@ export const SystemList = () => {
                         />
                     </Combobox.EventsTarget>
 
-                    <Button
+                    {/* <Button
                         variant="light"
                         color="green"
                         onClick={() => {
@@ -50,17 +58,34 @@ export const SystemList = () => {
                         }}
                     >
                         New
-                    </Button>
+                    </Button> */}
                 </Group>
 
                 <Combobox.Options>
-                    {filteredSystems.map(system => (
-                        <Combobox.Option value={system.id} key={system.id}>
-                            <SystemCard system={system} />
+                    {filteredMembers.map(person => (
+                        <Combobox.Option value={person.id} key={person.id}>
+                            <Group gap="xs">
+                                <Avatar
+                                    color={person.color ?? OPTIONS.systemDefaultColor}
+                                    variant="filled"
+                                    src={person.avatarUrl}
+                                    alt={person.name}
+                                    size="sm"
+                                    children={" "}
+                                />
+                                <Stack gap={0}>
+                                    <Text inherit span>
+                                        {person.name || "(No name)"}
+                                    </Text>
+                                    <Text inherit span inline c="dimmed" fz="xs">
+                                        
+                                    </Text>
+                                </Stack>
+                            </Group>
                         </Combobox.Option>
                     ))}
 
-                    {filteredSystems.length === 0 && (
+                    {filteredMembers.length === 0 && (
                         <Combobox.Empty>
                             No results
                         </Combobox.Empty>

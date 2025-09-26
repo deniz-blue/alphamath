@@ -1,16 +1,32 @@
+import type React from "react";
 import { PersonEditorModal } from "./components/editor/person/PersonEditor";
 import { PersonListModal } from "./components/editor/lists/PersonList";
 import { SystemListModal } from "./components/editor/lists/SystemList";
 import { SystemEditorModal } from "./components/editor/system/SystemEditor";
 import { modals, type ContextModalProps } from "@mantine/modals";
-import type React from "react";
+import { SystemMembersListModal } from "./components/editor/lists/SystemMembersList";
+import { LinksListModal } from "./components/editor/lists/LinksList";
+import { NodeSelectModal } from "./components/editor/select/NodeSelect";
 
 export const MODALS = {
     PersonEditorModal,
     PersonListModal,
     SystemListModal,
     SystemEditorModal,
+    SystemMembersListModal,
+    LinksListModal,
+    NodeSelectModal,
 } as const;
+
+export const MODAL_TITLES: Record<keyof typeof MODALS, string> = {
+    PersonEditorModal: "Edit Person",
+    PersonListModal: "People",
+    SystemListModal: "Systems",
+    SystemEditorModal: "Edit System",
+    SystemMembersListModal: "System Members",
+    LinksListModal: "Links",
+    NodeSelectModal: "Select Node",
+};
 
 declare module '@mantine/modals' {
     export interface MantineModalsOverride {
@@ -27,5 +43,6 @@ export const openAppModal = <Key extends keyof typeof MODALS>(
     modals.openContextModal({
         modal: name,
         innerProps: props,
+        title: MODAL_TITLES[name],
     });
 };

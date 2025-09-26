@@ -11,11 +11,13 @@ import type { Route } from "./+types/root";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "./app.css";
-import { MantineProvider } from "@mantine/core";
+import { createTheme, MantineProvider, ScrollArea } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 export const links: Route.LinksFunction = () => [
-
+	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
+	{ rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+	{ rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Lexend:wght@100..900&display=swap" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -25,7 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width initial-scale=1, user-scalable=no" />
 				<meta name="color-scheme" content="dark" />
-                <meta name="theme-color" content="#242424" />
+				<meta name="theme-color" content="#242424" />
 				<Meta />
 				<Links />
 			</head>
@@ -40,7 +42,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return (
-		<MantineProvider forceColorScheme="dark">
+		<MantineProvider
+			forceColorScheme="dark"
+			theme={createTheme({
+				fontFamily: "Lexend, sans-serif",
+				fontFamilyMonospace: "Fira Code, monospace",
+			})}
+		>
 			<Notifications />
 			<Outlet />
 		</MantineProvider>

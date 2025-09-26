@@ -3,11 +3,11 @@ import { immer } from "zustand/middleware/immer";
 import { temporal } from "zundo";
 import { TEST_MANIFEST } from "./data";
 import type { Actions, State } from "./store.type";
-import type { NodeRef } from "../lib/types";
+import type { GraphNodeRef } from "../lib/types";
 
 const randomId = (prefix = ""): string => prefix + Math.random().toString(36).slice(2).toString();
 
-const nodeRefEq = (a: NodeRef, b: NodeRef) => a.type == b.type && a.id == b.id;
+export const nodeRefEq = (a: GraphNodeRef, b: GraphNodeRef) => a.type == b.type && a.id == b.id;
 
 export const usePolyculeStore = create<State & Actions>()(
     temporal(
@@ -18,13 +18,18 @@ export const usePolyculeStore = create<State & Actions>()(
                 get().root.people.find(x => x.id == personId) ?? null,
             getSystem: (systemId) =>
                 get().root.systems.find(x => x.id == systemId) ?? null,
-            getMembersOfSystem: (systemId) =>
-                get().getSystem(systemId)?.memberIds.map(memberId => get().getPerson(memberId)).filter(x => !!x) ?? [],
+            
+            getMembersOfSystem: (systemId) => {
+                const root = get().root;
+                const system = root.systems.find(s => s.id == systemId);
+                if (!system) return [];
+                return root.people.filter(p => system.memberIds.includes(p.id));
+            },
 
             addPerson: (p) => {
                 const id = randomId("p_");
                 set(state => {
-                    state.root.people.push({ id, ...p });
+                    state.root.people.push({ ...p, id });
 
                     if (p.systemId) {
                         const system = state.root.systems.find(s => s.id == p.systemId);
@@ -159,6 +164,6 @@ export const usePolyculeStore = create<State & Actions>()(
                     state.root.groupRelationships = state.root.groupRelationships.filter(x => x.id !== id);
                 });
             },
-        }))
+        })),
     )
 );

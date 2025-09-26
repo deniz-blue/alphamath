@@ -4,3 +4,11 @@ body {
     /* probably a bad idea... -D */
     overflow: clip;
 }
+
+.mantine-Combobox-option:hover {
+    background-color: var(--mantine-color-dark-8);
+}
+
+.mantine-Modal-overlay {
+    user-select: none;
+}
