@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { OPTIONS } from "./options";
 import { compute, type ComputeResult } from "../../lib/force";
 import { Workspace } from "@alan404/react-workspace";
 import type { GraphNodeRef, Person, PolyculeManifest } from "../../lib/types";
-import { modals } from "@mantine/modals";
 import { vec2 } from "@alan404/vec2";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
-import { Menu, Popover, Stack } from "@mantine/core";
+import { Menu, Popover, Stack, Text } from "@mantine/core";
 import { openAppModal } from "../../modals";
-import { IconPencil } from "@tabler/icons-react";
+import { IconCircles, IconLink, IconPencil } from "@tabler/icons-react";
+import { useHotkeys } from "@mantine/hooks";
 
 export const PolyculeGraphView = () => {
     const root = usePolyculeStore(store => store.root);
@@ -118,20 +118,8 @@ export const GraphPerson = ({
 }: {
     person: Person;
 }) => {
+    const [opened, setOpened] = useState(false);
     const getSystem = usePolyculeStore(store => store.getSystem);
-
-    const openEditModal = useCallback(() => {
-        openAppModal("PersonEditorModal", { id: person.id });
-    }, [person.id]);
-
-    const openSystemEditModal = useCallback(() => {
-        if (!person.systemId) return;
-        openAppModal("SystemEditorModal", { id: person.systemId });
-    }, [person.systemId]);
-
-    const openRelationships = useCallback(() => {
-        openAppModal("LinksListModal", { target: { type: "person", id: person.id } });
-    }, [person.id]);
 
     return (
         <g
@@ -146,10 +134,14 @@ export const GraphPerson = ({
                 offset={0}
                 shadow="md"
                 arrowSize={12}
+                opened={opened}
+                onChange={setOpened}
             >
                 <Menu.Target>
                     <g>
                         <circle
+                            stroke={person.color ?? OPTIONS.personDefaultColor}
+                            strokeWidth={1}
                             fill={person.color ?? OPTIONS.personDefaultColor}
                             r={OPTIONS.personRadius}
                         />
@@ -161,7 +153,7 @@ export const GraphPerson = ({
                                 y={-OPTIONS.personRadius}
                                 width={OPTIONS.personRadius * 2}
                                 height={OPTIONS.personRadius * 2}
-                                clip-path="url(#avatarClip)"
+                                clipPath="url(#avatarClip)"
                                 preserveAspectRatio="xMidYMid slice"
                             />
                         )}
@@ -170,29 +162,7 @@ export const GraphPerson = ({
                 <Menu.Dropdown
                     fz="sm"
                 >
-                    <Menu.Label>
-                        {person.name || "(No name)"}
-                    </Menu.Label>
-                    <Menu.Item
-                        onClick={openEditModal}
-                        leftSection={<IconPencil size={14} />}
-                    >
-                        Edit
-                    </Menu.Item>
-                    {person.systemId && (
-                        <Menu.Item
-                            onClick={openSystemEditModal}
-                            leftSection={<IconPencil size={14} />}
-                        >
-                            Edit System
-                        </Menu.Item>
-                    )}
-                    <Menu.Item
-                        onClick={openRelationships}
-                        leftSection={<IconPencil size={14} />}
-                    >
-                        Edit Relationships
-                    </Menu.Item>
+                    <GraphPersonActions person={person} onClose={() => setOpened(false)} />
                 </Menu.Dropdown>
             </Menu>
 
@@ -218,5 +188,63 @@ export const GraphPerson = ({
                 </text>
             )}
         </g>
+    );
+};
+
+export const GraphPersonActions = ({
+    person,
+    onClose,
+}: {
+    person: Person;
+    onClose?: () => void;
+}) => {
+    const openEditModal = useCallback(() => {
+        openAppModal("PersonEditorModal", { id: person.id });
+        onClose?.();
+    }, [person.id]);
+
+    const openSystemEditModal = useCallback(() => {
+        if (!person.systemId) return;
+        openAppModal("SystemEditorModal", { id: person.systemId });
+        onClose?.();
+    }, [person.systemId]);
+
+    const openRelationships = useCallback(() => {
+        openAppModal("LinksListModal", { target: { type: "person", id: person.id } });
+        onClose?.();
+    }, [person.id]);
+
+    useHotkeys([
+        ["e", openEditModal],
+        ["s", openSystemEditModal],
+        ["r", openRelationships],
+    ]);
+
+    return (
+        <>
+            <Menu.Label>
+                {person.name || "(No name)"}
+            </Menu.Label>
+            <Menu.Item
+                onClick={openEditModal}
+                leftSection={<IconPencil size={14} />}
+            >
+                <Text span inline inherit td="underline">E</Text>dit
+            </Menu.Item>
+            {person.systemId && (
+                <Menu.Item
+                    onClick={openSystemEditModal}
+                    leftSection={<IconCircles size={14} />}
+                >
+                    <Text span inline inherit td="underline">S</Text>ystem
+                </Menu.Item>
+            )}
+            <Menu.Item
+                onClick={openRelationships}
+                leftSection={<IconLink size={14} />}
+            >
+                <Text span inline inherit td="underline">R</Text>elationships
+            </Menu.Item>
+        </>
     );
 };

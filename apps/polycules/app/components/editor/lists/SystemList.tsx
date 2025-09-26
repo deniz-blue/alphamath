@@ -3,9 +3,9 @@ import { type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import { DEFAULT_SYSTEM } from "../../../store/data";
-import { useState } from "react";
-import { OPTIONS } from "../../view/options";
 import { SystemCard } from "../../cards/SystemCard";
+import { SearchableList } from "../common/SearchableList";
+import type { System } from "../../../lib/types";
 
 export const SystemListModal = ({ }: ContextModalProps) => {
     return <SystemList />;
@@ -14,59 +14,21 @@ export const SystemListModal = ({ }: ContextModalProps) => {
 export const SystemList = () => {
     const systems = usePolyculeStore(state => state.root.systems);
     const addSystem = usePolyculeStore(state => state.addSystem);
-    const [search, setSearch] = useState("");
-    const filteredSystems = systems.filter(s => (
-        s.name.toLowerCase().includes(search.toLowerCase())
-    ));
-
-    const combobox = useCombobox();
 
     return (
         <Stack>
-            <Combobox
-                store={combobox}
-                onOptionSubmit={id => openAppModal("SystemEditorModal", { id })}
-            >
-                <Group justify="space-between" align="center">
-                    <Combobox.EventsTarget>
-                        <TextInput
-                            data-autofocus
-                            value={search}
-                            onChange={e => {
-                                setSearch(e.currentTarget.value);
-                                combobox.updateSelectedOptionIndex();
-                            }}
-                            placeholder="Search..."
-                            flex="1"
-                        />
-                    </Combobox.EventsTarget>
-
-                    <Button
-                        variant="light"
-                        color="green"
-                        onClick={() => {
-                            const id = addSystem(DEFAULT_SYSTEM);
-                            openAppModal("SystemEditorModal", { id });
-                        }}
-                    >
-                        New
-                    </Button>
-                </Group>
-
-                <Combobox.Options>
-                    {filteredSystems.map(system => (
-                        <Combobox.Option value={system.id} key={system.id}>
-                            <SystemCard system={system} />
-                        </Combobox.Option>
-                    ))}
-
-                    {filteredSystems.length === 0 && (
-                        <Combobox.Empty>
-                            No results
-                        </Combobox.Empty>
-                    )}
-                </Combobox.Options>
-            </Combobox>
+            <SearchableList<System>
+                data={systems}
+                getItemId={s => s.id}
+                getItemText={s => s.name}
+                renderItem={s => <SystemCard system={s} />}
+                onItemSelect={id => openAppModal("SystemEditorModal", { id })}
+                createNewLabel="New"
+                onCreateNew={() => {
+                    const id = addSystem(DEFAULT_SYSTEM);
+                    openAppModal("SystemEditorModal", { id });
+                }}
+            />
         </Stack>
     )
 };

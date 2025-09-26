@@ -3,6 +3,7 @@ import type { System } from "../../../lib/types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
+import { confirmableCallback } from "../openConfirmModal";
 
 export const SystemEditorModal = ({
     innerProps: { id },
@@ -96,7 +97,7 @@ export const SystemEditorForm = ({
             <Button
                 color="red"
                 variant="light"
-                onClick={onDelete}
+                onClick={confirmableCallback(`Are you sure you want to delete ${value.name || "<unnamed>"}& and all its alters?`, onDelete)}
             >
                 Delete System
             </Button>

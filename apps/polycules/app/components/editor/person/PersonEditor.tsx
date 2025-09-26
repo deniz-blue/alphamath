@@ -3,6 +3,7 @@ import type { Person } from "../../../lib/types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
+import { confirmableCallback } from "../openConfirmModal";
 
 export const PersonEditorModal = ({
     innerProps: { id },
@@ -91,17 +92,10 @@ export const PersonEditorForm = ({
             <Button
                 variant="light"
                 color="red"
-                onClick={() => modals.openConfirmModal({
-                    onConfirm: onDelete,
-                    title: "Are you sure?",
-                    children: (
-                        <Text>
-                            Are you sure you want to delete <Text inline span inherit fw="bold">{value.name}</Text>?
-                        </Text>
-                    ),
-                    labels: { confirm: "Delete", cancel: "Cancel" },
-                    confirmProps: { color: "red" },
-                })}
+                onClick={confirmableCallback(
+                    `Are you sure you want to delete ${value.name || "<unnamed>"}?`,
+                    onDelete,
+                )}
             >
                 Remove
             </Button>

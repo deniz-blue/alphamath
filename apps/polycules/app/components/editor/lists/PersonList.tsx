@@ -7,6 +7,8 @@ import { useState } from "react";
 import { OPTIONS } from "../../view/options";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { PersonCard } from "../../cards/PersonCard";
+import { SearchableList } from "../common/SearchableList";
+import type { Person } from "../../../lib/types";
 
 export const PersonListModal = ({ }: ContextModalProps) => {
     return <PersonList />;
@@ -15,70 +17,32 @@ export const PersonListModal = ({ }: ContextModalProps) => {
 export const PersonList = () => {
     const people = usePolyculeStore(state => state.root.people);
     const addPerson = usePolyculeStore(state => state.addPerson);
-    const getSystem = usePolyculeStore(state => state.getSystem);
-    const [search, setSearch] = useState("");
-    const [pluralityFilter, setPluralityFilter] = useState<"all" | "singlet" | "alter">("singlet");
-    const filteredPeople = people.filter(p => (
-        p.name.toLowerCase().includes(search.toLowerCase())
-        && (pluralityFilter === "all"
-            || (pluralityFilter === "singlet" && !p.systemId)
-            || (pluralityFilter === "alter" && !!p.systemId)
-        )
-    ));
 
-    const combobox = useCombobox();
+    const [pluralityFilter, setPluralityFilter] = useState<"all" | "singlet" | "alter">("singlet");
 
     return (
         <Stack gap="xs">
-            <Combobox
-                store={combobox}
-                onOptionSubmit={id => openAppModal("PersonEditorModal", { id })}
-            >
-                <Group justify="space-between" align="center" gap="xs">
-                    <Combobox.EventsTarget>
-                        <TextInput
-                            data-autofocus
-                            value={search}
-                            onChange={e => {
-                                setSearch(e.currentTarget.value);
-                                combobox.updateSelectedOptionIndex();
-                            }}
-                            placeholder="Search..."
-                            flex="1"
-                        />
-                    </Combobox.EventsTarget>
-
-                    <Button
-                        variant="light"
-                        color="green"
-                        onClick={() => {
-                            const id = addPerson(DEFAULT_PERSON);
-                            openAppModal("PersonEditorModal", { id });
-                        }}
-                    >
-                        New
-                    </Button>
-
+            <SearchableList<Person>
+                data={people}
+                getItemId={p => p.id}
+                getItemText={p => p.name}
+                renderItem={p => <PersonCard person={p} />}
+                onItemSelect={id => openAppModal("PersonEditorModal", { id })}
+                onCreateNew={() => {
+                    const id = addPerson(DEFAULT_PERSON);
+                    openAppModal("PersonEditorModal", { id });
+                }}
+                extraFilter={(
                     <PluralityFilterSelect
                         value={pluralityFilter}
                         onChange={setPluralityFilter}
                     />
-                </Group>
-
-                <Combobox.Options>
-                    {filteredPeople.map(person => (
-                        <Combobox.Option value={person.id} key={person.id}>
-                            <PersonCard person={person} />
-                        </Combobox.Option>
-                    ))}
-
-                    {filteredPeople.length === 0 && (
-                        <Combobox.Empty>
-                            No results
-                        </Combobox.Empty>
-                    )}
-                </Combobox.Options>
-            </Combobox>
+                )}
+                filterItem={(item) => (pluralityFilter === "all"
+                    || (pluralityFilter === "singlet" && !item.systemId)
+                    || (pluralityFilter === "alter" && !!item.systemId)
+                )}
+            />
         </Stack>
     )
 };
