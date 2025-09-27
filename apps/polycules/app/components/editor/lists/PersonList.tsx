@@ -4,8 +4,7 @@ import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import { DEFAULT_PERSON } from "../../../store/data";
 import { useState } from "react";
-import { OPTIONS } from "../../view/options";
-import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
+import { IconFilter } from "@tabler/icons-react";
 import { PersonCard } from "../../cards/PersonCard";
 import { SearchableList } from "../common/SearchableList";
 import type { Person } from "../../../lib/types";
@@ -27,10 +26,10 @@ export const PersonList = () => {
                 getItemId={p => p.id}
                 getItemText={p => p.name}
                 renderItem={p => <PersonCard person={p} />}
-                onItemSelect={id => openAppModal("PersonEditorModal", { id })}
+                onItemSelect={id => openAppModal("PersonModal", { id })}
                 onCreateNew={() => {
                     const id = addPerson(DEFAULT_PERSON);
-                    openAppModal("PersonEditorModal", { id });
+                    openAppModal("PersonModal", { id });
                 }}
                 extraFilter={(
                     <PluralityFilterSelect

@@ -81,20 +81,6 @@ export const SystemEditorForm = ({
             />
 
             <Button
-                variant="light"
-                onClick={() => openAppModal("SystemMembersListModal", { id: value.id })}
-            >
-                Edit Members
-            </Button>
-
-            <Button
-                variant="light"
-                onClick={() => openAppModal("LinksListModal", { target: { type: "system", id: value.id } })}
-            >
-                Edit Relationships
-            </Button>
-
-            <Button
                 color="red"
                 variant="light"
                 onClick={confirmableCallback(`Are you sure you want to delete ${value.name || "<unnamed>"}& and all its alters?`, onDelete)}

@@ -198,26 +198,26 @@ export const GraphPersonActions = ({
     person: Person;
     onClose?: () => void;
 }) => {
-    const openEditModal = useCallback(() => {
-        openAppModal("PersonEditorModal", { id: person.id });
+    const actionEdit = useCallback(() => {
+        openAppModal("PersonModal", { id: person.id });
         onClose?.();
     }, [person.id]);
 
-    const openSystemEditModal = useCallback(() => {
+    const actionSystem = useCallback(() => {
         if (!person.systemId) return;
-        openAppModal("SystemEditorModal", { id: person.systemId });
+        openAppModal("SystemModal", { id: person.systemId });
         onClose?.();
     }, [person.systemId]);
 
-    const openRelationships = useCallback(() => {
+    const actionRelationships = useCallback(() => {
         openAppModal("LinksListModal", { target: { type: "person", id: person.id } });
         onClose?.();
     }, [person.id]);
 
     useHotkeys([
-        ["e", openEditModal],
-        ["s", openSystemEditModal],
-        ["r", openRelationships],
+        ["e", actionEdit],
+        ["s", actionSystem],
+        ["r", actionRelationships],
     ]);
 
     return (
@@ -226,21 +226,21 @@ export const GraphPersonActions = ({
                 {person.name || "(No name)"}
             </Menu.Label>
             <Menu.Item
-                onClick={openEditModal}
+                onClick={actionEdit}
                 leftSection={<IconPencil size={14} />}
             >
                 <Text span inline inherit td="underline">E</Text>dit
             </Menu.Item>
             {person.systemId && (
                 <Menu.Item
-                    onClick={openSystemEditModal}
+                    onClick={actionSystem}
                     leftSection={<IconCircles size={14} />}
                 >
                     <Text span inline inherit td="underline">S</Text>ystem
                 </Menu.Item>
             )}
             <Menu.Item
-                onClick={openRelationships}
+                onClick={actionRelationships}
                 leftSection={<IconLink size={14} />}
             >
                 <Text span inline inherit td="underline">R</Text>elationships

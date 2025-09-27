@@ -22,11 +22,11 @@ export const SystemList = () => {
                 getItemId={s => s.id}
                 getItemText={s => s.name}
                 renderItem={s => <SystemCard system={s} />}
-                onItemSelect={id => openAppModal("SystemEditorModal", { id })}
+                onItemSelect={id => openAppModal("SystemModal", { id })}
                 createNewLabel="New"
                 onCreateNew={() => {
                     const id = addSystem(DEFAULT_SYSTEM);
-                    openAppModal("SystemEditorModal", { id });
+                    openAppModal("SystemModal", { id });
                 }}
             />
         </Stack>

@@ -73,13 +73,6 @@ export const PersonEditorForm = ({
                 onChange={e => onChange({ avatarUrl: e.currentTarget.value })}
             />
 
-            <Button
-                variant="light"
-                onClick={() => openAppModal("LinksListModal", { target: { type: "person", id: value.id } })}
-            >
-                Edit Relationships
-            </Button>
-
             {!!value.systemId && (
                 <Button
                     variant="light"
@@ -97,7 +90,7 @@ export const PersonEditorForm = ({
                     onDelete,
                 )}
             >
-                Remove
+                Delete
             </Button>
         </Stack>
     )

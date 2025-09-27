@@ -1,4 +1,4 @@
-import type { GroupRelationship, Person, PolyculeManifest, Relationship, System } from "../lib/types";
+import type { GraphNode, GraphNodeRef, GroupRelationship, Person, PolyculeManifest, Relationship, System } from "../lib/types";
 
 export type New<T> = Omit<T, "id">;
 export type Patch<T> = Partial<T> & { id: string };
@@ -8,6 +8,8 @@ export type State = {
 };
 
 export type Actions = {
+    getNode: (ref: GraphNodeRef) => GraphNode | null;
+
     getPerson: (personId: string) => Person | null;
     getSystem: (systemId: string) => System | null;
     getMembersOfSystem: (systemId: string) => Person[];
@@ -21,7 +23,7 @@ export type Actions = {
     removeSystem: (systemId: string) => void;
 
     getRelationship: (relationshipId: string) => Relationship | null;
-    getRelationshipsOfNode: (node: { type: "person" | "system"; id: string }) => Relationship[];
+    getRelationshipsOfNode: (ref: GraphNodeRef) => Relationship[];
     addRelationship: (r: New<Relationship>) => string;
     updateRelationship: (r: Patch<Relationship>) => void;
     removeRelationship: (relationshipId: string) => void;

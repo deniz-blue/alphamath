@@ -14,11 +14,27 @@ export const usePolyculeStore = create<State & Actions>()(
         immer((set, get) => ({
             root: TEST_MANIFEST,
 
-            getPerson: (personId) => 
+            getPerson: (personId) =>
                 get().root.people.find(x => x.id == personId) ?? null,
             getSystem: (systemId) =>
                 get().root.systems.find(x => x.id == systemId) ?? null,
-            
+
+            getNode: (ref) => {
+                if(ref.type == "person") {
+                    let data = get().getPerson(ref.id);
+                    if(!data) return null;
+                    return { type: "person", data };
+                };
+
+                if(ref.type == "system") {
+                    let data = get().getSystem(ref.id);
+                    if(!data) return null;
+                    return { type: "person", data };
+                };
+
+                return null;
+            },
+
             getMembersOfSystem: (systemId) => {
                 const root = get().root;
                 const system = root.systems.find(s => s.id == systemId);
@@ -47,7 +63,7 @@ export const usePolyculeStore = create<State & Actions>()(
                     };
                 });
             },
-            
+
             removePerson: (personId) => {
                 set(state => {
                     const personIndex = state.root.people.findIndex(x => x.id == personId);

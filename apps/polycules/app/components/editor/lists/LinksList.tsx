@@ -49,8 +49,7 @@ export const LinksList = ({
                         : <SystemCard system={getSystem(o.id)!} />;
                 }}
                 onItemSelect={id => {
-                    // TODO: view link details?
-                    // openAppModal("RelationshipEditorModal", { id });
+                    openAppModal("RelationshipEditorModal", { id });
                 }}
                 onCreateNew={() => {
                     openAppModal("NodeSelectModal", {

@@ -7,6 +7,9 @@ import { modals, type ContextModalProps } from "@mantine/modals";
 import { SystemMembersListModal } from "./components/editor/lists/SystemMembersList";
 import { LinksListModal } from "./components/editor/lists/LinksList";
 import { NodeSelectModal } from "./components/editor/select/NodeSelect";
+import { RelationshipEditorModal } from "./components/editor/relationship/RelationshipEditor";
+import { SystemModal } from "./components/editor/system/SystemModal";
+import { PersonModal } from "./components/editor/person/PersonModal";
 
 export const MODALS = {
     PersonEditorModal,
@@ -16,6 +19,9 @@ export const MODALS = {
     SystemMembersListModal,
     LinksListModal,
     NodeSelectModal,
+    RelationshipEditorModal,
+    SystemModal,
+    PersonModal,
 } as const;
 
 export const MODAL_TITLES: Record<keyof typeof MODALS, string> = {
@@ -26,6 +32,9 @@ export const MODAL_TITLES: Record<keyof typeof MODALS, string> = {
     SystemMembersListModal: "System Members",
     LinksListModal: "Links",
     NodeSelectModal: "Select Node",
+    RelationshipEditorModal: "Edit Relationship",
+    PersonModal: "Person",
+    SystemModal: "System",
 };
 
 declare module '@mantine/modals' {
