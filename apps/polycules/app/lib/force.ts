@@ -1,7 +1,7 @@
 // Force directed layout calculations
 
 import type { Person, PolyculeManifest, System } from "./types";
-import { type Vec2, vec2, vec2sub, vec2mul, vec2add } from "@alan404/vec2";
+import { type Vec2, vec2, vec2sub, vec2mul, vec2add, vec2average } from "@alan404/vec2";
 import { forceCenter, forceLink, forceManyBody, forceSimulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force";
 
 type D3Extra = {
@@ -12,6 +12,16 @@ type D3Extra = {
 export interface ComputeResult {
     people: Record<string, Vec2 & D3Extra>;
     systems: Record<string, Vec2>;
+};
+
+export const getCombinations2 = <T>(array: T[]): [T, T][] => {
+    let results: [T, T][] = [];
+    for (let i = 0; i < array.length - 1; i++) {
+        for (let j = i + 1; j < array.length; j++) {
+            results.push([array[i], array[j]]);
+        }
+    }
+    return results;
 };
 
 export const compute = (
@@ -33,8 +43,10 @@ export const compute = (
     // use D3 until we reimplement everything ourselves
     type Datum = SimulationNodeDatum & { person?: Person; system?: System; };
 
+    // == Nodes
+
     const nodes: Datum[] = [];
-    
+
     for (let p of root.people) {
         nodes.push({
             person: p,
@@ -45,23 +57,50 @@ export const compute = (
     }
 
     for (let s of root.systems) {
-        nodes.push({ system: s });
+        const memberPositions = s.memberIds.map(id => prev?.people[id])
+            .filter(x => !!x);
+
+        const avg = vec2average(memberPositions);
+
+        nodes.push({
+            system: s,
+            x: avg.x,
+            y: avg.y,
+        });
+
+        result.systems[s.id] = avg;
     }
 
-    const forceLinks = [];
-    for(let r of root.relationships) {
+    // == Forces
+
+    const alterLinks: SimulationLinkDatum<Datum>[] = [];
+    for (let sys of root.systems) {
+        let d3ids = root.people.filter(x => x.systemId == sys.id)
+            .map(p => "P/" + p.id);
+
+        const combinations = getCombinations2(d3ids);
+
+        for(let [source, target] of combinations)
+            alterLinks.push({ source, target });
+    }
+
+    const relationshipLinks: SimulationLinkDatum<Datum>[] = [];
+    for (let r of root.relationships) {
         const sourceId = r.from.type === "person" ? "P/" + r.from.id : "S/" + r.from.id;
         const targetId = r.to.type === "person" ? "P/" + r.to.id : "S/" + r.to.id;
-        forceLinks.push({ source: sourceId, target: targetId, strength: 0.1 });
+        relationshipLinks.push({ source: sourceId, target: targetId });
     }
+
+    // == Sim
 
     const datumId = (d: Datum) => d.person ? "P/" + d.person.id : d.system ? "S/" + d.system.id : "";
 
     const sim = forceSimulation<Datum>()
         .nodes(nodes)
         .force("center", forceCenter(0, 0))
-        .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -20).distanceMin(10).distanceMax(200))
-        .force("link", forceLink<Datum, SimulationLinkDatum<Datum>>(forceLinks).id(datumId))
+        .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -50).distanceMin(10).distanceMax(200))
+        .force("alters", forceLink<Datum, SimulationLinkDatum<Datum>>(alterLinks).id(datumId).strength(0.02))
+        .force("relationships", forceLink<Datum, SimulationLinkDatum<Datum>>(relationshipLinks).id(datumId).strength(0.01))
         .stop();
 
     sim.tick();

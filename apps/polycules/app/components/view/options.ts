@@ -10,6 +10,9 @@ export interface ViewOptions {
     systemNameColor: string;
     systemDefaultColor: string;
 
+    systemBackgroundOpacity: number;
+    systemBackgroundPadding: number;
+
     linkDefaultColor: string;
     linkDefaultWidth: number;
 };
@@ -25,6 +28,9 @@ export const OPTIONS: ViewOptions = {
     systemNameFontSize: 8,
     systemNameColor: "#828282",
     systemDefaultColor: "#2e2e2e",
+
+    systemBackgroundOpacity: 0.2,
+    systemBackgroundPadding: 8,
 
     linkDefaultColor: "black",
     linkDefaultWidth: 2,
