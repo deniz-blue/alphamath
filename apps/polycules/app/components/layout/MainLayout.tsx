@@ -1,10 +1,13 @@
-import { ActionIcon, Affix, Box, Button, Group, Stack } from "@mantine/core";
-import { useFullscreen, useHotkeys } from "@mantine/hooks";
+import { ActionIcon, Affix, Box, Button, Group, Stack, Tooltip } from "@mantine/core";
+import { useClipboard, useFullscreen, useHotkeys } from "@mantine/hooks";
 import { PolyculeGraphView } from "../view/PolyculeGraphView";
 import { openAppModal } from "../../modals";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { DEFAULT_PERSON } from "../../store/data";
-import { IconArrowBackUp, IconArrowForwardUp, IconMaximize, IconMinimize } from "@tabler/icons-react";
+import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconMaximize, IconMinimize, IconShare } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { notifications } from "@mantine/notifications";
+import { encodeGraph } from "../../lib/serde";
 
 export const MainLayout = () => {
     const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
@@ -33,6 +36,8 @@ export const MainLayout = () => {
 
             <Affix position={{ right: 20, bottom: 20 }}>
                 <Group>
+                    <CopyLinkButton />
+
                     <UndoRedo />
 
                     <ActionIcon
@@ -91,4 +96,31 @@ export const UndoRedo = () => {
             </ActionIcon>
         </ActionIcon.Group>
     );
+};
+
+export const CopyLinkButton = () => {
+    const { copied, copy, error, reset } = useClipboard();
+
+    useEffect(() => {
+        if(!error) return;
+        notifications.show({
+            title: "Error",
+            message: ""+error,
+            color: "red",
+        });
+    }, [error]);
+
+    return (
+        <Tooltip label={copied ? "Copied!" : "Copy share link"}>
+            <ActionIcon
+                onClick={() => copy(
+                    `${window.location.origin}${window.location.pathname}#${encodeGraph(usePolyculeStore.getState().root)}`
+                )}
+                color={copied ? "teal" : "gray"}
+                variant="light"
+            >
+                {copied ? <IconCheck /> : <IconShare />}
+            </ActionIcon>
+        </Tooltip>
+    )
 };
