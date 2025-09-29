@@ -61,6 +61,7 @@ export const GraphPerson = ({
                             height={OPTIONS.personRadius * 2}
                             clipPath="url(#avatarClip)"
                             preserveAspectRatio="xMidYMid slice"
+                            pointerEvents="none"
                         />
                     )}
                 </g>
