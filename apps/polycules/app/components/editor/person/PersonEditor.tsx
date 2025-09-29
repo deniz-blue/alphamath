@@ -21,30 +21,32 @@ export const PersonEditor = ({
 }) => {
     const person = usePolyculeStore(store => store.getPerson(id));
     const updatePerson = usePolyculeStore(store => store.updatePerson);
-    const removePerson = usePolyculeStore(store => store.removePerson);
-
+    
     if (!person) return null;
 
     return (
-        <PersonEditorForm
-            value={person}
-            onChange={p => updatePerson({ ...p, id })}
-            onDelete={() => {
-                if (modalId) modals.close(modalId);
-                removePerson(id);
-            }}
-        />
+        <Stack>
+            <PersonEditorForm
+                value={person}
+                onChange={p => updatePerson({ ...p, id })}
+            />
+
+            <Button
+                variant="light"
+                onClick={() => modalId && modals.close(modalId)}
+            >
+                Ok
+            </Button>
+        </Stack>
     );
 };
 
 export const PersonEditorForm = ({
     value,
     onChange,
-    onDelete,
 }: {
     value: Person;
     onChange: (v: Partial<Person>) => void;
-    onDelete?: () => void;
 }) => {
     return (
         <Stack>
@@ -72,26 +74,6 @@ export const PersonEditorForm = ({
                 value={value.avatarUrl ?? undefined}
                 onChange={e => onChange({ avatarUrl: e.currentTarget.value })}
             />
-
-            {!!value.systemId && (
-                <Button
-                    variant="light"
-                    onClick={() => openAppModal("SystemEditorModal", { id: value.systemId! })}
-                >
-                    Edit System
-                </Button>
-            )}
-
-            <Button
-                variant="light"
-                color="red"
-                onClick={confirmableCallback(
-                    `Are you sure you want to delete ${value.name || "<unnamed>"}?`,
-                    onDelete,
-                )}
-            >
-                Delete
-            </Button>
         </Stack>
     )
 };

@@ -8,6 +8,7 @@ import { PersonCard } from "../../cards/PersonCard";
 
 export interface NodeSelectProps {
     onSelect?: (node: GraphNodeRef) => void;
+    filterOnly?: "person" | "system";
 };
 
 export const NodeSelectModal = ({
@@ -28,6 +29,7 @@ export const NodeSelectModal = ({
 
 export const NodeSelect = ({
     onSelect,
+    filterOnly,
 }: NodeSelectProps) => {
     const systems = usePolyculeStore(state => state.root.systems);
     const people = usePolyculeStore(state => state.root.people);
@@ -58,6 +60,10 @@ export const NodeSelect = ({
                     if(type && realId) {
                         onSelect?.({ type: type as "system" | "person", id: realId });
                     }
+                }}
+                filterFn={(item) => {
+                    if(!filterOnly) return true;
+                    return item.type == filterOnly;
                 }}
             />
         </Stack>

@@ -47,12 +47,14 @@ export const compute = (
 
     const nodes: Datum[] = [];
 
+    const jiggle = () => (Math.random() - 0.5) * 100;
     for (let p of root.people) {
         nodes.push({
             person: p,
-            ...prev?.people?.[p.id],
-            x: prev?.people?.[p.id]?.x ?? (Math.random() - 0.5) * 100,
-            y: prev?.people?.[p.id]?.y ?? (Math.random() - 0.5) * 100,
+            ...(prev?.people?.[p.id] || {
+                x: jiggle(),
+                y: jiggle(),
+            }),
         });
     }
 

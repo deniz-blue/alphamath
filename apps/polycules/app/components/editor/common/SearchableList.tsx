@@ -1,5 +1,5 @@
 import { Button, Combobox, Group, Stack, TextInput, useCombobox } from "@mantine/core";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 export const SearchableList = <T,>({
     data,
@@ -7,27 +7,23 @@ export const SearchableList = <T,>({
     getItemText,
     getItemId,
     onItemSelect,
-    onCreateNew,
-    createNewLabel,
-    extraFilter,
-    filterItem = () => true,
+    filterFn = () => true,
+    controls,
 }: {
     data: T[];
     getItemId: (item: T) => string;
     getItemText: (item: T) => string;
     renderItem: (item: T) => React.ReactNode;
     onItemSelect: (id: string) => void;
-    onCreateNew?: () => void;
-    createNewLabel?: string;
-    extraFilter?: React.ReactNode;
-    filterItem?: (item: T, search: string) => boolean;
+    filterFn?: (item: T) => boolean;
+    controls?: React.ReactNode[];
 }) => {
     const [search, setSearch] = useState("");
     const combobox = useCombobox();
 
     const filteredItems = data.filter(item => (
         getItemText(item).toLowerCase().includes(search.toLowerCase())
-    )).filter(item => filterItem(item, search));
+    )).filter(item => filterFn(item));
 
     return (
         <Stack gap="xs">
@@ -55,17 +51,7 @@ export const SearchableList = <T,>({
                         />
                     </Combobox.EventsTarget>
 
-                    {onCreateNew && (
-                        <Button
-                            variant="light"
-                            color="green"
-                            onClick={onCreateNew}
-                        >
-                            {createNewLabel ?? "New"}
-                        </Button>
-                    )}
-
-                    {extraFilter}
+                    {controls?.map((x,i) => <Fragment key={i}>{x}</Fragment>)}
                 </Group>
 
                 <Combobox.Options>

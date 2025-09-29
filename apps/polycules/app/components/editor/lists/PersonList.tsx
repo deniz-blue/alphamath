@@ -27,20 +27,26 @@ export const PersonList = () => {
                 getItemText={p => p.name}
                 renderItem={p => <PersonCard person={p} />}
                 onItemSelect={id => openAppModal("PersonModal", { id })}
-                onCreateNew={() => {
-                    const id = addPerson(DEFAULT_PERSON);
-                    openAppModal("PersonModal", { id });
-                }}
-                extraFilter={(
-                    <PluralityFilterSelect
-                        value={pluralityFilter}
-                        onChange={setPluralityFilter}
-                    />
-                )}
-                filterItem={(item) => (pluralityFilter === "all"
+                filterFn={(item) => (pluralityFilter === "all"
                     || (pluralityFilter === "singlet" && !item.systemId)
                     || (pluralityFilter === "alter" && !!item.systemId)
                 )}
+                controls={[
+                    <Button
+                        variant="light"
+                        color="green"
+                        onClick={() => {
+                            const id = addPerson(DEFAULT_PERSON);
+                            openAppModal("PersonModal", { id });
+                        }}
+                    >
+                        New
+                    </Button>,
+                    <PluralityFilterSelect
+                        value={pluralityFilter}
+                        onChange={setPluralityFilter}
+                    />,
+                ]}
             />
         </Stack>
     )

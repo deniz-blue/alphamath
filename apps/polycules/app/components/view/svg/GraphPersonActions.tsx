@@ -4,6 +4,8 @@ import { openAppModal } from "../../../modals";
 import { useHotkeys } from "@mantine/hooks";
 import { Menu, Text } from "@mantine/core";
 import { IconCircles, IconLink, IconPencil } from "@tabler/icons-react";
+import { usePolyculeStore } from "../../../store/usePolyculeStore";
+import { confirmableCallback, openAppConfirmModal } from "../../editor/openConfirmModal";
 
 export const GraphPersonActions = ({
     person,
@@ -12,6 +14,8 @@ export const GraphPersonActions = ({
     person: Person;
     onClose?: () => void;
 }) => {
+    const removePerson = usePolyculeStore(store => store.removePerson);
+
     const actionEdit = useCallback(() => {
         openAppModal("PersonModal", { id: person.id });
         onClose?.();
@@ -32,6 +36,10 @@ export const GraphPersonActions = ({
         ["e", actionEdit],
         ["s", actionSystem],
         ["r", actionRelationships],
+        ["Delete", () => openAppConfirmModal(
+            `Delete ${person.name || "<unnamed>"}?`,
+            () => removePerson(person.id),
+        )],
     ]);
 
     return (

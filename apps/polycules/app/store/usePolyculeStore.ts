@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { temporal } from "zundo";
-import { TEST_MANIFEST } from "./data";
+import { DEFAULT_MANIFEST } from "./data";
 import type { Actions, State } from "./store.type";
 import type { GraphNodeRef } from "../lib/types";
 
@@ -12,7 +12,7 @@ export const nodeRefEq = (a: GraphNodeRef, b: GraphNodeRef) => a.type == b.type 
 export const usePolyculeStore = create<State & Actions>()(
     temporal(
         immer((set, get) => ({
-            root: TEST_MANIFEST,
+            root: DEFAULT_MANIFEST,
 
             getPerson: (personId) =>
                 get().root.people.find(x => x.id == personId) ?? null,
@@ -20,15 +20,15 @@ export const usePolyculeStore = create<State & Actions>()(
                 get().root.systems.find(x => x.id == systemId) ?? null,
 
             getNode: (ref) => {
-                if(ref.type == "person") {
+                if (ref.type == "person") {
                     let data = get().getPerson(ref.id);
-                    if(!data) return null;
+                    if (!data) return null;
                     return { type: "person", data };
                 };
 
-                if(ref.type == "system") {
+                if (ref.type == "system") {
                     let data = get().getSystem(ref.id);
-                    if(!data) return null;
+                    if (!data) return null;
                     return { type: "person", data };
                 };
 
@@ -97,6 +97,7 @@ export const usePolyculeStore = create<State & Actions>()(
                 });
                 return id;
             },
+            
             updateSystem: ({ id, ...s }) => {
                 set(state => {
                     const system = state.root.systems.find(x => x.id == id);
@@ -105,26 +106,49 @@ export const usePolyculeStore = create<State & Actions>()(
                     };
                 });
             },
+
             removeSystem: (systemId) => {
+                let system = get().getSystem(systemId);
+                if(!system) return;
+
+                let rels = get().getRelationshipsOfNode({
+                    type: "system",
+                    id: systemId,
+                });
+
+                for(let rel of rels) get().removeRelationship(rel.id);
+                for(let personId of system.memberIds) get().removePerson(personId);
+
                 set(state => {
                     const systemIndex = state.root.systems.findIndex(x => x.id == systemId);
-                    if (systemIndex !== -1) {
-                        const system = state.root.systems[systemIndex];
-                        // Remove members' systemId
-                        state.root.people.forEach(person => {
-                            if (person.systemId === systemId) {
-                                person.systemId = undefined;
-                            }
-                        });
-                        // Remove relationships
-                        state.root.relationships = state.root.relationships.filter(r => !(
-                            (r.from.type === "system" && r.from.id === systemId) ||
-                            (r.to.type === "system" && r.to.id === systemId)
-                        ));
-                        // Remove system
+                    if (systemIndex !== -1)
                         state.root.systems.splice(systemIndex, 1);
-                    }
                 });
+            },
+
+            unlinkSystem: (systemId) => {
+                let system = get().getSystem(systemId);
+                if(!system) return;
+                for(let memberId of system.memberIds) get().removePersonFromSystem(memberId, systemId);
+                get().removeSystem(systemId);
+            },
+
+            addPersonToSystem(personId, systemId) {
+                set(state => {
+                    let system = state.root.systems.find(x => x.id == systemId);
+                    if (!system?.memberIds.includes(personId)) system?.memberIds.push(personId);
+                    let person = state.root.people.find(x => x.id == personId);
+                    if (person) person.systemId = systemId;
+                })
+            },
+
+            removePersonFromSystem(personId, systemId) {
+                set(state => {
+                    let system = state.root.systems.find(x => x.id == systemId);
+                    if (system) system.memberIds = system.memberIds.filter(x => x !== personId);
+                    let person = state.root.people.find(x => x.id == personId);
+                    if (person) person.systemId = undefined;
+                })
             },
 
             getRelationship: (relationshipId) => {

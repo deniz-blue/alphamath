@@ -2,7 +2,6 @@ import { ActionIcon, Avatar, Button, CheckIcon, Combobox, Group, Select, Stack, 
 import { type ContextModalProps } from "@mantine/modals";
 import { nodeRefEq, usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
-import { useState } from "react";
 import type { GraphNodeRef, Relationship } from "../../../lib/types";
 import { PersonCard } from "../../cards/PersonCard";
 import { SystemCard } from "../../cards/SystemCard";
@@ -23,16 +22,15 @@ export const LinksList = ({
     const getPerson = usePolyculeStore(state => state.getPerson);
     const getSystem = usePolyculeStore(state => state.getSystem);
     const addRelationship = usePolyculeStore(state => state.addRelationship);
-    
+
     const relationships = getRelationshipsOfNode(target);
-    
+
     const getOther = (relationship: Relationship) => nodeRefEq(relationship.to, target)
         ? relationship.from
         : relationship.to;
 
     return (
         <Stack gap="xs">
-
             <SearchableList<Relationship>
                 data={relationships}
                 getItemId={r => r.id}
@@ -48,21 +46,26 @@ export const LinksList = ({
                         ? <PersonCard person={getPerson(o.id)!} />
                         : <SystemCard system={getSystem(o.id)!} />;
                 }}
-                onItemSelect={id => {
-                    openAppModal("RelationshipEditorModal", { id });
-                }}
-                onCreateNew={() => {
-                    openAppModal("NodeSelectModal", {
-                        onSelect: (node) => {
-                            addRelationship({
-                                from: target,
-                                to: node,
+                onItemSelect={id => openAppModal("RelationshipEditorModal", { id })}
+                controls={[
+                    <Button
+                        variant="light"
+                        color="green"
+                        onClick={() => {
+                            openAppModal("NodeSelectModal", {
+                                onSelect: (node) => {
+                                    addRelationship({
+                                        from: target,
+                                        to: node,
+                                    });
+                                },
                             });
-                        },
-                    });
-                }}
-                createNewLabel="Link"
+                        }}
+                    >
+                        Link
+                    </Button>
+                ]}
             />
-        </Stack>
+        </Stack >
     )
 };

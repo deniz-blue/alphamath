@@ -21,6 +21,10 @@ export type Actions = {
     addSystem: (s: New<System>) => string;
     updateSystem: (s: Patch<System>) => void;
     removeSystem: (systemId: string) => void;
+    unlinkSystem: (systemId: string) => void;
+
+    addPersonToSystem: (personId: string, systemId: string) => void;
+    removePersonFromSystem: (personId: string, systemId: string) => void;
 
     getRelationship: (relationshipId: string) => Relationship | null;
     getRelationshipsOfNode: (ref: GraphNodeRef) => Relationship[];

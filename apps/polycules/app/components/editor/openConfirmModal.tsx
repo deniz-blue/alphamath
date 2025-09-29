@@ -4,12 +4,12 @@ import React, { type PropsWithChildren, type ReactNode } from "react";
 
 export const ConfirmModalShim = ({
     children,
-    modalId,
+    onConfirm,
 }: PropsWithChildren<{
-    modalId: string;
+    onConfirm?: () => void;
 }>) => {
     useHotkeys([
-        ["Enter", () => modals.close(modalId)],
+        ["Enter", () => onConfirm?.()],
     ]);
 
     return children;
@@ -21,11 +21,11 @@ export const confirmableCallback = (
 ) => {
     return (e: React.MouseEvent) => {
         if(e.shiftKey) return onConfirm?.();
-        openConfirmModal(message, onConfirm);
+        openAppConfirmModal(message, onConfirm);
     };
 };
 
-export const openConfirmModal = (
+export const openAppConfirmModal = (
     message: ReactNode,
     onConfirm?: () => void,
 ) => {
@@ -34,7 +34,10 @@ export const openConfirmModal = (
         title: "Confirmation",
         modalId,
         children: (
-            <ConfirmModalShim modalId={modalId}>
+            <ConfirmModalShim onConfirm={() => {
+                modals.close(modalId);
+                onConfirm?.();
+            }}>
                 {message}
             </ConfirmModalShim>
         ),

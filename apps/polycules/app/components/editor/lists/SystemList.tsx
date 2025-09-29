@@ -23,11 +23,18 @@ export const SystemList = () => {
                 getItemText={s => s.name}
                 renderItem={s => <SystemCard system={s} />}
                 onItemSelect={id => openAppModal("SystemModal", { id })}
-                createNewLabel="New"
-                onCreateNew={() => {
-                    const id = addSystem(DEFAULT_SYSTEM);
-                    openAppModal("SystemModal", { id });
-                }}
+                controls={[
+                    <Button
+                        variant="light"
+                        color="green"
+                        onClick={() => {
+                            const id = addSystem(DEFAULT_SYSTEM);
+                            openAppModal("SystemModal", { id });
+                        }}
+                    >
+                        New
+                    </Button>
+                ]}
             />
         </Stack>
     )

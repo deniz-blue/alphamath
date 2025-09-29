@@ -3,13 +3,18 @@ import { type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import { SystemCard } from "../../cards/SystemCard";
+import { confirmableCallback } from "../openConfirmModal";
 
 export const SystemModal = ({
     innerProps: { id },
+    context,
+    id: modalId,
 }: ContextModalProps<{ id: string }>) => {
     const system = usePolyculeStore(store => store.getSystem(id));
+    const removeSystem = usePolyculeStore(store => store.removeSystem);
+    const unlinkSystem = usePolyculeStore(store => store.unlinkSystem);
 
-    if(!system) return null;
+    if (!system) return null;
     return (
         <Stack gap="xs">
             <SystemCard system={system} />
@@ -33,6 +38,34 @@ export const SystemModal = ({
                 onClick={() => openAppModal("LinksListModal", { target: { type: "system", id } })}
             >
                 Relationships
+            </Button>
+
+            <Button
+                color="red"
+                variant="light"
+                onClick={confirmableCallback(
+                    `Are you sure you want to unlink ${system.name || "<unnamed>"}&? Its alters will keep existing, but as singlets.`,
+                    () => {
+                        if(modalId) context.closeModal(modalId);
+                        unlinkSystem(id);
+                    },
+                )}
+            >
+                Unlink System
+            </Button>
+
+            <Button
+                color="red"
+                variant="light"
+                onClick={confirmableCallback(
+                    `Are you sure you want to delete ${system.name || "<unnamed>"}& and all its alters?`,
+                    () => {
+                        if(modalId) context.closeModal(modalId);
+                        removeSystem(id);
+                    },
+                )}
+            >
+                Delete System
             </Button>
         </Stack>
     );

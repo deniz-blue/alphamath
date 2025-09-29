@@ -21,30 +21,32 @@ export const SystemEditor = ({
 }) => {
     const system = usePolyculeStore(store => store.getSystem(id));
     const updateSystem = usePolyculeStore(store => store.updateSystem);
-    const removeSystem = usePolyculeStore(store => store.removeSystem);
 
     if (!system) return null;
 
     return (
-        <SystemEditorForm
-            value={system}
-            onChange={p => updateSystem({ ...p, id })}
-            onDelete={() => {
-                if (modalId) modals.close(modalId);
-                removeSystem(id);
-            }}
-        />
+        <Stack>
+            <SystemEditorForm
+                value={system}
+                onChange={p => updateSystem({ ...p, id })}
+            />
+
+            <Button
+                variant="light"
+                onClick={() => modalId && modals.close(modalId)}
+            >
+                Ok
+            </Button>
+        </Stack>
     );
 };
 
 export const SystemEditorForm = ({
     value,
     onChange,
-    onDelete,
 }: {
     value: System;
     onChange: (v: Partial<System>) => void;
-    onDelete?: () => void;
 }) => {
     return (
         <Stack>
@@ -79,14 +81,6 @@ export const SystemEditorForm = ({
                 value={value.pluralkitId ?? ""}
                 onChange={e => onChange({ pluralkitId: e.currentTarget.value })}
             />
-
-            <Button
-                color="red"
-                variant="light"
-                onClick={confirmableCallback(`Are you sure you want to delete ${value.name || "<unnamed>"}& and all its alters?`, onDelete)}
-            >
-                Delete System
-            </Button>
         </Stack>
     )
 };
