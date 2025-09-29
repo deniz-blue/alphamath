@@ -1,7 +1,7 @@
 import React, { forwardRef, PropsWithChildren, useContext } from "react";
 import { GlobalTransform } from "../core/GlobalTransformContext.js";
 
-export type WorkspaceViewProps = PropsWithChildren & React.JSX.IntrinsicElements["svg"];
+export type WorkspaceViewProps = PropsWithChildren<React.JSX.IntrinsicElements["svg"]>;
 
 export const WorkspaceView = ({
     children,
@@ -22,6 +22,7 @@ export const WorkspaceView = ({
                 width: "100%",
                 height: "100%",
                 display: "block",
+                touchAction: "none",
                 ...(props.style || {}),
             }}
         >

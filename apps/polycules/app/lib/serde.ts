@@ -11,7 +11,7 @@ export const encodeGraph = (graph: PolyculeManifest): string => {
 }
 
 // Decode
-export const decodeGraph = (encoded: string): PolyculeManifest => {
+export const decodeGraph = async (encoded: string): Promise<PolyculeManifest> => {
 	const [v, payload] = encoded.split(":", 2);
 	switch (v) {
 		case "v1":
@@ -21,6 +21,9 @@ export const decodeGraph = (encoded: string): PolyculeManifest => {
 			);
 			const json = new TextDecoder().decode(inflateSync(binary));
 			return JSON.parse(json);
+		case "v1-fetch":
+			const res = await fetch(payload);
+			return await res.json();
 		default:
 			throw new Error("Unsupported encoding version " + v);
 	}

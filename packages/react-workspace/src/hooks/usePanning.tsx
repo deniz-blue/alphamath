@@ -33,7 +33,10 @@ export const usePanning = ({
         props: dragProps,
     } = useRelativeDrag({
         position,
-        onDrag: setPosition,
+        onDrag: (pos, delta) => {
+            console.log("Panning onDrag", pos, delta)
+            setPosition(pos)
+        },
         scale: 1,
     });
 

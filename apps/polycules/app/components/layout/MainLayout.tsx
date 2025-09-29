@@ -1,13 +1,14 @@
-import { ActionIcon, Affix, Box, Button, Group, Stack, Tooltip } from "@mantine/core";
+import { ActionIcon, Affix, Box, Button, Group, Stack, Text, Tooltip } from "@mantine/core";
 import { useClipboard, useFullscreen, useHotkeys } from "@mantine/hooks";
 import { PolyculeGraphView } from "../view/PolyculeGraphView";
 import { openAppModal } from "../../modals";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { DEFAULT_PERSON } from "../../store/data";
-import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconMaximize, IconMinimize, IconShare } from "@tabler/icons-react";
+import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCopy, IconMaximize, IconMinimize, IconShare } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { encodeGraph } from "../../lib/serde";
+import { useGlobalTransform, useMousePosition } from "@alan404/react-workspace";
 
 export const MainLayout = () => {
     const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
@@ -34,9 +35,16 @@ export const MainLayout = () => {
                 </Stack>
             </Affix>
 
+            <Affix position={{ left: 20, bottom: 20 }}>
+                <WorkspaceInfo />
+            </Affix>
+
             <Affix position={{ right: 20, bottom: 20 }}>
                 <Group>
-                    <CopyLinkButton />
+                    <ActionIcon.Group>
+                        <CopyJSONButton />
+                        <CopyLinkButton />
+                    </ActionIcon.Group>
 
                     <UndoRedo />
 
@@ -50,6 +58,26 @@ export const MainLayout = () => {
                 </Group>
             </Affix>
         </Box>
+    )
+};
+
+export const WorkspaceInfo = () => {
+    const { x, y } = useMousePosition();
+    const { reset, position, scale } = useGlobalTransform();
+
+    useHotkeys([
+        ["v", reset],
+    ]);
+
+    return (
+        <Stack gap={0}>
+            <Text ff="monospace" c="dimmed" fz="sm" inline span>
+                Mouse: ({Math.round(x)}, {Math.round(y)})
+            </Text>
+            <Text ff="monospace" c="dimmed" fz="sm" inline span>
+                Workspace: ({Math.round(position.x)}, {Math.round(position.y)}) {scale}x
+            </Text>
+        </Stack>
     )
 };
 
@@ -102,10 +130,10 @@ export const CopyLinkButton = () => {
     const { copied, copy, error, reset } = useClipboard();
 
     useEffect(() => {
-        if(!error) return;
+        if (!error) return;
         notifications.show({
             title: "Error",
-            message: ""+error,
+            message: "" + error,
             color: "red",
         });
     }, [error]);
@@ -120,6 +148,32 @@ export const CopyLinkButton = () => {
                 variant="light"
             >
                 {copied ? <IconCheck /> : <IconShare />}
+            </ActionIcon>
+        </Tooltip>
+    )
+};
+
+
+export const CopyJSONButton = () => {
+    const { copied, copy, error, reset } = useClipboard();
+
+    useEffect(() => {
+        if (!error) return;
+        notifications.show({
+            title: "Error",
+            message: "" + error,
+            color: "red",
+        });
+    }, [error]);
+
+    return (
+        <Tooltip label={copied ? "Copied!" : "Copy JSON"}>
+            <ActionIcon
+                onClick={() => copy(JSON.stringify(usePolyculeStore.getState().root))}
+                color={copied ? "teal" : "gray"}
+                variant="light"
+            >
+                {copied ? <IconCheck /> : <IconCopy />}
             </ActionIcon>
         </Tooltip>
     )

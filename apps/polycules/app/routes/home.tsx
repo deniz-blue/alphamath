@@ -12,7 +12,7 @@ export default function Home() {
 	useImportFromHash();
 
 	return (
-		<GlobalTransformProvider>
+		<GlobalTransformProvider initialScale={1.5}>
 			<ModalsProvider
 				modals={MODALS}
 				modalProps={{
@@ -35,25 +35,27 @@ export const useImportFromHash = () => {
 		const hash = location.hash.slice(1);
 		if (!hash) return;
 
-		try {
-			const graph = decodeGraph(hash);
-			setGraphState({ root: graph });
+		(async () => {
+			try {
+				const graph = await decodeGraph(hash);
+				setGraphState({ root: graph });
 
-			navigate(location.pathname + location.search, { replace: true });
-		} catch (err) {
-			console.error("Failed to decode data:", err);
-			modals.open({
-				title: "Error",
-				children: (
-					<Text>
-						Failed to import polycule from URL:
+				navigate(location.pathname + location.search, { replace: true });
+			} catch (err) {
+				console.error("Failed to decode data:", err);
+				modals.open({
+					title: "Error",
+					children: (
+						<Text>
+							Failed to import polycule from URL:
 
-						<Code block>
-							{""+err}
-						</Code>
-					</Text>
-				),
-			});
-		}
+							<Code block>
+								{"" + err}
+							</Code>
+						</Text>
+					),
+				});
+			}
+		})()
 	}, [location, navigate]);
 };

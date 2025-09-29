@@ -60,7 +60,7 @@ export const compute = (
 
     for (let s of root.systems) {
         const memberPositions = s.memberIds.map(id => prev?.people[id])
-            .filter(x => !!x);
+            .filter(x => !!x && !!x.x && !!x.y);
 
         const avg = vec2average(memberPositions);
 
@@ -77,13 +77,18 @@ export const compute = (
 
     const alterLinks: SimulationLinkDatum<Datum>[] = [];
     for (let sys of root.systems) {
+        const d3sys = "S/"+sys.id;
+
         let d3ids = root.people.filter(x => x.systemId == sys.id)
             .map(p => "P/" + p.id);
 
-        const combinations = getCombinations2(d3ids);
+        for(let d3id of d3ids)
+            alterLinks.push({ source: d3id, target: d3sys });
 
-        for(let [source, target] of combinations)
-            alterLinks.push({ source, target });
+        // const combinations = getCombinations2(d3ids);
+
+        // for(let [source, target] of combinations)
+        //     alterLinks.push({ source, target });
     }
 
     const relationshipLinks: SimulationLinkDatum<Datum>[] = [];
@@ -99,7 +104,7 @@ export const compute = (
 
     const sim = forceSimulation<Datum>()
         .nodes(nodes)
-        .force("center", forceCenter(0, 0))
+        .force("center", forceCenter(0, 0).strength(0.01))
         .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -50).distanceMin(10).distanceMax(200))
         .force("alters", forceLink<Datum, SimulationLinkDatum<Datum>>(alterLinks).id(datumId).strength(0.02))
         .force("relationships", forceLink<Datum, SimulationLinkDatum<Datum>>(relationshipLinks).id(datumId).strength(0.01))

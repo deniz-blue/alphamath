@@ -4,7 +4,7 @@ export const mergeProps = <T>(...args: (T | null | undefined)[]) => {
     for (let props of args) {
         if (!props) continue;
         for (let [k, v] of Object.entries(props)) {
-            if (k.startsWith("on")) {
+            if (typeof v == "function" || typeof output[k] == "function") {
                 output[k] = mergeEvents([
                     output[k],
                     v,

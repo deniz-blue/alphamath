@@ -2,15 +2,18 @@ import { asVec2, Vec2Like } from "./utils.js";
 import { vec2 } from "./vec2.js";
 
 export const vec2add = (...vecs: Vec2Like[]) => {
-    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x + cur.x, acc.y + cur.y));
+    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x + cur.x, acc.y + cur.y), vec2());
 };
 
 export const vec2mul = (...vecs: Vec2Like[]) => {
-    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x * cur.x, acc.y * cur.y));
+    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x * cur.x, acc.y * cur.y), vec2(1));
 };
 
-export const vec2sub = (a: Vec2Like, b: Vec2Like) =>
-    vec2add(a, vec2mul(b, -1));
+export const vec2sub = (a: Vec2Like, b: Vec2Like) => {
+    const va = asVec2(a);
+    const vb = asVec2(b);
+    return vec2(va.x - vb.x, va.y - vb.y);
+};
 
 export const vec2div = (a: Vec2Like, b: Vec2Like) => {
     let _a = asVec2(a);

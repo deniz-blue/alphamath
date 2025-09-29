@@ -3,7 +3,7 @@ import { OPTIONS } from "./options";
 import { compute, type ComputeResult } from "../../lib/force";
 import { Workspace } from "@alan404/react-workspace";
 import type { GraphNodeRef, Person, PolyculeManifest } from "../../lib/types";
-import { vec2, vec2average, vec2distance } from "@alan404/vec2";
+import { vec2, vec2add, vec2average, vec2distance } from "@alan404/vec2";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { GraphRelationship } from "./svg/GraphRelationship";
 import { GraphPerson } from "./svg/GraphPerson";
@@ -122,6 +122,14 @@ export const PolyculeGraphView = () => {
                     <GraphPerson
                         key={person.id}
                         person={person}
+                        onDrag={(newPos, delta) => {
+                            console.log("PersonDrag<"+person.id+">", newPos, delta);
+                            if(coordsRef.current)
+                                coordsRef.current.people[person.id] = vec2add(
+                                    coordsRef.current.people[person.id],
+                                    delta,
+                                );
+                        }}
                     />
                 ))}
             </Workspace>

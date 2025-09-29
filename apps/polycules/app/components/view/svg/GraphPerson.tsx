@@ -4,14 +4,25 @@ import { OPTIONS } from "../options";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { Menu } from "@mantine/core";
 import { GraphPersonActions } from "./GraphPersonActions";
+import { useRelativeDrag } from "@alan404/react-workspace";
+import { vec2, type Vec2 } from "@alan404/vec2";
 
 export const GraphPerson = ({
     person,
+    onDrag,
 }: {
     person: Person;
+    onDrag?: (newPosition: Vec2, delta: Vec2) => void;
 }) => {
     const [opened, setOpened] = useState(false);
     const getSystem = usePolyculeStore(store => store.getSystem);
+
+    const {
+        props: dragProps,
+    } = useRelativeDrag({
+        onDrag: onDrag || (() => { }),
+        position: vec2(),
+    });
 
     return (
         <g
@@ -19,6 +30,8 @@ export const GraphPerson = ({
             data-id={person.id}
             key={person.id}
             style={{ cursor: "pointer" }}
+            onPointerDown={e => e.stopPropagation()}
+        // {...dragProps}
         >
             <Menu
                 withArrow
@@ -29,28 +42,29 @@ export const GraphPerson = ({
                 opened={opened}
                 onChange={setOpened}
             >
-                <Menu.Target>
-                    <g>
+                <g>
+                    <Menu.Target>
                         <circle
                             stroke={person.color ?? OPTIONS.personDefaultColor}
                             strokeWidth={1}
                             fill={person.color ?? OPTIONS.personDefaultColor}
                             r={OPTIONS.personRadius}
                         />
+                    </Menu.Target>
 
-                        {person.avatarUrl && (
-                            <image
-                                href={person.avatarUrl}
-                                x={-OPTIONS.personRadius}
-                                y={-OPTIONS.personRadius}
-                                width={OPTIONS.personRadius * 2}
-                                height={OPTIONS.personRadius * 2}
-                                clipPath="url(#avatarClip)"
-                                preserveAspectRatio="xMidYMid slice"
-                            />
-                        )}
-                    </g>
-                </Menu.Target>
+                    {person.avatarUrl && (
+                        <image
+                            href={person.avatarUrl}
+                            x={-OPTIONS.personRadius}
+                            y={-OPTIONS.personRadius}
+                            width={OPTIONS.personRadius * 2}
+                            height={OPTIONS.personRadius * 2}
+                            clipPath="url(#avatarClip)"
+                            preserveAspectRatio="xMidYMid slice"
+                        />
+                    )}
+                </g>
+
                 <Menu.Dropdown
                     fz="sm"
                 >
