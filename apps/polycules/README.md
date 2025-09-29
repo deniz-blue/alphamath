@@ -2,9 +2,21 @@
 
 Graph editor for non-monogamous relationships of any kinds.
 
-## New Version
+WORK IN PROGRESS
 
-<\todo>
+TODO:
+- [ ] Dragging people around
+- [ ] Relationship customization
+- [ ] PluralKit importing
+- [ ] Graph Merging
+
+## Development
+
+Use pnpm!
+
+Run `pnpm dev` to develop the frontend.
+
+Run `pnpm bdev` to develop the backend.
 
 ## Old Version
 

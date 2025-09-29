@@ -75,12 +75,12 @@ export const SystemEditorForm = ({
                 onChange={e => onChange({ avatarUrl: e.currentTarget.value })}
             />
 
-            <TextInput
+            {/* <TextInput
                 label="Pluralkit ID"
                 placeholder="<none>"
                 value={value.pluralkitId ?? ""}
                 onChange={e => onChange({ pluralkitId: e.currentTarget.value })}
-            />
+            /> */}
         </Stack>
     )
 };
