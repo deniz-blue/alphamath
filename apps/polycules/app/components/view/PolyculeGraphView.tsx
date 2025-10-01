@@ -94,7 +94,7 @@ export const PolyculeGraphView = () => {
             style={{ width: "100vw", height: "100vh" }}
         >
             <Workspace
-                ref={ref}
+                viewProps={{ ref }}
             >
                 <defs>
                     <clipPath id="avatarClip">

@@ -6,6 +6,7 @@ import type { GraphNodeRef, Relationship } from "../../../lib/types";
 import { PersonCard } from "../../cards/PersonCard";
 import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
+import { GraphNodeRefCard } from "../../cards/GraphNodeCard";
 
 export const LinksListModal = ({
     innerProps: { target },
@@ -42,9 +43,7 @@ export const LinksList = ({
                 }}
                 renderItem={r => {
                     const o = getOther(r);
-                    return o.type === "person"
-                        ? <PersonCard person={getPerson(o.id)!} />
-                        : <SystemCard system={getSystem(o.id)!} />;
+                    return <GraphNodeRefCard node={o} />;
                 }}
                 onItemSelect={id => openAppModal("RelationshipEditorModal", { id })}
                 controls={[
@@ -53,6 +52,14 @@ export const LinksList = ({
                         color="green"
                         onClick={() => {
                             openAppModal("NodeSelectModal", {
+                                filterFn: (node) => {
+                                    // Shouldn't be allowed to select itself
+                                    if(nodeRefEq(node, target)) return false;
+                                    // Shouldn't be allowed to create an existing relationship
+                                    if(relationships.some(x => nodeRefEq(getOther(x), node))) return false;
+
+                                    return true;
+                                },
                                 onSelect: (node) => {
                                     addRelationship({
                                         from: target,
