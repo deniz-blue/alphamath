@@ -4,6 +4,7 @@ import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import { SystemCard } from "../../cards/SystemCard";
 import { confirmableCallback } from "../openConfirmModal";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const SystemModal = ({
     innerProps: { id },
@@ -17,6 +18,8 @@ export const SystemModal = ({
     if (!system) return null;
     return (
         <Stack gap="xs">
+            <AppModalHeader />
+
             <SystemCard system={system} />
 
             <Button

@@ -36,7 +36,7 @@ export const SearchableList = <T,>({
                     align="center"
                     gap="xs"
                     pos="sticky"
-                    style={{ top: 60, zIndex: 2 }}
+                    style={{ top: "var(--mantine-spacing-md)", zIndex: 50 }}
                 >
                     <Combobox.EventsTarget>
                         <TextInput

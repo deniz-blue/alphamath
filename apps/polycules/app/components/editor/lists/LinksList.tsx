@@ -3,10 +3,9 @@ import { type ContextModalProps } from "@mantine/modals";
 import { nodeRefEq, usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import type { GraphNodeRef, Relationship } from "../../../lib/types";
-import { PersonCard } from "../../cards/PersonCard";
-import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
 import { GraphNodeRefCard } from "../../cards/GraphNodeCard";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const LinksListModal = ({
     innerProps: { target },
@@ -31,7 +30,9 @@ export const LinksList = ({
         : relationship.to;
 
     return (
-        <Stack gap="xs">
+        <Stack>
+            <AppModalHeader />
+
             <SearchableList<Relationship>
                 data={relationships}
                 getItemId={r => r.id}
@@ -54,9 +55,9 @@ export const LinksList = ({
                             openAppModal("NodeSelectModal", {
                                 filterFn: (node) => {
                                     // Shouldn't be allowed to select itself
-                                    if(nodeRefEq(node, target)) return false;
+                                    if (nodeRefEq(node, target)) return false;
                                     // Shouldn't be allowed to create an existing relationship
-                                    if(relationships.some(x => nodeRefEq(getOther(x), node))) return false;
+                                    if (relationships.some(x => nodeRefEq(getOther(x), node))) return false;
 
                                     return true;
                                 },
@@ -73,6 +74,6 @@ export const LinksList = ({
                     </Button>
                 ]}
             />
-        </Stack >
+        </Stack>
     )
 };

@@ -8,6 +8,7 @@ import { IconFilter } from "@tabler/icons-react";
 import { PersonCard } from "../../cards/PersonCard";
 import { SearchableList } from "../common/SearchableList";
 import type { Person } from "../../../lib/types";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const PersonListModal = ({ }: ContextModalProps) => {
     return <PersonList />;
@@ -17,10 +18,12 @@ export const PersonList = () => {
     const people = usePolyculeStore(state => state.root.people);
     const addPerson = usePolyculeStore(state => state.addPerson);
 
-    const [pluralityFilter, setPluralityFilter] = useState<"all" | "singlet" | "alter">("singlet");
+    const [pluralityFilter, setPluralityFilter] = useState<"all" | "singlet" | "alter">("all");
 
     return (
         <Stack gap="xs">
+            <AppModalHeader />
+
             <SearchableList<Person>
                 data={people}
                 getItemId={p => p.id}

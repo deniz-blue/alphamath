@@ -6,6 +6,7 @@ import { DEFAULT_SYSTEM } from "../../../store/data";
 import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
 import type { System } from "../../../lib/types";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const SystemListModal = ({ }: ContextModalProps) => {
     return <SystemList />;
@@ -17,6 +18,8 @@ export const SystemList = () => {
 
     return (
         <Stack>
+            <AppModalHeader />
+
             <SearchableList<System>
                 data={systems}
                 getItemId={s => s.id}

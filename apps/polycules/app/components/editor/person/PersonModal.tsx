@@ -4,6 +4,7 @@ import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
 import { PersonCard } from "../../cards/PersonCard";
 import { confirmableCallback } from "../openConfirmModal";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const PersonModal = ({
     innerProps: { id },
@@ -18,6 +19,8 @@ export const PersonModal = ({
     if (!person) return null;
     return (
         <Stack gap="xs">
+            <AppModalHeader />
+
             <PersonCard person={person} />
 
             <Button

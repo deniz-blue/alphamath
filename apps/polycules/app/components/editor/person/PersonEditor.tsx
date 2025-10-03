@@ -2,8 +2,7 @@ import { Button, CloseButton, ColorInput, DEFAULT_THEME, Stack, Text, TextInput 
 import type { Person } from "../../../lib/types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
-import { openAppModal } from "../../../modals";
-import { confirmableCallback } from "../openConfirmModal";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const PersonEditorModal = ({
     innerProps: { id },
@@ -26,6 +25,8 @@ export const PersonEditor = ({
 
     return (
         <Stack>
+            <AppModalHeader />
+
             <PersonEditorForm
                 value={person}
                 onChange={p => updatePerson({ ...p, id })}

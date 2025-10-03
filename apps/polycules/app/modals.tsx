@@ -52,6 +52,7 @@ export const openAppModal = <Key extends keyof typeof MODALS>(
     modals.openContextModal({
         modal: name,
         innerProps: props,
-        title: MODAL_TITLES[name],
+        title: null,
+        withCloseButton: false,
     });
 };

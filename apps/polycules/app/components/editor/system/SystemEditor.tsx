@@ -2,8 +2,7 @@ import { ActionIcon, Button, CloseButton, ColorInput, DEFAULT_THEME, Stack, Text
 import type { System } from "../../../lib/types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
-import { openAppModal } from "../../../modals";
-import { confirmableCallback } from "../openConfirmModal";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const SystemEditorModal = ({
     innerProps: { id },
@@ -50,6 +49,8 @@ export const SystemEditorForm = ({
 }) => {
     return (
         <Stack>
+            <AppModalHeader />
+
             <TextInput
                 data-autofocus
                 label="System Name"

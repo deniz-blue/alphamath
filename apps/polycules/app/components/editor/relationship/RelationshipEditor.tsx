@@ -5,6 +5,7 @@ import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { IconArrowsRightLeft } from "@tabler/icons-react";
 import { GraphNodeCard } from "../../cards/GraphNodeCard";
 import { openAppModal } from "../../../modals";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const RelationshipEditorModal = ({
     innerProps: { id },
@@ -51,6 +52,8 @@ export const RelationshipEditorForm = ({
 
     return (
         <Stack>
+            <AppModalHeader />
+
             <Group gap="xs" align="center">
                 <UnstyledButton
                     flex="1"

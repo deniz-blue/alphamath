@@ -5,6 +5,7 @@ import { openAppModal } from "../../../modals";
 import { SearchableList } from "../common/SearchableList";
 import { PersonCard } from "../../cards/PersonCard";
 import { DEFAULT_PERSON } from "../../../store/data";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const SystemMembersListModal = ({
     innerProps: { id },
@@ -24,6 +25,8 @@ export const SystemMembersList = ({
 
     return (
         <Stack>
+            <AppModalHeader />
+
             <SearchableList
                 data={members}
                 getItemId={person => person.id}

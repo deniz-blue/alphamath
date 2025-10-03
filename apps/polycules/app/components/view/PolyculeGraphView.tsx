@@ -82,11 +82,14 @@ export const PolyculeGraphView = () => {
     }, []);
 
     useEffect(() => {
-        let i = setInterval(() => {
+        let f: number;
+        const loop = () => {
+            f = requestAnimationFrame(loop);
             updateCoordinates();
             renderCoords();
-        }, 100); // TODO: debug interval
-        return () => clearInterval(i);
+        };
+        f = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(f);
     }, [renderCoords, updateCoordinates]);
 
     return (

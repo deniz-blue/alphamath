@@ -5,6 +5,7 @@ import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
 import type { GraphNodeRef } from "../../../lib/types";
 import { PersonCard } from "../../cards/PersonCard";
+import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export interface NodeSelectProps {
     onSelect?: (node: GraphNodeRef) => void;
@@ -43,6 +44,8 @@ export const NodeSelect = ({
 
     return (
         <Stack>
+            <AppModalHeader />
+
             <SearchableList<GraphNodeRef>
                 data={[
                     ...systems.map(s => ({ type: "system" as const, id: s.id })),
