@@ -1,6 +1,10 @@
 import { deflateSync, inflateSync } from "fflate"; // tiny & fast
 import type { PolyculeManifest } from "./types";
 
+export const createShareLink = (graph: PolyculeManifest) => {
+	return `${window.location.origin}${window.location.pathname}#${encodeGraph(graph)}`;
+};
+
 // Encode
 export const encodeGraph = (graph: PolyculeManifest): string => {
 	const json = JSON.stringify(graph);
