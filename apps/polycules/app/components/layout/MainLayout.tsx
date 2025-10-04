@@ -4,11 +4,12 @@ import { PolyculeGraphView } from "../view/PolyculeGraphView";
 import { openAppModal } from "../../modals";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { DEFAULT_PERSON } from "../../store/data";
-import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCopy, IconMaximize, IconMinimize, IconShare } from "@tabler/icons-react";
+import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCircles, IconCopy, IconMaximize, IconMinimize, IconShare, IconUser } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { encodeGraph } from "../../lib/serde";
 import { useGlobalTransform, useMousePosition } from "@alan404/react-workspace";
+import { DotMenu } from "./overlays/DotMenu";
 
 export const MainLayout = () => {
     const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
@@ -20,18 +21,7 @@ export const MainLayout = () => {
 
             <Affix position={{ left: 20, top: 20 }}>
                 <Stack>
-                    <Button
-                        variant="light"
-                        onClick={() => openAppModal("PersonListModal", {})}
-                    >
-                        List People
-                    </Button>
-                    <Button
-                        variant="light"
-                        onClick={() => openAppModal("SystemListModal", {})}
-                    >
-                        List Systems
-                    </Button>
+
                 </Stack>
             </Affix>
 
@@ -40,11 +30,26 @@ export const MainLayout = () => {
             </Affix>
 
             <Affix position={{ right: 20, bottom: 20 }}>
-                <Group>
-                    <ActionIcon.Group>
-                        <CopyJSONButton />
-                        <CopyLinkButton />
-                    </ActionIcon.Group>
+                <Group gap="xs">
+                    <Button
+                        variant="light"
+                        onClick={() => openAppModal("PersonListModal", {})}
+                        size="compact-md"
+                        leftSection={<IconUser />}
+                    >
+                        People
+                    </Button>
+                    <Button
+                        variant="light"
+                        onClick={() => openAppModal("SystemListModal", {})}
+                        size="compact-md"
+                        leftSection={<IconCircles />}
+                    >
+                        Systems
+                    </Button>
+
+
+                    <DotMenu />
 
                     <UndoRedo />
 
@@ -124,57 +129,4 @@ export const UndoRedo = () => {
             </ActionIcon>
         </ActionIcon.Group>
     );
-};
-
-export const CopyLinkButton = () => {
-    const { copied, copy, error, reset } = useClipboard();
-
-    useEffect(() => {
-        if (!error) return;
-        notifications.show({
-            title: "Error",
-            message: "" + error,
-            color: "red",
-        });
-    }, [error]);
-
-    return (
-        <Tooltip label={copied ? "Copied!" : "Copy share link"}>
-            <ActionIcon
-                onClick={() => copy(
-                    `${window.location.origin}${window.location.pathname}#${encodeGraph(usePolyculeStore.getState().root)}`
-                )}
-                color={copied ? "teal" : "gray"}
-                variant="light"
-            >
-                {copied ? <IconCheck /> : <IconShare />}
-            </ActionIcon>
-        </Tooltip>
-    )
-};
-
-
-export const CopyJSONButton = () => {
-    const { copied, copy, error, reset } = useClipboard();
-
-    useEffect(() => {
-        if (!error) return;
-        notifications.show({
-            title: "Error",
-            message: "" + error,
-            color: "red",
-        });
-    }, [error]);
-
-    return (
-        <Tooltip label={copied ? "Copied!" : "Copy JSON"}>
-            <ActionIcon
-                onClick={() => copy(JSON.stringify(usePolyculeStore.getState().root))}
-                color={copied ? "teal" : "gray"}
-                variant="light"
-            >
-                {copied ? <IconCheck /> : <IconCopy />}
-            </ActionIcon>
-        </Tooltip>
-    )
 };

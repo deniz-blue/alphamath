@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router";
 import { usePolyculeStore } from "../store/usePolyculeStore";
 import { useEffect } from "react";
 import { decodeGraph } from "../lib/serde";
+import { prettifyError, ZodError } from "zod";
 
 export default function Home() {
 	useImportFromHash();
@@ -50,7 +51,7 @@ export const useImportFromHash = () => {
 							Failed to import polycule from URL:
 
 							<Code block>
-								{"" + err}
+								{err instanceof ZodError ? prettifyError(err) : ("" + err)}
 							</Code>
 						</Text>
 					),

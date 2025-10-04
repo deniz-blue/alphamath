@@ -1,5 +1,5 @@
 import { deflateSync, inflateSync } from "fflate"; // tiny & fast
-import type { PolyculeManifest } from "./types";
+import { PolyculeManifestSchema, type PolyculeManifest } from "./types";
 
 export const createShareLink = (graph: PolyculeManifest) => {
 	return `${window.location.origin}${window.location.pathname}#${encodeGraph(graph)}`;
@@ -24,10 +24,10 @@ export const decodeGraph = async (encoded: string): Promise<PolyculeManifest> =>
 				c => c.charCodeAt(0)
 			);
 			const json = new TextDecoder().decode(inflateSync(binary));
-			return JSON.parse(json);
+			return PolyculeManifestSchema.parse(JSON.parse(json));
 		case "v1-fetch":
 			const res = await fetch(payload);
-			return await res.json();
+			return PolyculeManifestSchema.parse(await res.json());
 		default:
 			throw new Error("Unsupported encoding version " + v);
 	}
