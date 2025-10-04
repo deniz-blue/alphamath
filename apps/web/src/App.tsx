@@ -46,8 +46,10 @@ const MainView = () => {
                     position: "absolute",
                 }} />
 
-                <TransformProvider initialPosition={{ x: -25, y: -25 }}>
-                    <IconCrosshair size={50} />
+                <TransformProvider position={{ x: -25, y: -25 }}>
+                    <foreignObject>
+                        <IconCrosshair size={50} />
+                    </foreignObject>
                 </TransformProvider>
 
                 <RootItemRenderer />

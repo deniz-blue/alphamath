@@ -1,10 +1,6 @@
 import { Item, ItemComponent } from "../../../types/app/item";
 import { WithSetters } from "../../../types/utils";
-import { NoteItem } from "./types/NoteItem";
 import { ErrorCard } from "../../debug/ErrorCard";
-import { DebugItem } from "./types/DebugItem";
-import { ContextItem } from "./types/ContextItem";
-import { StatementItem } from "./types/StatementItem";
 import { match } from "@alan404/enum";
 import { Transition } from "@mantine/core";
 import { useState } from "react";
@@ -24,10 +20,6 @@ export const ItemRenderer = ({
     const [beingClosed, setBeingClosed] = useState(false);
 
     let Component = match(item)({
-        Note: () => NoteItem,
-        Debug: () => DebugItem,
-        Context: () => ContextItem,
-        Statement: () => StatementItem,
         _: () => () => (
             <ErrorCard
                 message="Unknown Item"
