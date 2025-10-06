@@ -6,7 +6,7 @@ export const vec2add = (...vecs: Vec2Like[]) => {
 };
 
 export const vec2mul = (...vecs: Vec2Like[]) => {
-    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x * cur.x, acc.y * cur.y), vec2(1));
+    return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x * cur.x, acc.y * cur.y));
 };
 
 export const vec2sub = (a: Vec2Like, b: Vec2Like) => {

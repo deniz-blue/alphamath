@@ -1,12 +1,11 @@
 import { useWindowEvent } from "@mantine/hooks";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Vec2, vec2, vec2add, vec2average, vec2client, vec2div, vec2sub } from "@alan404/vec2";
-import { getMouseButtons } from "../utils/index.js";
-import { useGlobalTransform } from "./useGlobalTransform.js";
-import { MouseEvents, TouchEvents } from "./events.js";
+import { useGlobalTransformStore } from "../core/globalTransformStore.js";
+import { ReactEventHandlers } from "./events.js";
 
 export interface UseRelativeDragOptions {
-    position: Vec2;
+    position: Vec2 | (() => Vec2);
     onDrag: (newPosition: Vec2, delta: Vec2) => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
@@ -17,7 +16,7 @@ export interface UseRelativeDragOptions {
 
 export interface UseRelativeDrag {
     isDragging: boolean;
-    props: React.DOMAttributes<Element>;
+    props: ReactEventHandlers<"onPointerDown" | "onPointerMove" | "onPointerUp" | "onPointerCancel">;
 };
 
 export const useRelativeDrag = (
@@ -31,8 +30,7 @@ export const useRelativeDrag = (
         allowMultitouch = false,
     }: UseRelativeDragOptions,
 ): UseRelativeDrag => {
-    const { scale: defaultScale } = useGlobalTransform();
-
+    const getPositionArg = () => typeof position == "function" ? position() : position;
 
     const [isDragging, setIsDragging] = useState(false);
     const lastPosRef = useRef<Vec2 | null>(null);
@@ -51,11 +49,11 @@ export const useRelativeDrag = (
         if (!isDragging || disabled || !lastPosRef.current) return;
 
         const clientDelta = vec2sub(client, lastPosRef.current);
-        const delta = vec2div(clientDelta, scale || defaultScale);
+        const delta = vec2div(clientDelta, scale || useGlobalTransformStore.getState().scale);
         
         lastPosRef.current = client;
-        onDrag(vec2add(position, delta), delta);
-    }, [isDragging, disabled, position, onDrag, scale]);
+        onDrag(vec2add(getPositionArg(), delta), delta);
+    }, [isDragging, disabled, onDrag, scale]);
 
     const handlePointerDown = useCallback(
         (e: React.PointerEvent) => {

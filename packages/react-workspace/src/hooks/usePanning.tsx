@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { useGlobalTransform } from "./useGlobalTransform.js";
 import { useRelativeDrag } from "./useRelativeDrag.js";
 import { useBoolean } from "./useBoolean.js";
 import { vec2, Vec2, vec2add, vec2average, vec2client, vec2distance, vec2mul, vec2sub } from "@alan404/vec2";
 import { useMousePosition } from "./useMousePosition.js";
-import { MouseEvents, TouchEvents } from "./events.js";
+import { ReactEventHandlers } from "./events.js";
 import { mergeProps } from "../utils/index.js";
+import { useGlobalTransformStore } from "../core/globalTransformStore.js";
+import { combineEventHandlerProps } from "../utils/combineEventHandlers.js";
 
 export interface UsePanningOptions {
     wheelScaleOn?: "cursor" | "window";
@@ -16,26 +17,15 @@ export interface UsePanningOptions {
 export const usePanning = ({
     onScalingEnd,
     onScalingStart,
-    wheelScaleOn,
+    wheelScaleOn = "cursor",
 }: UsePanningOptions = {}) => {
     const {
-        position,
-        setPosition,
-        scale,
-        setScale,
-        minScale,
-        maxScale,
-        getAbsolutePosition,
-    } = useGlobalTransform();
-
-    const {
         isDragging: isPanning,
-        props: dragProps,
+        props: dragEvents,
     } = useRelativeDrag({
-        position,
+        position: () => useGlobalTransformStore.getState().position,
         onDrag: (pos, delta) => {
-            console.log("Panning onDrag", pos, delta)
-            setPosition(pos)
+            useGlobalTransformStore.getState().setPosition(pos);
         },
         scale: 1,
     });
@@ -47,34 +37,36 @@ export const usePanning = ({
     const [lastPinchDistance, setLastPinchDistance] = useState<number | null>(null);
     const [startDragPosition, setStartDragPosition] = useState<Vec2>(vec2());
     const [start, setStart] = useState<Vec2>(vec2());
-    const [startScale, setStartScale] = useState(scale);
+    const [startScale, setStartScale] = useState(useGlobalTransformStore.getState().scale);
     const mouse = useMousePosition();
 
     const handleScaleChange = (
         scaleChange: number,
-        point: Vec2,
+        point: Vec2 | null,
     ) => {
-        let newScale = Math.max(minScale, Math.min(maxScale, scale + scaleChange));
+        const { scale, setScale, setPosition, position } = useGlobalTransformStore.getState();
+        let newScale = scale + scaleChange;
         setScale(newScale);
-        setPosition(vec2sub(position, vec2mul(point, newScale - scale)));
+        setPosition(vec2sub(position, vec2mul(point || position, newScale)));
     };
 
-    const scalingProps: TouchEvents & MouseEvents = {
-        onWheel: useCallback((e: React.WheelEvent<HTMLElement>) => {
+    const scaleEvents: ReactEventHandlers<"onWheel" | "onTouchStart" | "onTouchMove" | "onTouchEnd"> = {
+        onWheel: useCallback((e: React.WheelEvent<Element>) => {
             e.preventDefault();
-            const scaleChange = (e.deltaY < 0 ? 1 : -1) * 0.1;
-            const origin = wheelScaleOn == "cursor" ? mouse : getAbsolutePosition(vec2(window.innerWidth / 2, window.innerHeight / 2));
-            handleScaleChange(scaleChange, origin);
-        }, [mouse, position]),
+            const scaleMultiplier = e.deltaY < 0 ? 1.1 : 0.9;
+            const { fromScreenPosition, changeScaleFrom } = useGlobalTransformStore.getState();
+            const coordPoint = fromScreenPosition(vec2client(e));
+            changeScaleFrom(coordPoint, scaleMultiplier);
+        }, [mouse, wheelScaleOn]),
 
-        onTouchStart: useCallback((e: React.TouchEvent<HTMLElement>) => {
+        onTouchStart: useCallback((e: React.TouchEvent<Element>) => {
             if (e.touches.length !== 2) return;
             e.preventDefault();
-            setStartScale(scale);
             setStart(vec2average([vec2client(e.touches[0]!), vec2client(e.touches[1]!)]));
-            setStartDragPosition(position);
+            setStartScale(useGlobalTransformStore.getState().scale);
+            setStartDragPosition(useGlobalTransformStore.getState().position);
             setIsScaling(true);
-        }, [scale, position]),
+        }, []),
 
         onTouchMove: useCallback((e: React.TouchEvent<HTMLElement>) => {
             if (e.touches.length !== 2) return;
@@ -82,21 +74,16 @@ export const usePanning = ({
             let b = vec2client(e.touches[1]!);
             const distance = vec2distance(a, b);
             let point = vec2average([a, b]);
-    
+
             if (lastPinchDistance !== null) {
-                const scaleChange = (distance - lastPinchDistance) / 500;
-                let newScale = Math.max(minScale, Math.min(maxScale, scale + scaleChange));
-                setScale(newScale);
-    
-                setPosition(vec2add(
-                    startDragPosition,
-                    vec2sub(point, start),
-                    vec2mul(vec2sub(point, startDragPosition), startScale - newScale),
-                ));
+                const scaleMultiplier = distance / lastPinchDistance;
+                const { fromScreenPosition, changeScaleFrom } = useGlobalTransformStore.getState();
+                const coordPoint = fromScreenPosition(point);
+                changeScaleFrom(coordPoint, scaleMultiplier);
             }
-    
+
             setLastPinchDistance(distance);
-        }, [lastPinchDistance, position, start, startDragPosition]),
+        }, [lastPinchDistance]),
 
         onTouchEnd: useCallback(() => {
             setLastPinchDistance(null);
@@ -104,11 +91,12 @@ export const usePanning = ({
         }, []),
     };
 
-    const props = mergeProps(dragProps, scalingProps);
-   
+    // const props =
+    //     combineEventHandlerProps([dragEvents, scaleEvents]);
+
     return {
         isPanning,
         isScaling,
-        props,
+        props: { ...dragEvents, ...scaleEvents },
     };
 };

@@ -1,6 +1,5 @@
 import { modals, ModalsProvider } from "@mantine/modals";
 import { MainLayout } from "../components/layout/MainLayout";
-import { GlobalTransformProvider } from "@alan404/react-workspace";
 import { MODALS } from "../modals";
 import { Code, ScrollArea, Text } from "@mantine/core";
 import { useLocation, useNavigate } from "react-router";
@@ -13,17 +12,15 @@ export default function Home() {
 	useImportFromHash();
 
 	return (
-		<GlobalTransformProvider initialScale={1.5}>
-			<ModalsProvider
-				modals={MODALS}
-				modalProps={{
-					size: "md",
-					scrollAreaComponent: ScrollArea.Autosize,
-				}}
-			>
-				<MainLayout />
-			</ModalsProvider>
-		</GlobalTransformProvider>
+		<ModalsProvider
+			modals={MODALS}
+			modalProps={{
+				size: "md",
+				scrollAreaComponent: ScrollArea.Autosize,
+			}}
+		>
+			<MainLayout />
+		</ModalsProvider>
 	);
 }
 

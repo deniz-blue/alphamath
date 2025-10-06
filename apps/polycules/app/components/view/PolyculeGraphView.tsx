@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { OPTIONS } from "./options";
 import { compute, type ComputeResult } from "../../lib/force";
-import { Workspace } from "@alan404/react-workspace";
+import { useGlobalTransformStore, Workspace } from "@alan404/react-workspace";
 import type { GraphNodeRef, Person, PolyculeManifest } from "../../lib/types";
 import { vec2, vec2add, vec2average, vec2distance } from "@alan404/vec2";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { GraphRelationship } from "./svg/GraphRelationship";
 import { GraphPerson } from "./svg/GraphPerson";
 import { GraphSystem } from "./svg/GraphSystem";
+import { useMouse } from "@mantine/hooks";
 
 export const PolyculeGraphView = () => {
     const root = usePolyculeStore(store => store.root);
@@ -135,12 +136,20 @@ export const PolyculeGraphView = () => {
                         }}
                     />
                 ))}
+
+                <Dbg />
             </Workspace>
         </div >
     );
 };
 
 
+export const Dbg = () => {
+    const mouse = useMouse();
+    const { fromScreenPosition } = useGlobalTransformStore();
+    const { x, y } = fromScreenPosition(mouse);
 
+    return <circle cx={x} cy={y} r={5} fill="blue" pointerEvents="none" />;
+}
 
 

@@ -1,14 +1,13 @@
 import { useMouse } from "@mantine/hooks";
-import { useGlobalTransform } from "./useGlobalTransform.js";
 import { Vec2 } from "@alan404/vec2";
+import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 
 /**
- * Hook for getting mouse position relative to the Global Transform
- * @returns The position of the mouse in the viewport
+ * Hook for getting mouse position in view coordinates
+ * @returns The view position of the mouse
  */
 export const useMousePosition = (): Vec2 => {
-    const { getAbsolutePosition  } = useGlobalTransform();
+    const fromScreenPosition = useGlobalTransformStore(store => store.fromScreenPosition);
     const mouse = useMouse();
-
-    return getAbsolutePosition(mouse);
+    return fromScreenPosition(mouse);
 };

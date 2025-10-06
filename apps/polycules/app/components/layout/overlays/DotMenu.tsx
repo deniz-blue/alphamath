@@ -1,4 +1,4 @@
-import { ActionIcon, Button, JsonInput, Menu, Stack, TextInput } from "@mantine/core";
+import { ActionIcon, Button, JsonInput, Kbd, Menu, Stack, Table, TextInput } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconExternalLink, IconFileImport, IconJson } from "@tabler/icons-react";
 import { useReportError } from "../../../utils/error-handling";
 import { randomId, useClipboard, useFetch, useInputState } from "@mantine/hooks";
@@ -35,18 +35,6 @@ export const DotMenu = () => {
                 </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Item
-                    onClick={() => copy(createShareLink(usePolyculeStore.getState().root))}
-                    leftSection={<IconCopy />}
-                >
-                    Copy Link
-                </Menu.Item>
-                <Menu.Item
-                    onClick={() => copy(JSON.stringify(usePolyculeStore.getState().root))}
-                    leftSection={<IconJson />}
-                >
-                    Copy JSON
-                </Menu.Item>
                 <Menu.Sub position="left">
                     <Menu.Sub.Target>
                         <Menu.Sub.Item>
@@ -82,6 +70,59 @@ export const DotMenu = () => {
                         </Menu.Item>
                     </Menu.Sub.Dropdown>
                 </Menu.Sub>
+                <Menu.Sub position="left">
+                    <Menu.Sub.Target>
+                        <Menu.Sub.Item>
+                            Export
+                        </Menu.Sub.Item>
+                    </Menu.Sub.Target>
+                    <Menu.Sub.Dropdown>
+                        <Menu.Item
+                            onClick={() => copy(createShareLink(usePolyculeStore.getState().root))}
+                            leftSection={<IconCopy />}
+                        >
+                            Copy Link
+                        </Menu.Item>
+                        <Menu.Item
+                            onClick={() => copy(JSON.stringify(usePolyculeStore.getState().root))}
+                            leftSection={<IconJson />}
+                        >
+                            Copy JSON
+                        </Menu.Item>
+                    </Menu.Sub.Dropdown>
+                </Menu.Sub>
+                <Menu.Divider />
+                <Menu.Item
+                    visibleFrom="xs"
+                    onClick={() => modals.open({
+                        title: "Shortcuts",
+                        children: (
+                            <Table
+                                data={{
+                                    head: [
+                                        "Action",
+                                        "Shortcut",
+                                    ],
+                                    body: [
+                                        ["New person", <Kbd>N</Kbd>],
+                                        ["List people", <Kbd>1</Kbd>],
+                                        ["List systems", <Kbd>2</Kbd>],
+                                        ["Reset view", <Kbd>V</Kbd>],
+                                        ["Undo", <div><Kbd>Ctrl</Kbd> + <Kbd>Z</Kbd></div>],
+                                        ["Redo", (
+                                            <Stack gap={4}>
+                                                <div><Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Z</Kbd></div>
+                                                <div><Kbd>Ctrl</Kbd> + <Kbd>Y</Kbd></div>
+                                            </Stack>
+                                        )],
+                                    ],
+                                }}
+                            />
+                        ),
+                    })}
+                >
+                    Shortcuts
+                </Menu.Item>
                 <Menu.Item
                     component="a"
                     target="_blank"

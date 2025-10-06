@@ -1,4 +1,4 @@
-import { useGlobalTransform } from "../hooks/useGlobalTransform.js";
+import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 
 export type BackgroundGridProps = {
     color?: string;
@@ -11,7 +11,7 @@ export const BackgroundGrid = ({
     distance = 500,
     thickness = 1,
 }: BackgroundGridProps) => {
-    const { position, scale } = useGlobalTransform();
+    const { position, scale } = useGlobalTransformStore();
 
     const size = `${distance * scale}px`;
     const line = `${color} ${thickness}px`;

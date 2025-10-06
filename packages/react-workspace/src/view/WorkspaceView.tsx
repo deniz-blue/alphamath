@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, useContext } from "react";
-import { GlobalTransform } from "../core/GlobalTransformContext.js";
+import React, { PropsWithChildren, useContext, useEffect } from "react";
 import { mergeRefs, useElementSize } from "@mantine/hooks";
+import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 
 export type WorkspaceViewProps = PropsWithChildren<React.JSX.IntrinsicElements["svg"]>;
 
@@ -10,7 +10,15 @@ export const WorkspaceView = ({
     ...props
 }: WorkspaceViewProps) => {
     const { ref: sizeRef, height, width } = useElementSize();
-    const { position, scale } = useContext(GlobalTransform);
+    const position = useGlobalTransformStore(store => store.position);
+    const scale = useGlobalTransformStore(store => store.scale);
+
+    // const positionCentered = vec2add(position, vec2div(vec2(width, height), 2));
+
+    useEffect(() => {
+        if(!sizeRef.current) return;
+        useGlobalTransformStore.getState().center();
+    }, [sizeRef]);
 
     return (
         <svg
@@ -34,6 +42,7 @@ export const WorkspaceView = ({
                 ...(props.style || {}),
             }}
         >
+            <circle fill="black" r="2" cx="0" cy="0" />
             <g>
                 {children}
             </g>

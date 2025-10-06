@@ -1,15 +1,13 @@
 import { ActionIcon, Affix, Box, Button, Group, Stack, Text, Tooltip } from "@mantine/core";
-import { useClipboard, useFullscreen, useHotkeys } from "@mantine/hooks";
+import { useClipboard, useFullscreen, useHotkeys, useMouse } from "@mantine/hooks";
 import { PolyculeGraphView } from "../view/PolyculeGraphView";
 import { openAppModal } from "../../modals";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { DEFAULT_PERSON } from "../../store/data";
 import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCircles, IconCopy, IconMaximize, IconMinimize, IconShare, IconUser } from "@tabler/icons-react";
-import { useEffect } from "react";
-import { notifications } from "@mantine/notifications";
-import { encodeGraph } from "../../lib/serde";
-import { useGlobalTransform, useMousePosition } from "@alan404/react-workspace";
+import { useGlobalTransformStore, useMousePosition } from "@alan404/react-workspace";
 import { DotMenu } from "./overlays/DotMenu";
+import { vec2 } from "@alan404/vec2";
 
 export const MainLayout = () => {
     const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
@@ -67,17 +65,20 @@ export const MainLayout = () => {
 };
 
 export const WorkspaceInfo = () => {
-    const { x, y } = useMousePosition();
-    const { reset, position, scale } = useGlobalTransform();
+    const { reset, position, scale, fromScreenPosition, setScale, setPosition, changeScaleFrom } = useGlobalTransformStore();
+    const client = useMouse();
+    const ptr = fromScreenPosition(client);
 
     useHotkeys([
         ["v", reset],
+        ["plus", () => changeScaleFrom(vec2(), 1.1)],
+        ["-", () => changeScaleFrom(vec2(), 0.9)],
     ]);
 
     return (
         <Stack gap={0}>
             <Text ff="monospace" c="dimmed" fz="sm" inline span>
-                Mouse: ({Math.round(x)}, {Math.round(y)})
+                Mouse: ({Math.round(ptr.x)}, {Math.round(ptr.y)})
             </Text>
             <Text ff="monospace" c="dimmed" fz="sm" inline span>
                 Workspace: ({Math.round(position.x)}, {Math.round(position.y)}) {scale}x
