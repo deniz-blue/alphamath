@@ -9,6 +9,7 @@ import { GraphRelationship } from "./svg/GraphRelationship";
 import { GraphPerson } from "./svg/GraphPerson";
 import { GraphSystem } from "./svg/GraphSystem";
 import { useMouse } from "@mantine/hooks";
+import { Tooltip } from "@mantine/core";
 
 export const PolyculeGraphView = () => {
     const root = usePolyculeStore(store => store.root);
@@ -68,15 +69,15 @@ export const PolyculeGraphView = () => {
                 .filter(x => !!x);
             const avg = vec2average(memberCoords);
             let r = 0;
-            for(let coord of memberCoords) {
+            for (let coord of memberCoords) {
                 let dist = vec2distance(avg, coord);
-                if(dist > r) r = dist;
+                if (dist > r) r = dist;
             }
 
             r += OPTIONS.personRadius + OPTIONS.systemBackgroundPadding;
 
             sysEl.childNodes.forEach((el) => {
-                if(el.nodeName == "circle") (el as SVGCircleElement).setAttribute("r", r.toString());
+                if (el.nodeName == "circle") (el as SVGCircleElement).setAttribute("r", r.toString());
             });
             sysEl.setAttribute("transform", `translate(${avg.x}, ${avg.y})`);
         });
@@ -127,8 +128,8 @@ export const PolyculeGraphView = () => {
                         key={person.id}
                         person={person}
                         onDrag={(newPos, delta) => {
-                            console.log("PersonDrag<"+person.id+">", newPos, delta);
-                            if(coordsRef.current)
+                            console.log("PersonDrag<" + person.id + ">", newPos, delta);
+                            if (coordsRef.current)
                                 coordsRef.current.people[person.id] = vec2add(
                                     coordsRef.current.people[person.id],
                                     delta,
@@ -137,7 +138,7 @@ export const PolyculeGraphView = () => {
                     />
                 ))}
 
-                <Dbg />
+                {/* <Dbg /> */}
             </Workspace>
         </div >
     );
@@ -149,7 +150,18 @@ export const Dbg = () => {
     const { fromScreenPosition } = useGlobalTransformStore();
     const { x, y } = fromScreenPosition(mouse);
 
-    return <circle cx={x} cy={y} r={5} fill="blue" pointerEvents="none" />;
+    return (
+        <>
+            <Tooltip
+                target="#marker-origin"
+                label="Origin"
+                opened
+            />
+            <circle id="marker-origin" cx={0} cy={0} r={1} fill="red" />
+
+            <circle cx={x} cy={y} r={0.1} fill="blue" pointerEvents="none" />
+        </>
+    );
 }
 
 

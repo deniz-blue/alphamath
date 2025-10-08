@@ -56,6 +56,7 @@ export const usePanning = ({
             const scaleMultiplier = e.deltaY < 0 ? 1.1 : 0.9;
             const { fromScreenPosition, changeScaleFrom } = useGlobalTransformStore.getState();
             const coordPoint = fromScreenPosition(vec2client(e));
+            console.log("pt", coordPoint, e)
             changeScaleFrom(coordPoint, scaleMultiplier);
         }, [mouse, wheelScaleOn]),
 

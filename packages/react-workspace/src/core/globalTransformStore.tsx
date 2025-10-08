@@ -27,8 +27,8 @@ export type DefaultGlobalOptions = {
 export const DefaultGlobalOptions: DefaultGlobalOptions = {
     initialPosition: vec2(),
     initialScale: 1,
-    minScale: 0.2,
-    maxScale: 2,
+    minScale: 0.1,
+    maxScale: 10,
 };
 
 export const useGlobalTransformStore = create<(
@@ -44,8 +44,7 @@ export const useGlobalTransformStore = create<(
             scale: Math.max(get().minScale, Math.min(scale, get().maxScale)),
         }),
         setPosition: (position) => set({
-            position: position,
-            // position: vec2round(position),
+            position: vec2round(position),
         }),
         reset: () => {
             const { setScale, initialScale, center } = get();
@@ -63,31 +62,19 @@ export const useGlobalTransformStore = create<(
         }),
         fromScreenPosition: (v) => vec2div(vec2sub(v, get().position), get().scale),
         changeScaleFrom: (point: Vec2, delta: number) => {
-            console.log("changeScaleFrom", point, delta);
-
-
-            // A = 2x2 matrix that scales i-hat and j-hat by `delta`
-            // A = [delta, 0; 0, delta]
-            // p is `point`
-            // Ap = N
-
-
-            const { scale, minScale, maxScale, position } = get();
+            const { scale, position, minScale, maxScale } = get();
 
             const newScale = scale * delta;
-            const scaleRatio = newScale / scale;
+            const clampedScale = Math.max(minScale, Math.min(maxScale, newScale));
 
-            const newPosition = vec2sub(
-                point,
-                vec2mul(delta, vec2sub(point, position)),
-            )
-
-            console.log("before", position, scale);
-            console.log("after", newPosition, newScale);
+            const newPosition = vec2add(
+                position,
+                vec2mul(point, scale - clampedScale)
+            );
 
             set({
-                scale: newScale,
-                position: vec2mul(position, scaleRatio),
+                scale: clampedScale,
+                position: vec2round(newPosition),
             });
         },
     }))

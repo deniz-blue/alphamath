@@ -42,7 +42,6 @@ export const WorkspaceView = ({
                 ...(props.style || {}),
             }}
         >
-            <circle fill="black" r="2" cx="0" cy="0" />
             <g>
                 {children}
             </g>
