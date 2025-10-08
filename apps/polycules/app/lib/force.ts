@@ -77,12 +77,12 @@ export const compute = (
 
     const alterLinks: SimulationLinkDatum<Datum>[] = [];
     for (let sys of root.systems) {
-        const d3sys = "S/"+sys.id;
+        const d3sys = "S/" + sys.id;
 
         let d3ids = root.people.filter(x => x.systemId == sys.id)
             .map(p => "P/" + p.id);
 
-        for(let d3id of d3ids)
+        for (let d3id of d3ids)
             alterLinks.push({ source: d3id, target: d3sys });
 
         // const combinations = getCombinations2(d3ids);
@@ -92,10 +92,44 @@ export const compute = (
     }
 
     const relationshipLinks: SimulationLinkDatum<Datum>[] = [];
+    const p2pRelationshipLinks: SimulationLinkDatum<Datum>[] = [];
+    const p2sRelationshipLinks: SimulationLinkDatum<Datum>[] = [];
+    const s2sRelationshipLinks: SimulationLinkDatum<Datum>[] = [];
     for (let r of root.relationships) {
-        const sourceId = r.from.type === "person" ? "P/" + r.from.id : "S/" + r.from.id;
-        const targetId = r.to.type === "person" ? "P/" + r.to.id : "S/" + r.to.id;
-        relationshipLinks.push({ source: sourceId, target: targetId });
+        if (r.from.type == r.to.type) {
+            // person-person or system-system
+            if (r.from.type == "person") {
+                p2pRelationshipLinks.push({
+                    source: "P/" + r.from.id,
+                    target: "P/" + r.to.id,
+                });
+            } else {
+                const fromMemberIds = root.systems.find(s => s.id == r.from.id)?.memberIds || [];
+                const toMemberIds = root.systems.find(s => s.id == r.to.id)?.memberIds || [];
+
+                for (let a of fromMemberIds)
+                    for (let b of toMemberIds)
+                        s2sRelationshipLinks.push({
+                            source: "P/" + a,
+                            target: "P/" + b,
+                        });
+            }
+        } else {
+            // person-system
+            let personDatumId = "P/" + (r.from.type == "person" ? r.from.id : r.to.id);
+            let systemId = "S/" + (r.from.type == "system" ? r.from.id : r.to.id);
+            let system = root.systems.find(s => s.id == systemId);
+            if (!system) continue;
+            for (let memberId of system.memberIds) {
+                p2sRelationshipLinks.push({
+                    source: "P/" + memberId,
+                    target: personDatumId,
+                })
+            }
+        }
+        // const sourceId = r.from.type === "person" ? "P/" + r.from.id : "S/" + r.from.id;
+        // const targetId = r.to.type === "person" ? "P/" + r.to.id : "S/" + r.to.id;
+        // relationshipLinks.push({ source: sourceId, target: targetId });
     }
 
     // == Sim
@@ -104,10 +138,12 @@ export const compute = (
 
     const sim = forceSimulation<Datum>()
         .nodes(nodes)
-        .force("center", forceCenter(0, 0).strength(0.01))
-        .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -50).distanceMin(10).distanceMax(200))
+        .force("center", forceCenter(0, 0).strength(1))
+        .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -1).distanceMin(10).distanceMax(200))
         .force("alters", forceLink<Datum, SimulationLinkDatum<Datum>>(alterLinks).id(datumId).strength(0.02))
-        .force("relationships", forceLink<Datum, SimulationLinkDatum<Datum>>(relationshipLinks).id(datumId).strength(0.01))
+        .force("rel-p2p", forceLink<Datum, SimulationLinkDatum<Datum>>(p2pRelationshipLinks).id(datumId).strength(0.01))
+        .force("rel-p2s", forceLink<Datum, SimulationLinkDatum<Datum>>(p2sRelationshipLinks).id(datumId).strength(0.0001))
+        .force("rel-s2s", forceLink<Datum, SimulationLinkDatum<Datum>>(s2sRelationshipLinks).id(datumId).strength(0.0000001))
         .stop();
 
     sim.tick();

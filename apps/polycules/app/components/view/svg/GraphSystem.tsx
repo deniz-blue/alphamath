@@ -18,9 +18,10 @@ export const GraphSystem = ({
 
             <text
                 textAnchor="middle"
-                fontSize={OPTIONS.systemNameFontSize}
+                fontSize={OPTIONS.systemNameBackgroundFontSize}
                 fill={OPTIONS.systemNameColor}
                 pointerEvents="none"
+                opacity={0.2}
             >
                 {system.name || "(No system name)"}
             </text>

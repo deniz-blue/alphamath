@@ -45,8 +45,6 @@ export const GraphPerson = ({
                 <g>
                     <Menu.Target>
                         <circle
-                            stroke={person.color ?? OPTIONS.personDefaultColor}
-                            strokeWidth={1}
                             fill={person.color ?? OPTIONS.personDefaultColor}
                             r={OPTIONS.personRadius}
                         />
@@ -75,7 +73,7 @@ export const GraphPerson = ({
 
             <text
                 textAnchor="middle"
-                y={OPTIONS.personRadius + OPTIONS.personNamePadding}
+                y={OPTIONS.personRadius + OPTIONS.personNamePadding + OPTIONS.personNameFontSize}
                 fontSize={OPTIONS.personNameFontSize}
                 fill={OPTIONS.personNameColor}
                 pointerEvents="none"
@@ -86,7 +84,7 @@ export const GraphPerson = ({
             {person.systemId && (
                 <text
                     textAnchor="middle"
-                    y={OPTIONS.personRadius + OPTIONS.personNamePadding + OPTIONS.personNameFontSize + OPTIONS.systemNamePaddingTop}
+                    y={OPTIONS.personRadius + OPTIONS.personNamePadding + OPTIONS.personNameFontSize + OPTIONS.systemNamePaddingTop + OPTIONS.systemNameFontSize}
                     fontSize={OPTIONS.systemNameFontSize}
                     fill={OPTIONS.systemNameColor}
                     pointerEvents="none"

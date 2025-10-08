@@ -7,6 +7,7 @@ export interface ViewOptions {
 
     systemNamePaddingTop: number;
     systemNameFontSize: number;
+    systemNameBackgroundFontSize: number;
     systemNameColor: string;
     systemDefaultColor: string;
 
@@ -21,15 +22,16 @@ export const OPTIONS: ViewOptions = {
     personRadius: 12,
     personDefaultColor: "gray",
     personNameFontSize: 12,
-    personNamePadding: 10,
+    personNamePadding: 0,
     personNameColor: "#c9c9c9",
 
     systemNamePaddingTop: 0,
-    systemNameFontSize: 8,
+    systemNameFontSize: 6,
     systemNameColor: "#828282",
     systemDefaultColor: "#2e2e2e",
+    systemNameBackgroundFontSize: 8,
 
-    systemBackgroundOpacity: 0.2,
+    systemBackgroundOpacity: 0.5,
     systemBackgroundPadding: 8,
 
     linkDefaultColor: "black",

@@ -13,6 +13,7 @@ export const GraphRelationship = ({
             data-type="relationship"
             stroke={OPTIONS.linkDefaultColor}
             strokeWidth={OPTIONS.linkDefaultWidth}
+            strokeLinecap="round"
         />
     );
 };
