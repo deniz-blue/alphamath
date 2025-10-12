@@ -1,10 +1,10 @@
 import { PropsWithChildren, ReactNode, useRef } from "react";
 import { BackgroundGrid } from "./BackgroundGrid.js";
 import { WorkspaceView, WorkspaceViewProps } from "./WorkspaceView.js";
-import { usePanning } from "../hooks/index.js";
+import { usePanning } from "../gestures/index.js";
 import { mergeRefs } from "@mantine/hooks";
-import { useWheelScaling } from "../hooks/useWheelScaling.js";
-import { usePinchScaling } from "../hooks/usePinchScaling.js";
+import { useWheelScaling } from "../gestures/useWheelScaling.js";
+import { usePinchScaling } from "../gestures/usePinchScaling.js";
 
 export interface WorkspaceProps extends PropsWithChildren {
     background?: ReactNode;

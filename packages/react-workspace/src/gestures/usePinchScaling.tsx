@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useElementEvent } from "./useElementEvent.js";
+import { useElementEvent } from "../hooks/useElementEvent.js";
 import { vec2, Vec2, vec2average, vec2client, vec2distance } from "@alan404/vec2";
 import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 

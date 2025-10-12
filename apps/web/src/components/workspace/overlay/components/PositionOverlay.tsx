@@ -1,8 +1,8 @@
 import { Box, Button, Group, Text } from "@mantine/core";
-import { useGlobalTransform, useMousePosition } from "@alan404/react-workspace";
+import { useGlobalTransformStore, useMousePosition } from "@alan404/react-workspace";
 
 export const PositionOverlay = () => {
-    const { position, scale, reset } = useGlobalTransform();
+    const { position, scale, reset } = useGlobalTransformStore();
     const mouse = useMousePosition();
 
     return (

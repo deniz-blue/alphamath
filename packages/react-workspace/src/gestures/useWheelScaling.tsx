@@ -1,5 +1,5 @@
 import React from "react";
-import { useElementEvent } from "./useElementEvent.js";
+import { useElementEvent } from "../hooks/useElementEvent.js";
 import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 import { vec2client } from "@alan404/vec2";
 

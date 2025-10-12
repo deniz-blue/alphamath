@@ -1,7 +1,8 @@
 import { vec2add } from "@alan404/vec2";
-import { useRelativeDrag, useTransform } from "../hooks/index.js";
+import { useRelativeDrag } from "../gestures/index.js";
 import { useRef } from "react";
 import { mergeRefs } from "@mantine/hooks";
+import { useTransform } from "../hooks/useTransform.js";
 
 export type DragHandleProps = {
     onDragStart?: () => void;

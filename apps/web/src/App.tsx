@@ -6,7 +6,8 @@ import { ItemRenderer } from "./components/workspace/items/ItemRenderer";
 import { IconCrosshair } from "@tabler/icons-react";
 import { ContextStack } from "./components/util/ContextStack";
 import { SelectionContextProvider } from "./components/math/select/SelectionContext";
-import { BackgroundGrid, GlobalTransformProvider, TransformProvider, usePanning, WorkspaceView } from "@alan404/react-workspace";
+import { BackgroundGrid, TransformProvider, WorkspaceView } from "@alan404/react-workspace";
+import { usePanning, usePinchScaling, useWheelScaling } from "@alan404/react-workspace/gestures";
 
 const RootItemRenderer = () => {
     const { items, setItems } = useContext(WorkspaceContext);
@@ -25,19 +26,20 @@ const RootItemRenderer = () => {
 }
 
 const MainView = () => {
-    const {
-        isPanning,
-        props,
-    } = usePanning();
+    const ref = useRef<SVGSVGElement>(null);
+
+    usePanning(ref);
+    usePinchScaling(ref);
+    useWheelScaling(ref);
 
     return (
         <div>
             <BackgroundGrid />
             <WorkspaceView
-                {...props}
+                ref={ref}
                 id="workspace-view"
                 style={{
-                    cursor: isPanning ? "grabbing" : "all-scroll",
+                    // cursor: isPanning ? "grabbing" : "all-scroll",
                 }}
             >
                 <div  style={{
@@ -62,7 +64,6 @@ const MainView = () => {
 const App = () => {
     return (
         <ContextStack providers={[
-            GlobalTransformProvider,
             WorkspaceProvider,
             ToolProvider,
             SelectionContextProvider,

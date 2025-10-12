@@ -5,7 +5,8 @@
 	"repository": "https://github.com/TheAlan404/alphamath/tree/main/packages/react-workspace",
 	"description": "Infinitely pannable, accessible map-like workspace for React",
 	"exports": {
-		".": "./src/index.ts"
+		".": "./src/index.ts",
+		"./gestures": "./src/gestures/index.ts"
 	},
 	"publishConfig": {
 		"main": "dist/index.js",

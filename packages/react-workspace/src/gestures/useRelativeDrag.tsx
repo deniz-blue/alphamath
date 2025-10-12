@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Vec2, vec2client, vec2div, vec2sub } from "@alan404/vec2";
 import { useGlobalTransformStore } from "../core/globalTransformStore.js";
-import { useElementEvent } from "./useElementEvent.js";
+import { useElementEvent } from "../hooks/useElementEvent.js";
 
 export interface UseRelativeDragOptions {
     onDrag: (delta: Vec2) => void;
