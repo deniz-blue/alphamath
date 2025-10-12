@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Person } from "../../../lib/types";
 import { OPTIONS } from "../options";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
@@ -12,16 +12,14 @@ export const GraphPerson = ({
     onDrag,
 }: {
     person: Person;
-    onDrag?: (newPosition: Vec2, delta: Vec2) => void;
+    onDrag?: (delta: Vec2) => void;
 }) => {
+    const ref = useRef<SVGGElement>(null);
     const [opened, setOpened] = useState(false);
     const getSystem = usePolyculeStore(store => store.getSystem);
 
-    const {
-        props: dragProps,
-    } = useRelativeDrag({
+    useRelativeDrag(ref, {
         onDrag: onDrag || (() => { }),
-        position: vec2(),
     });
 
     return (
@@ -31,7 +29,7 @@ export const GraphPerson = ({
             key={person.id}
             style={{ cursor: "pointer" }}
             onPointerDown={e => e.stopPropagation()}
-        // {...dragProps}
+            ref={ref}
         >
             <Menu
                 withArrow

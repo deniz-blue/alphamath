@@ -1,8 +1,9 @@
 html,
 body {
-    height: 100%;
-    /* probably a bad idea... -D */
-    overflow: clip;
+    touch-action: none;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .mantine-Combobox-option:hover {

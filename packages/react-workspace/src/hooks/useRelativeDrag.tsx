@@ -1,104 +1,74 @@
-import { useWindowEvent } from "@mantine/hooks";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Vec2, vec2, vec2add, vec2average, vec2client, vec2div, vec2sub } from "@alan404/vec2";
+import React, { useRef, useState } from "react";
+import { Vec2, vec2client, vec2div, vec2sub } from "@alan404/vec2";
 import { useGlobalTransformStore } from "../core/globalTransformStore.js";
-import { ReactEventHandlers } from "./events.js";
+import { useElementEvent } from "./useElementEvent.js";
 
 export interface UseRelativeDragOptions {
-    position: Vec2 | (() => Vec2);
-    onDrag: (newPosition: Vec2, delta: Vec2) => void;
+    onDrag: (delta: Vec2) => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
     scale?: number;
     disabled?: boolean;
-    allowMultitouch?: boolean;
-};
-
-export interface UseRelativeDrag {
-    isDragging: boolean;
-    props: ReactEventHandlers<"onPointerDown" | "onPointerMove" | "onPointerUp" | "onPointerCancel">;
 };
 
 export const useRelativeDrag = (
+    ref: React.RefObject<Element | null>,
     {
-        position,
         onDrag,
         onDragStart,
         onDragEnd,
         scale,
         disabled = false,
-        allowMultitouch = false,
     }: UseRelativeDragOptions,
-): UseRelativeDrag => {
-    const getPositionArg = () => typeof position == "function" ? position() : position;
+) => {
+    const disabledRef = useRef(disabled);
+    disabledRef.current = disabled;
 
     const [isDragging, setIsDragging] = useState(false);
     const lastPosRef = useRef<Vec2 | null>(null);
     const activePointerId = useRef<number | null>(null);
 
-    const endDrag = useCallback(() => {
-        if (isDragging) {
-            setIsDragging(false);
-            lastPosRef.current = null;
-            activePointerId.current = null;
-            onDragEnd?.();
-        }
-    }, [isDragging, onDragEnd]);
+    useElementEvent(ref, "pointerdown", (e) => {
+        if (disabledRef.current) return;
 
-    const handleMove = useCallback((client: Vec2) => {
-        if (!isDragging || disabled || !lastPosRef.current) return;
+        // Only track one pointer at a time (the first active one)
+        if (activePointerId.current !== null) return;
 
+        // e.stopPropagation();
+        ref.current?.setPointerCapture(e.pointerId);
+        activePointerId.current = e.pointerId;
+        lastPosRef.current = { x: e.clientX, y: e.clientY };
+        setIsDragging(true);
+        onDragStart?.();
+    }, []);
+
+    useElementEvent(ref, "pointermove", (e) => {
+        if (!isDragging || disabledRef.current || !lastPosRef.current) return;
+
+        const client = vec2client(e);
         const clientDelta = vec2sub(client, lastPosRef.current);
-        const delta = vec2div(clientDelta, scale || useGlobalTransformStore.getState().scale);
-        
+        const delta = vec2div(clientDelta, scale ?? useGlobalTransformStore.getState().scale);
+
         lastPosRef.current = client;
-        onDrag(vec2add(getPositionArg(), delta), delta);
-    }, [isDragging, disabled, onDrag, scale]);
+        onDrag(delta);
+    }, [isDragging]);
 
-    const handlePointerDown = useCallback(
-        (e: React.PointerEvent) => {
-            if (disabled) return;
-
-            // Only track one pointer at a time (the first active one)
-            if (activePointerId.current !== null) return;
-
-            // e.stopPropagation();
-            e.currentTarget.setPointerCapture(e.pointerId);
-            activePointerId.current = e.pointerId;
-            lastPosRef.current = { x: e.clientX, y: e.clientY };
-            setIsDragging(true);
-            onDragStart?.();
-        },
-        [disabled, onDragStart]
-    );
-
-    const handlePointerMove = useCallback(
-        (e: React.PointerEvent) => {
-            if (disabled) return;
-            if (e.pointerId !== activePointerId.current) return;
-            handleMove(vec2client(e));
-        },
-        [disabled, handleMove]
-    );
-
-    const handlePointerUpOrCancel = useCallback(
-        (e: React.PointerEvent) => {
-            if (e.pointerId !== activePointerId.current) return;
-            e.currentTarget.releasePointerCapture(e.pointerId);
-            endDrag();
-        },
-        [endDrag]
-    );
-
-    const props = {
-        onPointerDown: handlePointerDown,
-        onPointerMove: handlePointerMove,
-        onPointerUp: handlePointerUpOrCancel,
-        onPointerCancel: handlePointerUpOrCancel,
+    const cancelDrag = () => {
+        if (activePointerId.current) ref.current?.releasePointerCapture(activePointerId.current);
+        activePointerId.current = null;
+        setIsDragging(false);
+        lastPosRef.current = null;
+        activePointerId.current = null;
+        onDragEnd?.();
     };
 
-    return {
-        isDragging,
-        props,
-    };
+    useElementEvent(ref, "pointerup", (e) => {
+        if (e.pointerId !== activePointerId.current) return;
+        cancelDrag();
+    }, []);
+
+    useElementEvent(ref, "pointercancel", (e) => {
+        if (e.pointerId !== activePointerId.current) return;
+        cancelDrag();
+    }, []);
 };

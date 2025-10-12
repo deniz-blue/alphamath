@@ -1,11 +1,9 @@
-import { Vec2 } from "@alan404/vec2";
+import { vec2add } from "@alan404/vec2";
 import { useRelativeDrag, useTransform } from "../hooks/index.js";
-import { forwardRef } from "react";
-import { mergeProps } from "../utils/index.js";
+import { useRef } from "react";
+import { mergeRefs } from "@mantine/hooks";
 
 export type DragHandleProps = {
-    position?: Vec2;
-    setPosition?: (pos: Vec2) => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
     withCursor?: boolean;
@@ -16,34 +14,31 @@ export const DragHandle = ({
     children,
     style,
     withCursor,
-    position: _position,
-    setPosition: _setPosition,
     onDragStart,
     onDragEnd,
     disabled,
-    ref,
+    ref: _ref,
     ...props
 }: DragHandleProps) => {
+    const ref = useRef<SVGGElement>(null);
     const { position, setPosition } = useTransform();
 
-    const { isDragging, props: _props } = useRelativeDrag({
-        position: _position || position,
-        onDrag: _setPosition || setPosition,
+    useRelativeDrag(ref, {
+        disabled,
+        onDrag: (delta) => {
+            setPosition(vec2add(position, delta));
+        },
         onDragStart,
         onDragEnd,
-        disabled,
     });
 
     return (
         <g
-            {...mergeProps(
-                props,
-                _props
-            )}
-            ref={ref}
-            data-dragging={isDragging}
+            {...props}
+            ref={mergeRefs(ref, _ref)}
+            // data-dragging={isDragging}
             style={{
-                cursor: withCursor !== false ? (isDragging ? "grabbing" : "grab") : undefined,
+                // cursor: withCursor !== false ? (isDragging ? "grabbing" : "grab") : undefined,
                 ...style,
             }}
         >

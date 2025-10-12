@@ -127,8 +127,8 @@ export const PolyculeGraphView = () => {
                     <GraphPerson
                         key={person.id}
                         person={person}
-                        onDrag={(newPos, delta) => {
-                            console.log("PersonDrag<" + person.id + ">", newPos, delta);
+                        onDrag={(delta) => {
+                            console.log("PersonDrag<" + person.id + ">", delta);
                             if (coordsRef.current)
                                 coordsRef.current.people[person.id] = vec2add(
                                     coordsRef.current.people[person.id],

@@ -1,12 +1,22 @@
 import React, { useEffect } from "react";
 
+export type AllEventMaps = ElementEventMap & GlobalEventHandlersEventMap;
+
+/**
+ * React hook for registering events to a RefObject of any DOM element
+ * @param ref RefObject to the element
+ * @param eventName Name of the event
+ * @param listener Listener to attach to the event
+ * @param deps Effect Dependencies (listener will get reattached when they change)
+ * @param extra addEventListener options
+ */
 export const useElementEvent = <
-    Element extends HTMLElement,
-    Event extends keyof HTMLElementEventMap,
+    El extends Element,
+    Event extends keyof AllEventMaps,
 >(
-    ref: React.RefObject<Element | null>,
+    ref: React.RefObject<El | null>,
     eventName: Event,
-    listener: (this: Element, e: HTMLElementEventMap[Event]) => any,
+    listener: (this: El, e: AllEventMaps[Event]) => any,
     deps: React.DependencyList = [],
     extra?: Omit<AddEventListenerOptions, "signal">,
 ) => {
