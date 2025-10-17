@@ -14,8 +14,9 @@ export const usePanning = (
         },
     });
 
+    // Trackpad 2-finger panning
     useElementEvent(ref, "wheel", (e) => {
-        if (e.ctrlKey) return;
+        if (e.ctrlKey || e.deltaMode != e.DOM_DELTA_PIXEL) return;
         e.preventDefault();
         let delta = vec2mul(vec2(e.deltaX, e.deltaY), -1);
         useGlobalTransformStore.getState().moveBy(delta);
