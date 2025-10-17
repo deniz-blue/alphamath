@@ -4,7 +4,7 @@ import { OPTIONS } from "../options";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { Menu } from "@mantine/core";
 import { GraphPersonActions } from "./GraphPersonActions";
-import { useRelativeDrag } from "@alan404/react-workspace";
+import { useRelativeDrag } from "@alan404/react-workspace/gestures";
 import { vec2, type Vec2 } from "@alan404/vec2";
 
 export const GraphPerson = ({

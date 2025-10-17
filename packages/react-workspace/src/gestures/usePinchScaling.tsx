@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { useElementEvent } from "../hooks/useElementEvent.js";
-import { vec2, Vec2, vec2average, vec2client, vec2distance } from "@alan404/vec2";
+import { vec2average, vec2client, vec2distance } from "@alan404/vec2";
 import { useGlobalTransformStore } from "../core/globalTransformStore.js";
 
 export const usePinchScaling = (

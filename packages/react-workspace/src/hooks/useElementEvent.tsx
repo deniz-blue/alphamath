@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
 export type AllEventMaps = ElementEventMap & GlobalEventHandlersEventMap;
 
@@ -20,14 +20,20 @@ export const useElementEvent = <
     deps: React.DependencyList = [],
     extra?: Omit<AddEventListenerOptions, "signal">,
 ) => {
+    const memoizedListener = useCallback(listener, [
+        ref,
+        listener,
+        ...deps,
+    ]);
+
     useEffect(() => {
         let el = ref.current;
         if(!el) return;
         const ctrl = new AbortController();
-        el.addEventListener(eventName, listener as any, {
+        el.addEventListener(eventName, memoizedListener as any, {
             ...extra,
             signal: ctrl.signal,
         });
         return () => ctrl.abort();
-    }, [ref, ...deps]);
+    }, [ref, memoizedListener, ...deps]);
 };

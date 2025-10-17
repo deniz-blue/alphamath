@@ -6,7 +6,8 @@
 	"description": "Infinitely pannable, accessible map-like workspace for React",
 	"exports": {
 		".": "./src/index.ts",
-		"./gestures": "./src/gestures/index.ts"
+		"./gestures": "./src/gestures/index.ts",
+		"./styles.css": "./src/styles.css"
 	},
 	"publishConfig": {
 		"main": "dist/index.js",

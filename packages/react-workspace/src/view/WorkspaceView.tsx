@@ -16,7 +16,7 @@ export const WorkspaceView = ({
     // const positionCentered = vec2add(position, vec2div(vec2(width, height), 2));
 
     useEffect(() => {
-        if(!sizeRef.current) return;
+        if (!sizeRef.current) return;
         useGlobalTransformStore.getState().center();
     }, [sizeRef]);
 
@@ -41,6 +41,7 @@ export const WorkspaceView = ({
                 touchAction: "none",
                 ...(props.style || {}),
             }}
+            className={"workspace-view " + (props.className ?? "")}
         >
             <g>
                 {children}

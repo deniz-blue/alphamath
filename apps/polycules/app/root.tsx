@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@alan404/react-workspace/styles.css";
 import "./app.css";
 import { createTheme, MantineProvider, ScrollArea } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";

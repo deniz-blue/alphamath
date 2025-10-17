@@ -7,9 +7,11 @@ export const useWheelScaling = (
     ref: React.RefObject<Element | null>,
 ) => {
     useElementEvent(ref, "wheel", (e) => {
+        if (!e.ctrlKey) return;
         e.preventDefault();
-        const scaleMultiplier = e.deltaY < 0 ? 1.1 : 0.9;
+        const scaleMultiplier = 1 - (e.deltaY * 0.01);
         const { fromScreenPosition, changeScaleFrom } = useGlobalTransformStore.getState();
-        changeScaleFrom(fromScreenPosition(vec2client(e)), scaleMultiplier);
+        const pos = fromScreenPosition(vec2client(e));
+        changeScaleFrom(pos, scaleMultiplier);
     }, [], { passive: false });
 };
