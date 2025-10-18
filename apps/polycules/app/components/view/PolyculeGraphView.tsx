@@ -64,13 +64,6 @@ export const PolyculeGraphView = () => {
                 />
             ))}
 
-            <line
-                data-type="action-create-link"
-                stroke={"blue"}
-                strokeWidth={OPTIONS.linkDefaultWidth * 3}
-                strokeLinecap="round"
-            />
-
             {root.people.map(person => (
                 <GraphPerson
                     key={person.id}
