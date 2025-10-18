@@ -3,7 +3,7 @@ import type { Person } from "../../../lib/types";
 import { openAppModal } from "../../../modals";
 import { useHotkeys } from "@mantine/hooks";
 import { Menu, Text } from "@mantine/core";
-import { IconCircles, IconLink, IconPencil } from "@tabler/icons-react";
+import { IconCircles, IconLink, IconLinkPlus, IconPencil } from "@tabler/icons-react";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { confirmableCallback, openAppConfirmModal } from "../../editor/openConfirmModal";
 

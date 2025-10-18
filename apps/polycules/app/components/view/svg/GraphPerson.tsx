@@ -75,7 +75,10 @@ export const GraphPerson = ({
                 <Menu.Dropdown
                     fz="sm"
                 >
-                    <GraphPersonActions person={person} onClose={() => setOpened(false)} />
+                    <GraphPersonActions
+                        person={person}
+                        onClose={() => setOpened(false)}
+                    />
                 </Menu.Dropdown>
             </Menu>
 

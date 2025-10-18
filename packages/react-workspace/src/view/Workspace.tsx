@@ -25,7 +25,7 @@ export const Workspace = ({
     usePanning(ref);
 
     return (
-        <div>
+        <div className="large-viewport">
             {background ?? <BackgroundGrid />}
             <WorkspaceView
                 {...viewProps}
