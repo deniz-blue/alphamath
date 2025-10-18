@@ -10,9 +10,11 @@ import { vec2, type Vec2 } from "@alan404/vec2";
 export const GraphPerson = ({
     person,
     onDrag,
+    onDragState,
 }: {
     person: Person;
     onDrag?: (delta: Vec2) => void;
+    onDragState?: (dragging: boolean) => void;
 }) => {
     const ref = useRef<SVGGElement>(null);
     const [opened, setOpened] = useState(false);
@@ -20,6 +22,9 @@ export const GraphPerson = ({
 
     useRelativeDrag(ref, {
         onDrag: onDrag || (() => { }),
+        onDragStart: () => onDragState?.(true),
+        onDragEnd: () => onDragState?.(false),
+        onClick: () => setOpened(o=>!o),
     });
 
     return (
@@ -39,6 +44,11 @@ export const GraphPerson = ({
                 arrowSize={12}
                 opened={opened}
                 onChange={setOpened}
+                closeOnClickOutside
+                withOverlay
+                overlayProps={{
+                    opacity: 0,
+                }}
             >
                 <g>
                     <Menu.Target>

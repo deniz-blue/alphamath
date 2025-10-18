@@ -5,10 +5,23 @@
     padding-left: env(safe-area-inset-left, 0);
 }
 
+.large-viewport {
+    width: 100lvw;
+    height: 100lvh;
+}
+
+.small-viewport {
+    width: 100svw;
+    height: 100svh;
+}
+
 .workspace-view {
     touch-action: none;
     overflow: hidden;
     margin: 0;
     padding: 0;
     overscroll-behavior: none;
+    user-select: none;
+    width: 100lvw;
+    height: 100lvh;
 }

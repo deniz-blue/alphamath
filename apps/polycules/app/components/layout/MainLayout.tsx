@@ -17,15 +17,11 @@ export const MainLayout = () => {
             <PolyculeGraphView />
             <Keybinds />
 
-            <Affix position={{ left: 20, top: 20 }}>
-                <Stack>
-
-                </Stack>
-            </Affix>
-
-            <Affix position={{ left: 20, bottom: 20 }}>
-                <WorkspaceInfo />
-            </Affix>
+            <Box className="viewport-safe-area small-viewport" style={{ position: "fixed", top:0,left:0, pointerEvents: "none" }}>
+                <Affix withinPortal={false} style={{ left: 20, bottom: 20, userSelect: "none" }}>
+                    <WorkspaceInfo />
+                </Affix>
+            </Box>
 
             <Affix position={{ right: 20, bottom: 20 }}>
                 <Group gap="xs">

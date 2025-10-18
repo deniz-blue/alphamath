@@ -35,7 +35,7 @@ export const vec2mag = (vec: Vec2Like) => {
 export const vec2distance = (a: Vec2Like, b: Vec2Like) => {
     let _a = asVec2(a);
     let _b = asVec2(b);
-    return Math.sqrt((_a.x - _b.x) ** 2 + (_a.y - _b.y) ** 2);
+    return Math.hypot(_a.x - _b.x, _a.y - _b.y);
 };
 
 export const vec2apply = (vec: Vec2Like, fn: (v: number) => number) => {

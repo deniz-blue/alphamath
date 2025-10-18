@@ -15,9 +15,12 @@ export const PolyculeGraphView = () => {
     const root = usePolyculeStore(store => store.root);
     const ref = useRef<SVGSVGElement>(null);
     const coordsRef = useRef<ComputeResult>(null);
+    const nodesBeingDraggedRef = useRef<Set<string>>(new Set());
 
     const updateCoordinates = useCallback(() => {
-        coordsRef.current = compute(usePolyculeStore.getState().root, coordsRef.current ?? undefined);
+        coordsRef.current = compute(usePolyculeStore.getState().root, coordsRef.current ?? undefined, {
+            isDragging: !!nodesBeingDraggedRef.current.size,
+        });
     }, [compute]);
 
     const renderCoords = useCallback(() => {
@@ -128,12 +131,18 @@ export const PolyculeGraphView = () => {
                         key={person.id}
                         person={person}
                         onDrag={(delta) => {
-                            console.log("PersonDrag<" + person.id + ">", delta);
                             if (coordsRef.current)
                                 coordsRef.current.people[person.id] = vec2add(
                                     coordsRef.current.people[person.id],
                                     delta,
                                 );
+                        }}
+                        onDragState={(dragging) => {
+                            if (dragging) {
+                                nodesBeingDraggedRef.current.add(person.id);
+                            } else {
+                                nodesBeingDraggedRef.current.delete(person.id);
+                            }
                         }}
                     />
                 ))}

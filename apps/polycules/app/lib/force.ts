@@ -26,7 +26,10 @@ export const getCombinations2 = <T>(array: T[]): [T, T][] => {
 
 export const compute = (
     root: PolyculeManifest,
-    prev?: ComputeResult
+    prev?: ComputeResult,
+    meta?: {
+        isDragging?: boolean;
+    },
 ): ComputeResult => {
     // 1. apply force between Person[] to drift them apart // d3.forceManyBody
     // 2. apply glue force between system members so they show up as a group
@@ -137,14 +140,16 @@ export const compute = (
     const datumId = (d: Datum) => d.person ? "P/" + d.person.id : d.system ? "S/" + d.system.id : "";
 
     const sim = forceSimulation<Datum>()
+        .stop()
         .nodes(nodes)
-        .force("center", forceCenter(0, 0).strength(1))
         .force("charge", forceManyBody<Datum>().strength(d => d.system ? 0 : -1).distanceMin(10).distanceMax(200))
         .force("alters", forceLink<Datum, SimulationLinkDatum<Datum>>(alterLinks).id(datumId).strength(0.02))
         .force("rel-p2p", forceLink<Datum, SimulationLinkDatum<Datum>>(p2pRelationshipLinks).id(datumId).strength(0.01))
         .force("rel-p2s", forceLink<Datum, SimulationLinkDatum<Datum>>(p2sRelationshipLinks).id(datumId).strength(0.0001))
         .force("rel-s2s", forceLink<Datum, SimulationLinkDatum<Datum>>(s2sRelationshipLinks).id(datumId).strength(0.0000001))
-        .stop();
+
+    if(!meta?.isDragging) sim
+        .force("center", forceCenter(0, 0).strength(0.01))
 
     sim.tick();
 
