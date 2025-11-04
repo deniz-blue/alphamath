@@ -1,5 +1,5 @@
 import { asVec2, Vec2Like } from "./utils.js";
-import { vec2 } from "./vec2.js";
+import { Vec2, vec2 } from "./vec2.js";
 
 export const vec2add = (...vecs: Vec2Like[]) => {
     return vecs.map(asVec2).reduce((acc, cur) => vec2(acc.x + cur.x, acc.y + cur.y), vec2());
@@ -46,6 +46,17 @@ export const vec2apply = (vec: Vec2Like, fn: (v: number) => number) => {
 export const vec2round = (vec: Vec2Like) => vec2apply(vec, Math.round);
 export const vec2floor = (vec: Vec2Like) => vec2apply(vec, Math.floor);
 export const vec2ceil = (vec: Vec2Like) => vec2apply(vec, Math.ceil);
+
+export const vec2min = (a: Vec2Like, b: Vec2Like) => {
+    let _a = asVec2(a);
+    let _b = asVec2(b);
+    return vec2(Math.min(_a.x, _b.x), Math.min(_a.y, _b.y));
+};
+export const vec2max = (a: Vec2Like, b: Vec2Like) => {
+    let _a = asVec2(a);
+    let _b = asVec2(b);
+    return vec2(Math.max(_a.x, _b.x), Math.max(_a.y, _b.y));
+};
 
 export const vec2normalize = (vec: Vec2Like) => vec2div(vec, vec2mag(vec));
 export const vec2abs = (vec: Vec2Like) => vec2apply(vec, Math.abs);

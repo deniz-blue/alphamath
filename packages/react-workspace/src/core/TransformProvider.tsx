@@ -34,7 +34,9 @@ export const TransformProvider = ({
             setPosition,
         }}>
             <g
-                transform={`translate(${position.x}px, ${position.y}px)`}
+                // transform={`translate(${position.x}px, ${position.y}px)`}
+                x={position.x}
+                y={position.y}
                 {...props}
             >
                 {children}

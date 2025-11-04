@@ -1,14 +1,26 @@
 {
-    "extends": "@repo/typescript-config/vite.json",
-    "include": [
-        "src"
-    ],
-    "compilerOptions": {
-        "paths": {
-            "@/*": ["./src/*"],
-            "@alan404/vec2": ["../vec2/src/index.ts"],
-            "@alan404/react-workspace": ["../react-workspace/src/index.ts"]
-        }
+  "include": [
+    "**/*",
+    "**/.server/**/*",
+    "**/.client/**/*",
+    ".react-router/types/**/*"
+  ],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "types": ["node", "vite/client"],
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "rootDirs": [".", "./.react-router/types"],
+    "paths": {
+      "~/*": ["./app/*"]
     },
-    "references": [{ "path": "./tsconfig.node.json" }]
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true
+  }
 }

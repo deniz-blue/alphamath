@@ -6,7 +6,7 @@ import { ItemRenderer } from "./components/workspace/items/ItemRenderer";
 import { IconCrosshair } from "@tabler/icons-react";
 import { ContextStack } from "./components/util/ContextStack";
 import { SelectionContextProvider } from "./components/math/select/SelectionContext";
-import { BackgroundGrid, TransformProvider, WorkspaceView } from "@alan404/react-workspace";
+import { BackgroundGrid, TransformProvider, Workspace, WorkspaceView } from "@alan404/react-workspace";
 import { usePanning, usePinchScaling, useWheelScaling } from "@alan404/react-workspace/gestures";
 
 const RootItemRenderer = () => {
@@ -28,36 +28,35 @@ const RootItemRenderer = () => {
 const MainView = () => {
     const ref = useRef<SVGSVGElement>(null);
 
-    usePanning(ref);
-    usePinchScaling(ref);
-    useWheelScaling(ref);
-
     return (
-        <div>
-            <BackgroundGrid />
-            <WorkspaceView
-                ref={ref}
-                id="workspace-view"
-                style={{
-                    // cursor: isPanning ? "grabbing" : "all-scroll",
-                }}
+        <Workspace
+            viewProps={{ ref }}
+        >
+            <text
+                y={20}
+                textAnchor="middle"
             >
-                <div  style={{
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                }} />
+                meow
+            </text>
 
-                <TransformProvider position={{ x: -25, y: -25 }}>
-                    <foreignObject>
-                        <IconCrosshair size={50} />
-                    </foreignObject>
-                </TransformProvider>
+            {/* <foreignObject>
+                <math>
+                    <mrow>
+                        <mi>x</mi>
+                        <mo>+</mo>
+                        <mi>y</mi>
+                    </mrow>
+                </math>
+            </foreignObject> */}
+            <TransformProvider>
+                <IconCrosshair size={50} />
+            </TransformProvider>
 
-                <RootItemRenderer />
-            </WorkspaceView>
-            <MainOverlay />
-        </div>
+            <RootItemRenderer />
+            <foreignObject>
+                <MainOverlay />
+            </foreignObject>
+        </Workspace>
     )
 };
 
