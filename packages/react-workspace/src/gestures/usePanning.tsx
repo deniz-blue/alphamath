@@ -12,6 +12,9 @@ export const usePanning = (
         onDrag: (delta) => {
             useGlobalTransformStore.getState().moveBy(delta);
         },
+        onClick: () => {
+            (document.activeElement as HTMLElement|null)?.blur?.();
+        },
     });
 
     // Trackpad 2-finger panning

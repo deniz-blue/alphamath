@@ -1,104 +1,64 @@
-import { useElementEvent, Workspace } from "@alan404/react-workspace";
+import { Workspace } from "@alan404/react-workspace";
 import { Calculator } from "../windows/calculator/Calculator";
-import { useRef } from "react";
-import type { PropsWithChildren } from "react";
-import { useState } from "react";
-import { vec2, vec2add, vec2max } from "@alan404/vec2";
-import { ActionIcon, Group, Paper, Stack, Text } from "@mantine/core";
-import { useRelativeDrag } from "@alan404/react-workspace/gestures";
-import { IconX } from "@tabler/icons-react";
+import { NotepadWindow } from "../windows/notepad/Notepad";
+import { WindowBase } from "./WindowBase";
+import { useWorkspace } from "../../store/useWorkspace";
+import { useHotkeys } from "@mantine/hooks";
+import { InfoCornerOverlay } from "./overlays/InfoCornerOverlay";
+import { ActionBarOverlay } from "./overlays/ActionBarOverlay";
+import { Flex } from "@mantine/core";
 
 export default function MainLayout() {
+    const openWindow = useWorkspace(store => store.openWindow);
+    const windows = useWorkspace(store => store.windows);
+
+    useHotkeys([
+        ["shift+n", () => openWindow({
+            type: "Notepad",
+            data: { content: "" },
+        })],
+        ["shift+c", () => openWindow({
+            type: "Calculator",
+            data: {},
+        })],
+    ])
+
     return (
-        <Workspace>
-            <WindowBase>
-                <Calculator />
-            </WindowBase>
-        </Workspace>
+        <div>
+            <Workspace>
+                <text
+                    fontSize={12}
+                    textAnchor="middle"
+                    y={4}
+                    fill="#aaaaaa66"
+                >
+                    welcome to the demo
+                </text>
+
+                {windows.map((w) => (
+                    <WindowBase
+                        key={w.id}
+                        position={w.position}
+                        size={w.size}
+                        onMove={(pos) => useWorkspace.getState().moveWindow(w.id, pos)}
+                        onResize={(size) => useWorkspace.getState().resizeWindow(w.id, size)}
+                        title={w.id}
+                    >
+                        {w.type == "Calculator" && <Calculator />}
+                        {w.type == "Notepad" && <NotepadWindow windowId={w.id} />}
+                    </WindowBase>
+                ))}
+            </Workspace>
+            <div className="small-viewport viewport-safe-area" style={{ pointerEvents: "none", position: "fixed", top: 0 }}>
+                <div style={{ position: "fixed", bottom: 0, margin: 4 }}>
+                    <InfoCornerOverlay />
+                </div>
+                <div style={{ position: "fixed", bottom: 0, margin: 4, width: "100%" }}>
+                    <Flex justify="center">
+                        <ActionBarOverlay />
+                    </Flex>
+                </div>
+            </div>
+        </div>
     )
 }
-
-export const WindowBase = ({ children }: PropsWithChildren) => {
-    const [size, setSize] = useState(vec2(300, 500));
-    const [pos, setPos] = useState(vec2(0, 0));
-
-    const ref = useRef<HTMLDivElement>(null);
-    useElementEvent(ref, "pointerdown", e => e.stopPropagation());
-    useElementEvent(ref, "touchstart", e => e.stopPropagation());
-
-    const titlebarRef = useRef<HTMLDivElement>(null);
-    useRelativeDrag(titlebarRef, {
-        onDrag(delta) {
-            setPos(old => vec2add(old, delta));
-        },
-    });
-
-    const rightBottomCornerRef = useRef<HTMLDivElement>(null);
-    useRelativeDrag(rightBottomCornerRef, {
-        onDrag(delta) {
-            setSize(old => vec2max(vec2add(old, delta), 200));
-        },
-    });
-
-    return (
-        <foreignObject
-            x={pos.x}
-            y={pos.y}
-            width={size.x}
-            height={size.y}
-        >
-            <div
-                ref={ref}
-                style={{
-                    pointerEvents: "auto",
-                    userSelect: "text",
-                    height: "100%",
-                }}
-            >
-                <Paper
-                    withBorder
-                    w="100%"
-                    h="100%"
-                >
-                    <Stack gap={0}>
-                        <Paper
-                            ref={titlebarRef}
-                            bg="dark"
-                        >
-                            <Group justify="space-between" px={4}>
-                                <Group>
-                                    <Text ff="monospace" fz="sm" style={{ userSelect: "none" }}>
-                                        Window Name
-                                    </Text>
-                                </Group>
-                                <Group>
-                                    <ActionIcon
-                                        variant="light"
-                                        color="gray"
-                                        size="xs"
-                                    >
-                                        <IconX />
-                                    </ActionIcon>
-                                </Group>
-                            </Group>
-                        </Paper>
-
-                        {children}
-                    </Stack>
-                </Paper>
-
-                <div
-                    ref={rightBottomCornerRef}
-                    style={{
-                        position: "absolute",
-                        right: "0",
-                        bottom: "0",
-                        width: "1rem",
-                        height: "1rem",
-                        cursor: "nwse-resize",
-                    }}
-                />
-            </div>
-        </foreignObject>
-    )
-};

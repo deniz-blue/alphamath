@@ -8,14 +8,12 @@ import { usePinchScaling } from "../gestures/usePinchScaling.js";
 
 export interface WorkspaceProps extends PropsWithChildren {
     background?: ReactNode;
-    withCursor?: boolean;
     viewProps?: WorkspaceViewProps;
 }
 
 export const Workspace = ({
     background,
     children,
-    withCursor = true,
     viewProps,
 }: WorkspaceProps) => {
     const ref = useRef<SVGSVGElement>(null);

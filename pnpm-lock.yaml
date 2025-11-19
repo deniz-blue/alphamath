@@ -74,16 +74,16 @@ importers:
         version: 7.9.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       use-immer:
         specifier: ^0.11.0
-        version: 0.11.0(immer@10.1.3)(react@19.1.1)
+        version: 0.11.0(immer@10.2.0)(react@19.1.1)
       zod:
         specifier: ^4.1.11
         version: 4.1.11
       zundo:
         specifier: ^2.3.0
-        version: 2.3.0(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1))
+        version: 2.3.0(zustand@5.0.8(@types/react@19.1.13)(immer@10.2.0)(react@19.1.1))
       zustand:
         specifier: ^5.0.8
-        version: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)
+        version: 5.0.8(@types/react@19.1.13)(immer@10.2.0)(react@19.1.1)
     devDependencies:
       '@react-router/dev':
         specifier: ^7.9.2
@@ -166,6 +166,9 @@ importers:
       brigadier-ts:
         specifier: ^1.4.1
         version: 1.4.1
+      immer:
+        specifier: ^10.2.0
+        version: 10.2.0
       isbot:
         specifier: ^5
         version: 5.1.30
@@ -189,10 +192,10 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@5.4.20(@types/node@24.8.1)(less@3.13.1)(lightningcss@1.30.1)(sass@1.80.6))
       zundo:
         specifier: ^2.3.0
-        version: 2.3.0(zustand@5.0.8(@types/react@19.2.2)(immer@10.1.3)(react@19.2.0))
+        version: 2.3.0(zustand@5.0.8(@types/react@19.2.2)(immer@10.2.0)(react@19.2.0))
       zustand:
         specifier: ^5.0.8
-        version: 5.0.8(@types/react@19.2.2)(immer@10.1.3)(react@19.2.0)
+        version: 5.0.8(@types/react@19.2.2)(immer@10.2.0)(react@19.2.0)
     devDependencies:
       '@react-router/dev':
         specifier: ^7.9.2
@@ -1928,6 +1931,9 @@ packages:
 
   immer@10.1.3:
     resolution: {integrity: sha512-tmjF/k8QDKydUlm3mZU+tjM6zeq9/fFpPqH9SzWmBnVVKsPBg/V66qsMwb3/Bo90cgUN+ghdVBess+hPsxUyRw==}
+
+  immer@10.2.0:
+    resolution: {integrity: sha512-d/+XTN3zfODyjr89gM3mPq1WNX2B8pYsu7eORitdwyA2sBubnTl3laYlBk4sXY5FUa5qTZGBDPJICVbvqzjlbw==}
 
   immutable@4.3.7:
     resolution: {integrity: sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==}
@@ -4586,7 +4592,10 @@ snapshots:
   image-size@0.5.5:
     optional: true
 
-  immer@10.1.3: {}
+  immer@10.1.3:
+    optional: true
+
+  immer@10.2.0: {}
 
   immutable@4.3.7:
     optional: true
@@ -5388,9 +5397,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
 
-  use-immer@0.11.0(immer@10.1.3)(react@19.1.1):
+  use-immer@0.11.0(immer@10.2.0)(react@19.1.1):
     dependencies:
-      immer: 10.1.3
+      immer: 10.2.0
       react: 19.1.1
 
   use-isomorphic-layout-effect@1.2.1(@types/react@19.1.13)(react@19.1.1):
@@ -5655,19 +5664,13 @@ snapshots:
 
   zod@4.1.11: {}
 
-  zundo@2.3.0(zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)):
+  zundo@2.3.0(zustand@5.0.8(@types/react@19.1.13)(immer@10.2.0)(react@19.1.1)):
     dependencies:
-      zustand: 5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1)
+      zustand: 5.0.8(@types/react@19.1.13)(immer@10.2.0)(react@19.1.1)
 
-  zundo@2.3.0(zustand@5.0.8(@types/react@19.2.2)(immer@10.1.3)(react@19.2.0)):
+  zundo@2.3.0(zustand@5.0.8(@types/react@19.2.2)(immer@10.2.0)(react@19.2.0)):
     dependencies:
-      zustand: 5.0.8(@types/react@19.2.2)(immer@10.1.3)(react@19.2.0)
-
-  zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.1.1):
-    optionalDependencies:
-      '@types/react': 19.1.13
-      immer: 10.1.3
-      react: 19.1.1
+      zustand: 5.0.8(@types/react@19.2.2)(immer@10.2.0)(react@19.2.0)
 
   zustand@5.0.8(@types/react@19.1.13)(immer@10.1.3)(react@19.2.0):
     optionalDependencies:
@@ -5675,8 +5678,14 @@ snapshots:
       immer: 10.1.3
       react: 19.2.0
 
-  zustand@5.0.8(@types/react@19.2.2)(immer@10.1.3)(react@19.2.0):
+  zustand@5.0.8(@types/react@19.1.13)(immer@10.2.0)(react@19.1.1):
+    optionalDependencies:
+      '@types/react': 19.1.13
+      immer: 10.2.0
+      react: 19.1.1
+
+  zustand@5.0.8(@types/react@19.2.2)(immer@10.2.0)(react@19.2.0):
     optionalDependencies:
       '@types/react': 19.2.2
-      immer: 10.1.3
+      immer: 10.2.0
       react: 19.2.0
