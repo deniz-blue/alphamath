@@ -3,9 +3,10 @@ import type { Person } from "../../../lib/types";
 import { openAppModal } from "../../../modals";
 import { useHotkeys } from "@mantine/hooks";
 import { Menu, Text } from "@mantine/core";
-import { IconCircles, IconLink, IconLinkPlus, IconPencil } from "@tabler/icons-react";
+import { IconCircles, IconLink, IconLinkPlus, IconList, IconPencil } from "@tabler/icons-react";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
-import { confirmableCallback, openAppConfirmModal } from "../../editor/openConfirmModal";
+import { openAppConfirmModal } from "../../editor/openConfirmModal";
+import { useGraphUIStore } from "../useGraphUIStore";
 
 export const GraphPersonActions = ({
     person,
@@ -32,10 +33,15 @@ export const GraphPersonActions = ({
         onClose?.();
     }, [person.id]);
 
+    // const actionStartLinking = useCallback(() => {
+    //     useGraphUIStore.getState().setMode(person.id);
+    // }, [person.id]);
+
     useHotkeys([
         ["e", actionEdit],
         ["s", actionSystem],
         ["r", actionRelationships],
+        // ["l", actionStartLinking],
         ["Delete", () => openAppConfirmModal(
             `Delete ${person.name || "<unnamed>"}?`,
             () => removePerson(person.id),
@@ -47,6 +53,12 @@ export const GraphPersonActions = ({
             <Menu.Label>
                 {person.name || "(No name)"}
             </Menu.Label>
+            {/* <Menu.Item
+                onClick={actionStartLinking}
+                leftSection={<IconLink size={14} />}
+            >
+                <Text span inline inherit td="underline">L</Text>ink...
+            </Menu.Item> */}
             <Menu.Item
                 onClick={actionEdit}
                 leftSection={<IconPencil size={14} />}
@@ -63,7 +75,7 @@ export const GraphPersonActions = ({
             )}
             <Menu.Item
                 onClick={actionRelationships}
-                leftSection={<IconLink size={14} />}
+                leftSection={<IconList size={14} />}
             >
                 <Text span inline inherit td="underline">R</Text>elationships
             </Menu.Item>

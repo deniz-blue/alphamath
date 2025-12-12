@@ -5,14 +5,16 @@ import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { Menu } from "@mantine/core";
 import { GraphPersonActions } from "./GraphPersonActions";
 import { useRelativeDrag } from "@alan404/react-workspace/gestures";
-import { vec2, type Vec2 } from "@alan404/vec2";
+import { type Vec2 } from "@alan404/vec2";
 
 export const GraphPerson = ({
     person,
+    highlight,
     onDrag,
     onDragState,
 }: {
     person: Person;
+    highlight?: boolean;
     onDrag?: (delta: Vec2) => void;
     onDragState?: (dragging: boolean) => void;
 }) => {
@@ -68,6 +70,15 @@ export const GraphPerson = ({
                             clipPath="url(#avatarClip)"
                             preserveAspectRatio="xMidYMid slice"
                             pointerEvents="none"
+                        />
+                    )}
+
+                    {highlight && (
+                        <circle
+                            stroke="var(--mantine-color-blue-outline)"
+                            strokeWidth={2}
+                            r={OPTIONS.personRadius * 1.2}
+                            fill="none"
                         />
                     )}
                 </g>
