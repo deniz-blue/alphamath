@@ -7,11 +7,23 @@ You can view/use the application right now [here](https://poly.deniz.blue).
 
 This project was inspired by [*Madison Rye Progress*](https://github.com/makyo)' [polycul.es](https://polycul.es/) ([repo](https://github.com/makyo/polycul.es)) website.
 
+Feel free to show [me](https://deniz.blue) your graphs! I like it when people make use of things I make.
+
+## Format
+
+Zod schemas can be found [here](./app/lib/schema)
+
+Links are future-compatible because they are versioned. Valid link formats are:
+
+- `https://poly.deniz.blue/#v1:DATA` where `DATA` Deflate compressed json string encoded in URL-safe Base64 format
+- `https://poly.deniz.blue/#v1-fetch:URL` where `URL` is any URL (schema can be omitted) pointing to a json file
+  - for example, `URL` can be something like `gist.githubusercontent.com/USERNAME/GIST_ID/raw/FILE.json`
+
+Would it make sense to have a central database? If you are interested in this idea open an issue and we can discuss about it
+
 ## WIP
 
 TODO:
-- [ ] Export/Import JSON file
-- [ ] Dragging people around
 - [ ] Relationship customization
 - [ ] PluralKit importing
 - [ ] Graph Merging

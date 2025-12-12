@@ -26,7 +26,8 @@ export const decodeGraph = async (encoded: string): Promise<PolyculeManifest> =>
 			const json = new TextDecoder().decode(inflateSync(binary));
 			return PolyculeManifestSchema.parse(JSON.parse(json));
 		case "v1-fetch":
-			const res = await fetch(payload);
+			const url = payload.startsWith("http") ? payload : "https://" + payload;
+			const res = await fetch(url);
 			return PolyculeManifestSchema.parse(await res.json());
 		default:
 			throw new Error("Unsupported encoding version " + v);
