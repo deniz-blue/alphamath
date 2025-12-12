@@ -1,4 +1,4 @@
-import { ActionIcon, Affix, Box, Button, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Affix, Box, Button, Group, SegmentedControl, Stack, Text, Tooltip } from "@mantine/core";
 import { useClipboard, useFullscreen, useHotkeys, useMouse } from "@mantine/hooks";
 import { PolyculeGraphView } from "../view/PolyculeGraphView";
 import { openAppModal } from "../../modals";
@@ -8,9 +8,11 @@ import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconCircles, IconCopy, 
 import { useGlobalTransformStore, useMousePosition } from "@alan404/react-workspace";
 import { DotMenu } from "./overlays/DotMenu";
 import { vec2 } from "@alan404/vec2";
+import { useGraphUIStore } from "../view/useGraphUIStore";
 
 export const MainLayout = () => {
     const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
+    const mode = useGraphUIStore(store => store.mode);
 
     return (
         <Box pos="relative">
@@ -25,6 +27,15 @@ export const MainLayout = () => {
 
             <Affix position={{ right: 20, bottom: 20 }}>
                 <Group gap="xs">
+                    <SegmentedControl
+                        data={[
+                            { value: "drag", label: "Drag" },
+                            { value: "link", label: "Link" },
+                        ]}
+                        value={mode}
+                        onChange={(v) => useGraphUIStore.getState().setMode(v as any)}
+                    />
+
                     <Button
                         variant="light"
                         onClick={() => openAppModal("PersonListModal", {})}
@@ -41,7 +52,6 @@ export const MainLayout = () => {
                     >
                         Systems
                     </Button>
-
 
                     <DotMenu />
 
@@ -61,15 +71,9 @@ export const MainLayout = () => {
 };
 
 export const WorkspaceInfo = () => {
-    const { reset, position, scale, fromScreenPosition, setScale, setPosition, changeScaleFrom } = useGlobalTransformStore();
+    const { position, scale, fromScreenPosition } = useGlobalTransformStore();
     const client = useMouse();
     const ptr = fromScreenPosition(client);
-
-    useHotkeys([
-        ["v", reset],
-        ["plus", () => changeScaleFrom(vec2(), 1.1)],
-        ["-", () => changeScaleFrom(vec2(), 0.9)],
-    ]);
 
     return (
         <Stack gap={0}>
@@ -91,12 +95,21 @@ export const Keybinds = () => {
         ["mod+z", () => undo()],
         ["mod+shift+z", () => redo()],
         ["mod+y", () => redo()],
-        ["1", () => openAppModal("PersonListModal", {})],
-        ["2", () => openAppModal("SystemListModal", {})],
+
+        ["1", () => useGraphUIStore.getState().setMode("drag")],
+        ["2", () => useGraphUIStore.getState().setMode("link")],
+        
+        ["p", () => openAppModal("PersonListModal", {})],
+        ["s", () => openAppModal("SystemListModal", {})],
+        
         ["n", () => {
             const id = addPerson(DEFAULT_PERSON);
             openAppModal("PersonEditorModal", { id });
         }],
+
+        ["v", () => useGlobalTransformStore.getState().reset()],
+        ["plus", () => useGlobalTransformStore.getState().changeScaleFrom(vec2(), 1.1)],
+        ["-", () => useGlobalTransformStore.getState().changeScaleFrom(vec2(), 0.9)],
     ]);
 
     return null;

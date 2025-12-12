@@ -27,7 +27,7 @@ export const PolyculeGraphView = () => {
         coordsRef.current = compute(usePolyculeStore.getState().root, coordsRef.current ?? undefined, {
             isDragging: !!activeNodeIdsRef.current.size,
         });
-    }, [compute]);
+    }, [compute, mode]);
 
     const renderCoords = useCallback(() => {
         const svg = ref.current;
@@ -51,7 +51,7 @@ export const PolyculeGraphView = () => {
         } else {
             newlink.setAttribute("opacity", "0");
         }
-    }, []);
+    }, [mode]);
 
     const getLinkTargetId = useCallback(() => {
         if (!coordsRef.current) return null;
@@ -82,7 +82,7 @@ export const PolyculeGraphView = () => {
         };
         f = requestAnimationFrame(loop);
         return () => cancelAnimationFrame(f);
-    }, [renderCoords, updateCoordinates]);
+    }, [renderCoords, updateCoordinates, renderNewlink, newlinkLogic]);
 
     return (
         <Workspace

@@ -105,9 +105,13 @@ export const DotMenu = () => {
                                     ],
                                     body: [
                                         ["New person", <Kbd>N</Kbd>],
-                                        ["List people", <Kbd>1</Kbd>],
-                                        ["List systems", <Kbd>2</Kbd>],
+                                        ["Drag Mode", <Kbd>1</Kbd>],
+                                        ["Link Mode", <Kbd>2</Kbd>],
+                                        ["List people", <Kbd>P</Kbd>],
+                                        ["List systems", <Kbd>S</Kbd>],
                                         ["Reset view", <Kbd>V</Kbd>],
+                                        ["Zoom In", <Kbd>+</Kbd>],
+                                        ["Zoom Out", <Kbd>-</Kbd>],
                                         ["Undo", <div><Kbd>Ctrl</Kbd> + <Kbd>Z</Kbd></div>],
                                         ["Redo", (
                                             <Stack gap={4}>
