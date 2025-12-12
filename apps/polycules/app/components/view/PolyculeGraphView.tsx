@@ -8,6 +8,7 @@ import { GraphRelationship } from "./svg/GraphRelationship";
 import { GraphPerson } from "./svg/GraphPerson";
 import { GraphSystem } from "./svg/GraphSystem";
 import { updateSVG } from "./update-svg";
+import { Information } from "./Information";
 
 export const PolyculeGraphView = () => {
     const root = usePolyculeStore(store => store.root);
@@ -49,6 +50,10 @@ export const PolyculeGraphView = () => {
                     />
                 </clipPath>
             </defs>
+
+            {root.people.length === 0 && (
+                <Information />
+            )}
 
             {root.systems.map(system => (
                 <GraphSystem
