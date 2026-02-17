@@ -1,9 +1,11 @@
 html,
-body {
+body,
+#root {
     touch-action: none;
     overflow: hidden;
     margin: 0;
     padding: 0;
+	height: 100%;
 }
 
 .mantine-Combobox-option:hover {

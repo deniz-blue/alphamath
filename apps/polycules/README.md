@@ -11,7 +11,7 @@ Feel free to show [me](https://deniz.blue) your graphs! I like it when people ma
 
 ## Format
 
-Zod schemas can be found [here](./app/lib/schema)
+Zod schemas can be found [here](./src/lib/schema)
 
 Links are future-compatible because they are versioned. Valid link formats are:
 

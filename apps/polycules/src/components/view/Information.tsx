@@ -10,11 +10,6 @@ export const Information = () => {
         return () => c.abort();
     };
 
-    const text = `
-    Welcome to poly.deniz.blue
-    A graph editor for non-monogamous relationships that can include plurality
-    `.trim().split("\n").map(x => x.trim()).join("\n");
-
     const size = 500;
 
     return (
@@ -47,7 +42,7 @@ export const Information = () => {
                                             verticalAlign: "middle",
                                             imageRendering: "auto",
                                         }}
-                                        src="https://github.com/deniz-blue/md-emojis/raw/main/emojis/plurality-colors.svg"
+                                        src="https://github.com/deniz-blue/md-emojis/raw/main/emojis/identity/plurality-colors.svg"
                                     />
                                     {" "}plurality
                             </Anchor>

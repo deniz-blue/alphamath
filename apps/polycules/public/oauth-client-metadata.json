@@ -1,0 +1,20 @@
+{
+	"client_id": "https://poly.deniz.blue/oauth-client-metadata.json",
+	"client_name": "Polycules Grapher",
+	"client_uri": "https://poly.deniz.blue",
+	"logo_uri": "https://poly.deniz.blue/icon.svg",
+	"scope": "atproto repo:blue.deniz.poly",
+	"redirect_uris": [
+		"https://poly.deniz.blue/oauth/callback"
+	],
+	"dpop_bound_access_tokens": true,
+	"application_type": "web",
+	"grant_types": [
+		"authorization_code",
+		"refresh_token"
+	],
+	"response_types": [
+		"code"
+	],
+	"token_endpoint_auth_method": "none"
+}
