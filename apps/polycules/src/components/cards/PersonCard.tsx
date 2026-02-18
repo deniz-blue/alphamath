@@ -1,5 +1,5 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
-import type { Person } from "../../lib/types";
+import type { Person } from "../../lib/legacy-schema/legacy-types";
 import { OPTIONS } from "../view/options";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 

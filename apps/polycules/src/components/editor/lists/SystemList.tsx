@@ -5,7 +5,7 @@ import { openAppModal } from "../../../modals";
 import { DEFAULT_SYSTEM } from "../../../store/data";
 import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
-import type { System } from "../../../lib/types";
+import type { System } from "../../../lib/legacy-schema/legacy-types";
 import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const SystemListModal = ({ }: ContextModalProps) => {

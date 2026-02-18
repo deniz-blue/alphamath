@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import type { Person } from "../../../lib/types";
+import type { Person } from "../../../lib/legacy-schema/legacy-types";
 import { OPTIONS } from "../options";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { Menu } from "@mantine/core";

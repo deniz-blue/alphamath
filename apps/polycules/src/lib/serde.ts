@@ -1,5 +1,5 @@
 import { deflateSync, inflateSync } from "fflate"; // tiny & fast
-import { PolyculeManifestSchema, type PolyculeManifest } from "./types";
+import { PolyculeManifestSchema, type PolyculeManifest } from "./legacy-schema/legacy-types";
 
 export const createShareLink = (graph: PolyculeManifest) => {
 	return `${window.location.origin}${window.location.pathname}#${encodeGraph(graph)}`;

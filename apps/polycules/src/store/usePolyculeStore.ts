@@ -3,7 +3,7 @@ import { immer } from "zustand/middleware/immer";
 import { temporal } from "zundo";
 import { DEFAULT_MANIFEST } from "./data";
 import type { Actions, State } from "./store.type";
-import type { GraphNodeRef } from "../lib/types";
+import type { GraphNodeRef } from "../lib/legacy-schema/legacy-types";
 
 const randomId = (prefix = ""): string => prefix + Math.random().toString(36).slice(2).toString();
 

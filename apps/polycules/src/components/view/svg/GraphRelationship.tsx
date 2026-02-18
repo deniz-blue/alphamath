@@ -1,4 +1,4 @@
-import type { Relationship } from "../../../lib/types";
+import type { Relationship } from "../../../lib/legacy-schema/legacy-types";
 import { OPTIONS } from "../options";
 
 export const GraphRelationship = ({

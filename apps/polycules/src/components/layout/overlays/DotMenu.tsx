@@ -7,7 +7,7 @@ import { notifications } from "@mantine/notifications";
 import { createShareLink, encodeGraph } from "../../../lib/serde";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { modals } from "@mantine/modals";
-import { PolyculeManifestSchema } from "../../../lib/types";
+import { PolyculeManifestSchema } from "../../../lib/legacy-schema/legacy-types";
 import { prettifyError } from "zod";
 
 export const DotMenu = () => {

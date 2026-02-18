@@ -3,7 +3,7 @@ import { type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { SystemCard } from "../../cards/SystemCard";
 import { SearchableList } from "../common/SearchableList";
-import type { GraphNodeRef } from "../../../lib/types";
+import type { GraphNodeRef } from "../../../lib/legacy-schema/legacy-types";
 import { PersonCard } from "../../cards/PersonCard";
 import { AppModalHeader } from "../../modal/AppModalHeader";
 

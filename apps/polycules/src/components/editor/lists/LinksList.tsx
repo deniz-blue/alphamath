@@ -2,7 +2,7 @@ import { ActionIcon, Avatar, Button, CheckIcon, Combobox, Group, Select, Stack, 
 import { type ContextModalProps } from "@mantine/modals";
 import { nodeRefEq, usePolyculeStore } from "../../../store/usePolyculeStore";
 import { openAppModal } from "../../../modals";
-import type { GraphNodeRef, Relationship } from "../../../lib/types";
+import type { GraphNodeRef, Relationship } from "../../../lib/legacy-schema/legacy-types";
 import { SearchableList } from "../common/SearchableList";
 import { GraphNodeRefCard } from "../../cards/GraphNodeCard";
 import { AppModalHeader } from "../../modal/AppModalHeader";

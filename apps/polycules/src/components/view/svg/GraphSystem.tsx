@@ -1,4 +1,4 @@
-import type { System } from "../../../lib/types";
+import type { System } from "../../../lib/legacy-schema/legacy-types";
 import { OPTIONS } from "../options";
 
 export const GraphSystem = ({

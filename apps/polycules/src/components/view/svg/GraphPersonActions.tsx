@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { Person } from "../../../lib/types";
+import type { Person } from "../../../lib/legacy-schema/legacy-types";
 import { openAppModal } from "../../../modals";
 import { useHotkeys } from "@mantine/hooks";
 import { Menu, Text } from "@mantine/core";

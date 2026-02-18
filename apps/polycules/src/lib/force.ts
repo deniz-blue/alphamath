@@ -1,6 +1,6 @@
 // Force directed layout calculations
 
-import type { Person, PolyculeManifest, System } from "./types";
+import type { Person, PolyculeManifest, System } from "./legacy-schema/legacy-types";
 import { type Vec2, vec2, vec2sub, vec2mul, vec2add, vec2average } from "@alan404/vec2";
 import { forceCenter, forceLink, forceManyBody, forceSimulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force";
 

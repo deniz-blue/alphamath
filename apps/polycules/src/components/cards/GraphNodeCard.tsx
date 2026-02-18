@@ -1,4 +1,4 @@
-import type { GraphNode, GraphNodeRef } from "../../lib/types";
+import type { GraphNode, GraphNodeRef } from "../../lib/legacy-schema/legacy-types";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { PersonCard } from "./PersonCard";
 import { SystemCard } from "./SystemCard";

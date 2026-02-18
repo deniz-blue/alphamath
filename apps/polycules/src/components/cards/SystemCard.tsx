@@ -1,5 +1,5 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
-import type { System } from "../../lib/types";
+import type { System } from "../../lib/legacy-schema/legacy-types";
 import { OPTIONS } from "../view/options";
 
 export const SystemCard = ({ system }: { system: System }) => {

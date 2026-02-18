@@ -1,5 +1,5 @@
 import { Button, CloseButton, ColorInput, DEFAULT_THEME, Stack, Text, TextInput } from "@mantine/core";
-import type { Person } from "../../../lib/types";
+import type { Person } from "../../../lib/legacy-schema/legacy-types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { AppModalHeader } from "../../modal/AppModalHeader";

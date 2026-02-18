@@ -7,7 +7,7 @@ import { useState } from "react";
 import { IconFilter } from "@tabler/icons-react";
 import { PersonCard } from "../../cards/PersonCard";
 import { SearchableList } from "../common/SearchableList";
-import type { Person } from "../../../lib/types";
+import type { Person } from "../../../lib/legacy-schema/legacy-types";
 import { AppModalHeader } from "../../modal/AppModalHeader";
 
 export const PersonListModal = ({ }: ContextModalProps) => {

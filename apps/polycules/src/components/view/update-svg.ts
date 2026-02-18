@@ -1,6 +1,6 @@
 import { vec2, vec2average, vec2distance } from "@alan404/vec2";
 import type { ComputeResult } from "../../lib/force";
-import type { GraphNodeRef } from "../../lib/types";
+import type { GraphNodeRef } from "../../lib/legacy-schema/legacy-types";
 import { usePolyculeStore } from "../../store/usePolyculeStore";
 import { OPTIONS } from "./options";
 

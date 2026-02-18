@@ -1,4 +1,4 @@
-import type { GraphNode, GraphNodeRef, GroupRelationship, Person, PolyculeManifest, Relationship, System } from "../lib/types";
+import type { GraphNode, GraphNodeRef, GroupRelationship, Person, PolyculeManifest, Relationship, System } from "../lib/legacy-schema/legacy-types";
 
 export type New<T> = Omit<T, "id">;
 export type Patch<T> = Partial<T> & { id: string };

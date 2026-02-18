@@ -1,0 +1,47 @@
+{
+  "defs": {
+    "main": {
+      "description": "A relationship between two subjects",
+      "key": "tid",
+      "record": {
+        "properties": {
+          "subject": {
+            "refs": ["#didLink", "#recordLink"],
+            "type": "union"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        },
+        "required": ["subject", "createdAt"],
+        "type": "object"
+      },
+      "type": "record"
+    },
+    "didLink": {
+      "description": "A link to someone using their DID",
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        }
+      },
+      "required": ["did"],
+      "type": "object"
+    },
+    "recordLink": {
+      "description": "Link to someone using a record, can be a `host.plural.system.member` record for example",
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      },
+      "required": ["did"],
+      "type": "object"
+    }
+  },
+  "id": "blue.deniz.poly.relationship",
+  "lexicon": 1
+}

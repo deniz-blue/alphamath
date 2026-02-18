@@ -1,5 +1,5 @@
 import { ActionIcon, Box, Button, CloseButton, ColorInput, DEFAULT_THEME, Group, Paper, Stack, TextInput, UnstyledButton } from "@mantine/core";
-import type { Relationship } from "../../../lib/types";
+import type { Relationship } from "../../../lib/legacy-schema/legacy-types";
 import { modals, type ContextModalProps } from "@mantine/modals";
 import { usePolyculeStore } from "../../../store/usePolyculeStore";
 import { IconArrowsRightLeft } from "@tabler/icons-react";

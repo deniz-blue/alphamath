@@ -1,4 +1,4 @@
-import type { Person, PolyculeManifest, System } from "../lib/types";
+import type { Person, PolyculeManifest, System } from "../lib/legacy-schema/legacy-types";
 import type { New } from "./store.type";
 
 export const DEFAULT_MANIFEST: PolyculeManifest = {
