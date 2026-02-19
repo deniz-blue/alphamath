@@ -31,7 +31,7 @@ export const GraphNode = ({
 	useRelativeDrag(ref, {
 		onDrag: (delta) => {
 			useCoordsStore.setState((state) => {
-				if (!state.coords) return state;
+				if (!state.coords) return;
 				let node = state.coords.nodes[nodeId as any];
 				if (!node) node = state.coords.nodes[nodeId as any] = { x: 0, y: 0 };
 				node.x += delta.x;

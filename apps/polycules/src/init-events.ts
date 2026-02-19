@@ -9,6 +9,7 @@ useATProtoAuthStore.getState().initialize();
 
 const { subscription } = createJetstream({
 	localStorageKey: "poly.deniz.blue:jetstream-cursor",
+	wantedDids: [],
 	wantedCollections: [
 		"app.bsky.actor.profile",
 		"blue.deniz.poly.relationship",

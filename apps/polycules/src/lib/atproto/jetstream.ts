@@ -1,13 +1,16 @@
 import { JetstreamSubscription, type CommitEvent } from "@atcute/jetstream";
+import type { AtprotoDid } from "@atcute/lexicons/syntax";
 
 export const createJetstream = ({
 	onCommit,
 	wantedCollections,
+	wantedDids,
 	localStorageKey,
 	url = "wss://jetstream2.us-east.bsky.network",
 }: {
 	onCommit?: (event: CommitEvent) => void;
 	wantedCollections?: string[];
+	wantedDids?: AtprotoDid[];
 	localStorageKey?: string;
 	url?: string;
 }) => {
@@ -15,6 +18,7 @@ export const createJetstream = ({
 	const subscription = new JetstreamSubscription({
 		url,
 		wantedCollections,
+		wantedDids,
 		cursor: localStorageKey ? (Number(localStorage.getItem(localStorageKey)) ?? undefined) : undefined,
 		onConnectionOpen: () => console.log("Jetstream: Connection opened"),
 		onConnectionClose: () => console.log("Jetstream: Connection closed"),

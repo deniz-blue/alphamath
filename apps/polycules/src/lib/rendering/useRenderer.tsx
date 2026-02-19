@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { compute, type ComputeResult } from "../force";
 import { useGraphUIStore } from "../useGraphUIStore";
 import { useGraphStore } from "../store";

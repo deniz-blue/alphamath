@@ -96,9 +96,6 @@ importers:
       fflate:
         specifier: ^0.8.2
         version: 0.8.2
-      hono:
-        specifier: ^4.11.9
-        version: 4.11.9
       isbot:
         specifier: ^5.1.35
         version: 5.1.35
@@ -278,13 +275,13 @@ importers:
         version: link:../vec2
       '@mantine/hooks':
         specifier: ^8.3.10
-        version: 8.3.10(react@19.2.0)
+        version: 8.3.10(react@19.2.4)
       react:
         specifier: ^19.2.0
-        version: 19.2.0
+        version: 19.2.4
       zustand:
         specifier: ^5.0.9
-        version: 5.0.9(@types/react@19.1.13)(immer@10.2.0)(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0))
+        version: 5.0.9(@types/react@19.1.13)(immer@10.2.0)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -4274,9 +4271,9 @@ snapshots:
       klona: 2.0.6
       react: 19.2.0
 
-  '@mantine/hooks@8.3.10(react@19.2.0)':
+  '@mantine/hooks@8.3.10(react@19.2.4)':
     dependencies:
-      react: 19.2.0
+      react: 19.2.4
 
   '@mantine/hooks@8.3.15(react@19.2.4)':
     dependencies:
@@ -6607,9 +6604,9 @@ snapshots:
       react: 19.2.0
       use-sync-external-store: 1.6.0(react@19.2.0)
 
-  zustand@5.0.9(@types/react@19.1.13)(immer@10.2.0)(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0)):
+  zustand@5.0.9(@types/react@19.1.13)(immer@10.2.0)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4)):
     optionalDependencies:
       '@types/react': 19.1.13
       immer: 10.2.0
-      react: 19.2.0
-      use-sync-external-store: 1.6.0(react@19.2.0)
+      react: 19.2.4
+      use-sync-external-store: 1.6.0(react@19.2.4)
