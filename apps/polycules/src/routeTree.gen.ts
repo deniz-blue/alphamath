@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as LayoutRouteRouteImport } from "./routes/_layout/route"
 import { Route as LayoutIndexRouteImport } from "./routes/_layout/index"
+import { Route as OauthCallbackRouteImport } from "./routes/oauth.callback"
+import { Route as LayoutSubjectRouteRouteImport } from "./routes/_layout/$subject/route"
+import { Route as LayoutSubjectEditRouteImport } from "./routes/_layout/$subject/edit"
 
 const LayoutRouteRoute = LayoutRouteRouteImport.update({
   id: "/_layout",
@@ -21,28 +24,59 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: "/",
   getParentRoute: () => LayoutRouteRoute,
 } as any)
+const OauthCallbackRoute = OauthCallbackRouteImport.update({
+  id: "/oauth/callback",
+  path: "/oauth/callback",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LayoutSubjectRouteRoute = LayoutSubjectRouteRouteImport.update({
+  id: "/$subject",
+  path: "/$subject",
+  getParentRoute: () => LayoutRouteRoute,
+} as any)
+const LayoutSubjectEditRoute = LayoutSubjectEditRouteImport.update({
+  id: "/edit",
+  path: "/edit",
+  getParentRoute: () => LayoutSubjectRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof LayoutIndexRoute
+  "/$subject": typeof LayoutSubjectRouteRouteWithChildren
+  "/oauth/callback": typeof OauthCallbackRoute
+  "/$subject/edit": typeof LayoutSubjectEditRoute
 }
 export interface FileRoutesByTo {
+  "/$subject": typeof LayoutSubjectRouteRouteWithChildren
+  "/oauth/callback": typeof OauthCallbackRoute
   "/": typeof LayoutIndexRoute
+  "/$subject/edit": typeof LayoutSubjectEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/_layout": typeof LayoutRouteRouteWithChildren
+  "/_layout/$subject": typeof LayoutSubjectRouteRouteWithChildren
+  "/oauth/callback": typeof OauthCallbackRoute
   "/_layout/": typeof LayoutIndexRoute
+  "/_layout/$subject/edit": typeof LayoutSubjectEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/"
+  fullPaths: "/" | "/$subject" | "/oauth/callback" | "/$subject/edit"
   fileRoutesByTo: FileRoutesByTo
-  to: "/"
-  id: "__root__" | "/_layout" | "/_layout/"
+  to: "/$subject" | "/oauth/callback" | "/" | "/$subject/edit"
+  id:
+    | "__root__"
+    | "/_layout"
+    | "/_layout/$subject"
+    | "/oauth/callback"
+    | "/_layout/"
+    | "/_layout/$subject/edit"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   LayoutRouteRoute: typeof LayoutRouteRouteWithChildren
+  OauthCallbackRoute: typeof OauthCallbackRoute
 }
 
 declare module "@tanstack/react-router" {
@@ -61,14 +95,48 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRouteRoute
     }
+    "/oauth/callback": {
+      id: "/oauth/callback"
+      path: "/oauth/callback"
+      fullPath: "/oauth/callback"
+      preLoaderRoute: typeof OauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/_layout/$subject": {
+      id: "/_layout/$subject"
+      path: "/$subject"
+      fullPath: "/$subject"
+      preLoaderRoute: typeof LayoutSubjectRouteRouteImport
+      parentRoute: typeof LayoutRouteRoute
+    }
+    "/_layout/$subject/edit": {
+      id: "/_layout/$subject/edit"
+      path: "/edit"
+      fullPath: "/$subject/edit"
+      preLoaderRoute: typeof LayoutSubjectEditRouteImport
+      parentRoute: typeof LayoutSubjectRouteRoute
+    }
   }
 }
 
+interface LayoutSubjectRouteRouteChildren {
+  LayoutSubjectEditRoute: typeof LayoutSubjectEditRoute
+}
+
+const LayoutSubjectRouteRouteChildren: LayoutSubjectRouteRouteChildren = {
+  LayoutSubjectEditRoute: LayoutSubjectEditRoute,
+}
+
+const LayoutSubjectRouteRouteWithChildren =
+  LayoutSubjectRouteRoute._addFileChildren(LayoutSubjectRouteRouteChildren)
+
 interface LayoutRouteRouteChildren {
+  LayoutSubjectRouteRoute: typeof LayoutSubjectRouteRouteWithChildren
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
+  LayoutSubjectRouteRoute: LayoutSubjectRouteRouteWithChildren,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 
@@ -78,6 +146,7 @@ const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   LayoutRouteRoute: LayoutRouteRouteWithChildren,
+  OauthCallbackRoute: OauthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

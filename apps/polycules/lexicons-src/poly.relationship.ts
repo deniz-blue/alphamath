@@ -8,6 +8,7 @@ export default document({
 			description: "A relationship between two subjects",
 			record: object({
 				properties: {
+					via: ref({ ref: "#recordLink" }),
 					subject: required(union({
 						refs: [
 							ref({ ref: "#didLink" }),
@@ -29,7 +30,7 @@ export default document({
 		recordLink: object({
 			description: "Link to someone using a record, can be a `host.plural.system.member` record for example",
 			properties: {
-				did: required(string({ format: "at-uri" })),
+				uri: required(string({ format: "at-uri" })),
 			},
 		}),
 	},

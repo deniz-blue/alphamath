@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export type System = z.infer<typeof SystemSchema>;
-export const SystemSchema = z.object({
+export type LegacySystem = z.infer<typeof LegacySystemSchema>;
+export const LegacySystemSchema = z.object({
     id: z.string(),
     memberIds: z.string().array(),
 

@@ -38,8 +38,12 @@ export const createJetstream = ({
 		localStorage.setItem(localStorageKey, String(subscription.cursor));
 	}, 5_000);
 
-	return () => {
-		unmounted = true;
-		clearInterval(interval);
+	return {
+		subscription,
+		unsubscribe: () => {
+			unmounted = true;
+			clearInterval(interval);
+			console.log("Jetstream: Unsubscribed");
+		},
 	};
 };

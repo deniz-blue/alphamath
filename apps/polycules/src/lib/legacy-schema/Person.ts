@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export type Person = z.infer<typeof PersonSchema>;
-export const PersonSchema = z.object({
+export type LegacyPerson = z.infer<typeof LegacyPersonSchema>;
+export const LegacyPersonSchema = z.object({
     id: z.string(),
     systemId: z.string().optional(),
 

@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { GraphNodeRefSchema } from "./GraphNodeRef";
+import { LegacyGraphNodeRefSchema } from "./GraphNodeRef";
 
-export type Relationship = z.infer<typeof RelationshipSchema>;
-export const RelationshipSchema = z.object({
+export type LegacyRelationship = z.infer<typeof LegacyRelationshipSchema>;
+export const LegacyRelationshipSchema = z.object({
     id: z.string(),
-    from: GraphNodeRefSchema,
-    to: GraphNodeRefSchema,
+    from: LegacyGraphNodeRefSchema,
+    to: LegacyGraphNodeRefSchema,
 
     label: z.string().nullish(),
     // might expand!

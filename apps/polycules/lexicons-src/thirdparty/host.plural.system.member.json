@@ -1,0 +1,134 @@
+{
+	"lexicon": 1,
+	"id": "host.plural.system.member",
+	"defs": {
+		"main": {
+			"type": "record",
+			"description": "A system member. Uses TID as rkey. Can be public (plaintext) or private (encrypted).",
+			"key": "tid",
+			"record": {
+				"type": "object",
+				"properties": {
+					"visibility": {
+						"type": "string",
+						"knownValues": [
+							"public",
+							"private"
+						],
+						"description": "Visibility setting. Private members store data in ciphertext only."
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 200,
+						"description": "Member name/identifier. Only present for public members."
+					},
+					"displayName": {
+						"type": "string",
+						"maxLength": 640,
+						"description": "Display name. Only present for public members."
+					},
+					"pronouns": {
+						"type": "string",
+						"maxLength": 100,
+						"description": "Member pronouns. Only present for public members."
+					},
+					"avatar": {
+						"type": "blob",
+						"accept": [
+							"image/png",
+							"image/jpeg",
+							"image/webp",
+							"image/gif",
+							"application/octet-stream"
+						],
+						"maxSize": 1000000,
+						"description": "Avatar image blob (plaintext for public, encrypted for private)."
+					},
+					"bio": {
+						"type": "string",
+						"maxLength": 2560,
+						"description": "Member bio/description. Only present for public members."
+					},
+					"colour": {
+						"type": "string",
+						"maxLength": 7,
+						"description": "Member colour (hex format). Only present for public members."
+					},
+					"proxyTags": {
+						"type": "array",
+						"maxLength": 10,
+						"items": {
+							"type": "ref",
+							"ref": "#proxyTag"
+						},
+						"description": "Proxy tags for message proxying. Only present for public members."
+					},
+					"customFields": {
+						"type": "array",
+						"maxLength": 25,
+						"items": {
+							"type": "ref",
+							"ref": "#customField"
+						},
+						"description": "Custom profile fields. Only present for public members."
+					},
+					"did": {
+						"type": "string",
+						"maxLength": 2048,
+						"description": "Optional DID associated with this member. Must match a host.plural.system.link record for the link to be valid. Only set on public members."
+					},
+					"ciphertext": {
+						"type": "bytes",
+						"description": "Encrypted member data (IV + AES-256-GCM ciphertext). Only present for private members."
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "datetime",
+						"description": "When the member was created (ISO 8601)."
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "datetime",
+						"description": "When the member was last updated (ISO 8601)."
+					}
+				},
+				"required": [
+					"visibility",
+					"createdAt"
+				]
+			}
+		},
+		"proxyTag": {
+			"type": "object",
+			"description": "Proxy tag for message proxying. At least one of prefix or suffix should be defined.",
+			"properties": {
+				"prefix": {
+					"type": "string",
+					"maxLength": 50
+				},
+				"suffix": {
+					"type": "string",
+					"maxLength": 50
+				}
+			}
+		},
+		"customField": {
+			"type": "object",
+			"description": "Custom field on a member profile.",
+			"properties": {
+				"name": {
+					"type": "string",
+					"maxLength": 100
+				},
+				"value": {
+					"type": "string",
+					"maxLength": 500
+				}
+			},
+			"required": [
+				"name",
+				"value"
+			]
+		}
+	}
+}

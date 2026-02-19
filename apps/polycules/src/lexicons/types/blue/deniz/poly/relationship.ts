@@ -16,13 +16,16 @@ const _mainSchema = /*#__PURE__*/ v.record(
     get subject() {
       return /*#__PURE__*/ v.variant([didLinkSchema, recordLinkSchema]);
     },
+    get via() {
+      return /*#__PURE__*/ v.optional(recordLinkSchema);
+    },
   }),
 );
 const _recordLinkSchema = /*#__PURE__*/ v.object({
   $type: /*#__PURE__*/ v.optional(
     /*#__PURE__*/ v.literal("blue.deniz.poly.relationship#recordLink"),
   ),
-  did: /*#__PURE__*/ v.resourceUriString(),
+  uri: /*#__PURE__*/ v.resourceUriString(),
 });
 
 type didLink$schematype = typeof _didLinkSchema;

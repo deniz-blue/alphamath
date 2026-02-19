@@ -5,6 +5,10 @@
       "key": "tid",
       "record": {
         "properties": {
+          "via": {
+            "ref": "#recordLink",
+            "type": "ref"
+          },
           "subject": {
             "refs": ["#didLink", "#recordLink"],
             "type": "union"
@@ -33,12 +37,12 @@
     "recordLink": {
       "description": "Link to someone using a record, can be a `host.plural.system.member` record for example",
       "properties": {
-        "did": {
+        "uri": {
           "type": "string",
           "format": "at-uri"
         }
       },
-      "required": ["did"],
+      "required": ["uri"],
       "type": "object"
     }
   },

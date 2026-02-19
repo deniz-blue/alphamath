@@ -1,17 +1,17 @@
 html,
 body,
 #root {
-    touch-action: none;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
+	touch-action: none;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
 	height: 100%;
 }
 
 .mantine-Combobox-option:hover {
-    background-color: var(--mantine-color-dark-8);
+	background-color: var(--mantine-color-dark-8);
 }
 
 .mantine-Modal-overlay {
-    user-select: none;
+	user-select: none;
 }

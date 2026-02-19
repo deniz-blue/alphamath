@@ -1,6 +1,11 @@
-import { Anchor, Code, Container, Text, Title } from "@mantine/core";
+import { useGlobalTransformStore, Workspace } from "@alan404/react-workspace";
+import { Affix, Anchor, Code, Container, Text, Title } from "@mantine/core";
 import { createFileRoute, Outlet, type ErrorComponentProps } from "@tanstack/react-router"
 import { Fragment } from "react/jsx-runtime";
+import { useRenderer } from "../../lib/rendering/useRenderer";
+import { useHotkeys } from "@mantine/hooks";
+import { vec2 } from "@alan404/vec2";
+import { WorkspaceInfo } from "../../components/WorkspaceInfo";
 
 export const Route = createFileRoute("/_layout")({
 	component: LayoutPage,
@@ -8,22 +13,36 @@ export const Route = createFileRoute("/_layout")({
 })
 
 function LayoutPage() {
+	useRenderer();
+
 	return (
-		<Fragment>
+		<Workspace>
 			<Outlet />
 			<Shortcuts />
-		</Fragment>
+			<Overlays />
+		</Workspace>
 	)
 }
 
 const Overlays = () => {
 	return (
 		<Fragment>
+			<Affix>
+				<Affix style={{ left: 20, bottom: 20, userSelect: "none", pointerEvents: "none" }}>
+					<WorkspaceInfo />
+				</Affix>
+			</Affix>
 		</Fragment>
 	);
 };
 
 const Shortcuts = () => {
+	useHotkeys([
+		["v", () => useGlobalTransformStore.getState().reset()],
+		["plus", () => useGlobalTransformStore.getState().changeScaleFrom(vec2(), 1.1)],
+		["-", () => useGlobalTransformStore.getState().changeScaleFrom(vec2(), 0.9)],
+	]);
+
 	return null;
 };
 

@@ -1,5 +1,4 @@
 export * from "./GraphNodeRef"
-export * from "./GroupRelationship"
 export * from "./Person"
 export * from "./PolyculeManifest"
 export * from "./Relationship"

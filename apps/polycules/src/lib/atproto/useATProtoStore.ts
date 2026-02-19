@@ -32,14 +32,6 @@ export const useATProtoAuthStore = create<ATProtoAuthStore>((set, get) => ({
 	initialize: async () => {
 		const storedSessions = listStoredSessions();
 		set({ sessions: storedSessions });
-		const mostRecentSession = storedSessions[0];
-		if (!mostRecentSession) return;
-		const session = await getSession(mostRecentSession, {
-			allowStale: true,
-		});
-		const agent = new OAuthUserAgent(session);
-		const rpc = new Client({ handler: agent });
-		set({ session, agent, rpc });
 	},
 
 	startAuthorization: async (input: string) => {
@@ -100,7 +92,3 @@ export const useATProtoAuthStore = create<ATProtoAuthStore>((set, get) => ({
 		set({ sessions: listStoredSessions() });
 	},
 }));
-
-export const getAvatarOfDid = (did: Did) => {
-	return `https://blobs.blue/${did}/avatar-thumb`;
-};

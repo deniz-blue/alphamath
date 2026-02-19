@@ -3,7 +3,7 @@
 	"client_name": "Polycules Grapher",
 	"client_uri": "https://poly.deniz.blue",
 	"logo_uri": "https://poly.deniz.blue/icon.svg",
-	"scope": "atproto repo:blue.deniz.poly",
+	"scope": "atproto repo:blue.deniz.poly.relationship",
 	"redirect_uris": [
 		"https://poly.deniz.blue/oauth/callback"
 	],

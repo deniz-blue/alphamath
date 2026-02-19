@@ -1,13 +1,13 @@
 import { z } from "zod";
-import type { Person } from "./Person";
-import type { System } from "./System";
+import type { LegacyPerson } from "./Person";
+import type { LegacySystem } from "./System";
 
-export type GraphNodeRef = z.infer<typeof GraphNodeRefSchema>;
-export const GraphNodeRefSchema = z.object({
+export type LegacyGraphNodeRef = z.infer<typeof LegacyGraphNodeRefSchema>;
+export const LegacyGraphNodeRefSchema = z.object({
     type: z.enum(["system", "person"]),
     id: z.string(),
 });
 
-export type GraphNode =
-    | { type: "person"; data: Person }
-    | { type: "system"; data: System };
+export type LegacyGraphNode =
+    | { type: "person"; data: LegacyPerson }
+    | { type: "system"; data: LegacySystem };

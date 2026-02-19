@@ -1,14 +1,12 @@
 import { z } from "zod";
-import { PersonSchema } from "./Person";
-import { SystemSchema } from "./System";
-import { RelationshipSchema } from "./Relationship";
-import { GroupRelationshipSchema } from "./GroupRelationship";
+import { LegacyPersonSchema } from "./Person";
+import { LegacySystemSchema } from "./System";
+import { LegacyRelationshipSchema } from "./Relationship";
 
-export type PolyculeManifest = z.infer<typeof PolyculeManifestSchema>;
-export const PolyculeManifestSchema = z.object({
+export type LegacyPolyculeManifest = z.infer<typeof LegacyPolyculeManifestSchema>;
+export const LegacyPolyculeManifestSchema = z.object({
     v: z.literal(1),
-    people: PersonSchema.array(),
-    systems: SystemSchema.array(),
-    relationships: RelationshipSchema.array(),
-    groupRelationships: GroupRelationshipSchema.array(),
+    people: LegacyPersonSchema.array(),
+    systems: LegacySystemSchema.array(),
+    relationships: LegacyRelationshipSchema.array(),
 });
