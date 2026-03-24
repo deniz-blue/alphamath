@@ -37,6 +37,17 @@ function RouteComponent() {
 				params: { subject: useATProtoAuthStore.getState().agent?.sub! },
 				replace: true,
 			});
+		}).catch(err => {
+			console.error("Error finalizing OAuth authorization:", err);
+			navigate({
+				to: "/",
+				replace: true,
+			});
+			notifications.show({
+				title: "Error",
+				message: "Failed to complete login, please try again",
+				color: "red",
+			});
 		})
 	}, []);
 

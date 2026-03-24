@@ -22,16 +22,17 @@
 		"@atcute/lexicons": "^1.2.9",
 		"@atcute/oauth-browser-client": "^3.0.0",
 		"@atcute/tid": "^1.1.2",
+		"@deniz-blue/vite-plugins": "^1.0.0",
 		"@hono/node-server": "^1.19.9",
 		"@mantine/core": "^8.3.15",
 		"@mantine/hooks": "^8.3.15",
 		"@mantine/modals": "^8.3.15",
 		"@mantine/notifications": "^8.3.15",
 		"@tabler/icons-react": "^3.36.1",
-		"@tanstack/react-query": "^5.90.21",
-		"@tanstack/react-router": "^1.160.2",
-		"@tanstack/zod-adapter": "^1.160.2",
-		"@vitejs/plugin-react": "^5.1.4",
+		"@tanstack/react-query": "^5.95.2",
+		"@tanstack/react-router": "^1.168.3",
+		"@tanstack/zod-adapter": "^1.166.9",
+		"@vitejs/plugin-react": "^6.0.1",
 		"d3-force": "^3.0.0",
 		"fflate": "^0.8.2",
 		"isbot": "^5.1.35",
@@ -43,14 +44,12 @@
 		"zustand": "^5.0.11"
 	},
 	"devDependencies": {
-		"@tanstack/router-plugin": "^1.160.2",
+		"@tanstack/router-plugin": "^1.167.4",
 		"@types/d3-force": "^3.0.10",
 		"@types/node": "^25.2.3",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"vite": "8.0.0-beta.14",
-		"vite-tsconfig-paths": "^5.1.4"
+		"vite": "8.0.2"
 	}
 }

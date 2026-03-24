@@ -1,15 +1,18 @@
-import { isDid, isHandle, type Did } from "@atcute/lexicons/syntax";
+import { AtprotoDid, isDid, isHandle, type Did } from "@atcute/lexicons/syntax";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 import { useGraphStore, type NodeId } from "../../../lib/store";
 import { useEffect } from "react";
 import { handleResolver } from "../../../lib/atproto/atproto-services";
-import { extractDidMethod, getAtprotoHandle, isAtprotoDid, isPlcDid, isWebDid, type DidDocument } from "@atcute/identity";
+import { extractDidMethod, isAtprotoDid, isPlcDid, isWebDid } from "@atcute/identity";
 import { GraphNode } from "../../../components/svg/GraphNode";
 import { parseCanonicalResourceUriValid } from "../../../lib/atproto/util";
 import { useQuery } from "@tanstack/react-query";
 import type { AppBskyActorProfile } from "@atcute/bluesky";
 import { GraphLink } from "../../../components/svg/GraphLink";
 import { Menu, Stack } from "@mantine/core";
+import { ResolvedActor } from "@atcute/identity-resolver";
+import { HostPluralSystemMember, HostPluralSystemProfile } from "../../../lexicons";
+import { isBlob } from "@atcute/lexicons/interfaces";
 
 export const Route = createFileRoute("/_layout/$subject")({
 	component: RouteComponent,
@@ -24,7 +27,7 @@ export const Route = createFileRoute("/_layout/$subject")({
 			if (!isPlcDid(subject) && !isWebDid(subject)) throw new Error("Invalid DID");
 			if (extractDidMethod(subject) !== "plc" && extractDidMethod(subject) !== "web")
 				throw new Error("Unsupported DID method");
-			return { subject: subject as Did<"plc" | "web"> };
+			return { subject: subject as AtprotoDid };
 		},
 	},
 })
@@ -36,7 +39,7 @@ function RouteComponent() {
 	const nodes = useGraphStore(state => state.nodes);
 
 	useEffect(() => {
-		useGraphStore.getState().addToGraph(subject as Did<"plc" | "web">);
+		useGraphStore.getState().crawlDid(subject as AtprotoDid);
 	}, [subject]);
 
 	console.log({ edges, nodes });
@@ -62,23 +65,38 @@ function RouteComponent() {
 
 const AtGraphNode = ({ nodeId }: { nodeId: NodeId }) => {
 	const type = isDid(nodeId) ? "did" : "uri";
-	const did = isAtprotoDid(nodeId) ? nodeId : (parseCanonicalResourceUriValid(nodeId)?.repo as Did<"plc" | "web">);
+	const did = isAtprotoDid(nodeId) ? nodeId : (parseCanonicalResourceUriValid(nodeId)?.repo as AtprotoDid);
+	const rkey = isAtprotoDid(nodeId) ? null : parseCanonicalResourceUriValid(nodeId)?.rkey;
 
-	const profile = useQuery<AppBskyActorProfile.Main>({
+	const qBskyProfile = useQuery<AppBskyActorProfile.Main>({
 		queryKey: ["at", did, "app.bsky.actor.profile", "self"],
 	});
 
-	const handle = useQuery({
-		queryKey: ["didDocument", did],
-		select: (doc: DidDocument) => getAtprotoHandle(doc),
+	const qSystemProfile = useQuery<HostPluralSystemProfile.Main>({
+		queryKey: ["at", did, "host.plural.system.profile", "self"],
+		enabled: !!rkey,
 	});
+
+	const qSystemMember = useQuery<HostPluralSystemMember.Main>({
+		queryKey: ["at", did, "host.plural.system.member", rkey!],
+		enabled: !!rkey,
+	});
+
+	const qIdentity = useQuery<ResolvedActor>({
+		queryKey: ["identity", did],
+	});
+
+	const avatarCid = isBlob(qSystemMember.data?.avatar) ? qSystemMember.data.avatar.ref.$link : undefined;
+	const avatarUrl = avatarCid ? (
+		`${qIdentity.data?.pds.replace(/\/$/, "")}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${avatarCid}`
+	) : `https://blobs.blue/${did}/avatar-thumb`;
 
 	return (
 		<GraphNode
 			nodeId={nodeId}
-			avatarUrl={`https://blobs.blue/${did}/avatar`}
-			primaryName={profile.data?.displayName ?? ""}
-			secondaryName={handle.data ?? did ?? ""}
+			avatarUrl={avatarUrl}
+			primaryName={qSystemMember.data?.name ?? qBskyProfile.data?.displayName ?? ""}
+			secondaryName={qSystemProfile.data?.displayName ?? qIdentity.data?.handle ?? did ?? ""}
 			dropdown={<AtNodeDropdown nodeId={nodeId} did={did} />}
 		/>
 	)
@@ -89,7 +107,7 @@ const AtNodeDropdown = ({
 	did,
 }: {
 	nodeId: NodeId;
-	did: Did;
+	did: AtprotoDid;
 }) => {
 	return (
 		<Stack gap={0}>

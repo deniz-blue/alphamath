@@ -17,7 +17,6 @@ const { subscription } = createJetstream({
 		"host.plural.system.member",
 	] as (keyof Records)[],
 	onCommit: async (event) => {
-		console.log("Jetstream event", event);
 		const { did, commit: { collection, rkey } } = event;
 		await queryClient.invalidateQueries({
 			queryKey: ["at", did as AtprotoDid, collection as keyof Records, rkey],
@@ -28,7 +27,7 @@ const { subscription } = createJetstream({
 
 		if (collection === "blue.deniz.poly.relationship") {
 			if (event.commit.operation === "delete") useGraphStore.getState().processRelationshipDelete(did as AtprotoDid);
-			else useGraphStore.getState().processRelationshipRecord(did as AtprotoDid, event.commit.record as any);
+			else useGraphStore.getState().addRelationshipRecord(did as AtprotoDid, event.commit.record as any);
 		};
 	},
 });
@@ -49,5 +48,5 @@ queryClient.getQueryCache().subscribe(event => {
 		wantedDids,
 	});
 
-	console.log("Updated wanted DIDs for Jetstream subscription", wantedDids);
+	// console.log("Updated wanted DIDs for Jetstream subscription", wantedDids);
 })

@@ -3,11 +3,11 @@
 		"**/*",
 	],
 	"compilerOptions": {
-		"moduleResolution": "Bundler",
 		"jsx": "react-jsx",
-		"target": "ESNext",
 		"useDefineForClassFields": true,
 		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"target": "ESNext",
 		"lib": [
 			"ESNext",
 			"DOM"

@@ -31,7 +31,6 @@ export const createJetstream = ({
 		for await (const event of subscription) {
 			if (unmounted) break;
 			if (event.kind == "commit") {
-				console.log("Jetstream: Commit:", event);
 				onCommit?.(event);
 			}
 		}

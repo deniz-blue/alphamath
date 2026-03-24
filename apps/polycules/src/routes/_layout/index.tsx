@@ -17,6 +17,7 @@ export function IndexPage() {
 			withCloseButton={false}
 			closeOnEscape={false}
 			closeOnClickOutside={false}
+			autoFocus={false}
 			size="xl"
 		>
 			<IndexModalContent

@@ -2,12 +2,18 @@ import { parseResourceUri, type RecordKey } from "@atcute/lexicons";
 import type { Records } from "@atcute/lexicons/ambient";
 import { QueryClient } from "@tanstack/react-query";
 import { assertResponse, getRpcForDid } from "./lib/atproto/util";
-import type { AtprotoDid, Nsid } from "@atcute/lexicons/syntax";
-import { didDocumentResolver } from "./lib/atproto/atproto-services";
+import type { AtprotoDid, Cid, Handle, Nsid } from "@atcute/lexicons/syntax";
+import { didDocumentResolver, handleResolver, identityResolver } from "./lib/atproto/atproto-services";
 
 type AtRecordQueryKey = ["at", AtprotoDid, keyof Records, RecordKey | "*"];
 type DidDocumentQueryKey = ["didDocument", AtprotoDid];
-type QueryKey = AtRecordQueryKey | DidDocumentQueryKey;
+type ResolveHandleQueryKey = ["handle", Handle];
+type IdentityQueryKey = ["identity", AtprotoDid | Handle];
+type QueryKey = 
+	| AtRecordQueryKey
+	| DidDocumentQueryKey
+	| ResolveHandleQueryKey
+	| IdentityQueryKey
 
 declare module "@tanstack/react-query" {
 	interface Register {
@@ -24,7 +30,9 @@ export const queryClient = new QueryClient({
 					const [_at, repo, collection, rkey] = queryKey;
 					if (rkey === "*") return await fetchAllRecords(repo, collection);
 					else return await fetchRecord(repo, collection, rkey);
-				} else if (queryKey[0] === "didDocument") return await didDocumentResolver.resolve(queryKey[1] as AtprotoDid);
+				} else if (queryKey[0] === "didDocument") return await didDocumentResolver.resolve(queryKey[1]);
+				else if (queryKey[0] === "handle") return await handleResolver.resolve(queryKey[1]);
+				else if (queryKey[0] === "identity") return await identityResolver.resolve(queryKey[1]);
 				else throw new Error("Invalid query key");
 			},
 		},

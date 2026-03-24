@@ -33,10 +33,16 @@ export interface Graph {
 };
 
 interface StoreActions {
-	addToGraph: (did: AtprotoDid) => Promise<void>;
-	processRelationshipRecord: (source: AtprotoDid, record: BlueDenizPolyRelationship.Main) => Promise<void>;
 	processRelationshipDelete: (source: AtprotoDid) => Promise<void>;
+
+	// Higher calls
 	removeSingleNodes: (except: AtprotoDid[]) => void;
+
+	// Lower calls
+	crawlDid: (did: AtprotoDid) => Promise<void>;
+	crawlDidConditional: (did: AtprotoDid) => Promise<void>;
+	crawlRelationship: (source: AtprotoDid, record: BlueDenizPolyRelationship.Main) => Promise<void>;
+	addRelationshipRecord: (source: AtprotoDid, record: BlueDenizPolyRelationship.Main) => Promise<void>;
 }
 
 export const useGraphStore = create<Graph & StoreActions>()(
@@ -44,11 +50,16 @@ export const useGraphStore = create<Graph & StoreActions>()(
 		nodes: [],
 		edges: [],
 
-		addToGraph: async (did) => {
-			if (get().nodes.includes(did)) return;
+		crawlDidConditional: async (did) => {
+			if (!get().nodes.includes(did)) await get().crawlDid(did);
+		},
 
+		crawlDid: async (did) => {
 			set(state => {
-				state.nodes.push(did);
+				if (!state.nodes.includes(did)) {
+					state.nodes.push(did);
+					console.log("crawlDid: Added node", did);
+				};
 			});
 
 			const relationships = await queryClient.ensureQueryData<Record<string, BlueDenizPolyRelationship.Main>>({
@@ -56,24 +67,41 @@ export const useGraphStore = create<Graph & StoreActions>()(
 			});
 
 			for (const [__rkey, record] of Object.entries(relationships)) {
-				await get().processRelationshipRecord(did, record);
+				await get().crawlRelationship(did, record);
 			};
 		},
 
-		processRelationshipRecord: async (source, record) => {
-			let from: NodeId = source;
+		crawlRelationship: async (source, record) => {
+			await get().addRelationshipRecord(source, record);
 
-			if (record.via)
+			if (record.subject.$type === "blue.deniz.poly.relationship#didLink")
+				await get().crawlDidConditional(record.subject.did as AtprotoDid);
+			else if (record.subject.$type === "blue.deniz.poly.relationship#recordLink") {
+				const parsed = parseResourceUri(record.subject.uri);
+				if (parsed.ok && parsed.value.repo) {
+					let { repo } = parsed.value;
+					if (isHandle(repo)) repo = await handleResolver.resolve(repo);
+					await get().crawlDidConditional(repo as AtprotoDid);
+				};
+			};
+		},
+
+		addRelationshipRecord: async (source, record) => {
+			let from: NodeId = source;
+			let to: NodeId;
+
+			if (record.via && record.via.$type === "blue.deniz.poly.relationship#recordLink")
 				from = await resolveUriAsCanonical(record.via.uri);
 
-			let dids: AtprotoDid[] = [];
-			let to: NodeId | null = await relationshipNodeId(record, dids);
-			if (!to) return;
+			if (record.subject.$type === "blue.deniz.poly.relationship#didLink")
+				to = record.subject.did as AtprotoDid;
+			else if (record.subject.$type === "blue.deniz.poly.relationship#recordLink")
+				to = await resolveUriAsCanonical(record.subject.uri);
+			else return;
 
-			const edge: Edge = {
-				from,
-				to,
-			};
+			const edge: Edge = { from, to };
+
+			console.log("Processing relationship record", { source, record, edge });
 
 			set(state => {
 				if (!state.edges.some(e => e.from === edge.from && e.to === edge.to)) {
@@ -81,11 +109,10 @@ export const useGraphStore = create<Graph & StoreActions>()(
 					console.log("Added edge", edge);
 				};
 
-				for (const did of dids) {
-					if (!state.nodes.includes(did)) {
-						state.nodes.push(did);
-						console.log("Added node", did);
-					};
+				console.log("INCLUDES CHECK", { to, includes: state.nodes.includes(to), arr: state.nodes });
+				if (!state.nodes.includes(to)) {
+					state.nodes.push(to);
+					console.log("Added node", to);
 				};
 			});
 		},
@@ -96,7 +123,7 @@ export const useGraphStore = create<Graph & StoreActions>()(
 				state.edges = state.edges.filter(e => e.from !== source && e.to !== source);
 				console.log("Removed node and edges for", source);
 			});
-			await get().addToGraph(source);
+			// await get().addToGraph(source);
 			get().removeSingleNodes([source]);
 		},
 
@@ -111,3 +138,6 @@ export const useGraphStore = create<Graph & StoreActions>()(
 		},
 	})),
 );
+
+// @ts-expect-error
+window.useGraphStore = useGraphStore;

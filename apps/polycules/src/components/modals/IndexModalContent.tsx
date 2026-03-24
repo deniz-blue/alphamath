@@ -1,8 +1,8 @@
-import { ActionIcon, Anchor, Image, Input, SimpleGrid, Stack, Text, TextInput, Title } from "@mantine/core";
+import { ActionIcon, Anchor, Button, Collapse, Image, Input, SimpleGrid, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useCallback, useState } from "react";
 import { useATProtoAuthStore } from "../../lib/atproto/useATProtoStore";
 import { ATProtoAccountItem } from "../atproto/ATProtoAccountItem";
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconAt } from "@tabler/icons-react";
 import type { Did, Handle } from "@atcute/lexicons";
 import { isDid, isHandle, type AtprotoDid } from "@atcute/lexicons/syntax";
 
@@ -25,24 +25,18 @@ export const IndexModalContent = ({
 						href="https://en.wikipedia.org/wiki/Polyamory"
 						target="_blank"
 					>
-						<Text inline inherit span ff="Times New Roman">&pi;</Text> non-monogamous
-					</Anchor> relationships that can include <Anchor
+						non-monogamous
+					</Anchor> relationships with <Anchor
 						href="https://morethanone.info"
 						target="_blank"
 					>
-						<Image
-							w={20}
-							h={20}
-							display="inline"
-							style={{
-								lineHeight: 1,
-								verticalAlign: "middle",
-								imageRendering: "auto",
-							}}
-							src="https://github.com/deniz-blue/md-emojis/raw/main/emojis/identity/plurality-colors.svg"
-						/>
-						{" "}plurality
-					</Anchor>
+						plurality
+					</Anchor> (using <Anchor
+						href="https://plural.host"
+						target="_blank"
+					>
+						plural.host
+					</Anchor>).
 				</Text>
 
 				<Text inherit>
@@ -51,7 +45,7 @@ export const IndexModalContent = ({
 						target="_blank"
 					>
 						Atmosphere
-					</Anchor>
+					</Anchor> - you own your data.
 				</Text>
 			</Stack>
 
@@ -74,12 +68,6 @@ export const IndexModalContent = ({
 						inherit
 					>
 						open source
-					</Anchor>! Made with 💜 by <Anchor
-						href="https://deniz.blue"
-						target="_blank"
-						inherit
-					>
-						@deniz.blue
 					</Anchor>.
 				</Text>
 			</Stack>
@@ -97,22 +85,29 @@ export const ViewGraphInput = ({ onViewGraph }: { onViewGraph?: (handleOrDid: Ha
 	}, [input, onViewGraph]);
 
 	return (
-		<TextInput
-			label="View someone's graph"
-			description="Enter their handle or DID"
-			placeholder="alice.bsky.social or did:plc:..."
-			value={input}
-			onChange={e => setInput(e.currentTarget.value)}
-			onKeyUp={(e) => e.key === "Enter" && onSubmit()}
-			rightSection={(
-				<ActionIcon
-					disabled={!input}
+		<Stack gap={4}>
+			<TextInput
+				autoFocus
+				label="View someone's graph"
+				description="Enter their handle or DID"
+				placeholder="alice.bsky.social or did:plc:..."
+				value={input}
+				onChange={e => setInput(e.currentTarget.value)}
+				onKeyUp={(e) => e.key === "Enter" && onSubmit()}
+				rightSection={<IconArrowRight />}
+				leftSection={<IconAt size={18} />}
+			/>
+			<Collapse in={!!input}>
+				<Button
+					disabled={!input || (!isHandle(input) && !isDid(input))}
 					onClick={onSubmit}
+					fullWidth
+					rightSection={<IconArrowRight size={18} />}
 				>
-					<IconArrowRight />
-				</ActionIcon>
-			)}
-		/>
+					View Graph
+				</Button>
+			</Collapse>
+		</Stack>
 	);
 };
 
@@ -130,27 +125,35 @@ export const EditRelationshipsSection = ({ onEditRelationships }: { onEditRelati
 
 	return (
 		<Stack gap="xl">
-			<Stack gap={0}>
+			<Stack gap={4}>
 				<TextInput
 					label="Edit your relationships"
-					description="Enter your handle or DID"
+					description="Log in via the Atmosphere"
 					placeholder="alice.bsky.social or did:plc:..."
 					value={input}
 					onChange={e => setInput(e.currentTarget.value)}
 					onKeyUp={(e) => e.key === "Enter" && onSubmit()}
-					rightSection={(
-						<ActionIcon
-							disabled={!input}
-							loading={loading}
-							onClick={onSubmit}
-						>
-							<IconArrowRight />
-						</ActionIcon>
-					)}
+					leftSection={<IconAt size={18} />}
+					rightSection={<IconArrowRight size={18} />}
 				/>
-				{loading && (
+				<Collapse in={!!input}>
+					<Button
+						disabled={!input || (!isHandle(input) && !isDid(input))}
+						loading={loading}
+						onClick={onSubmit}
+						fullWidth
+						rightSection={<IconArrowRight size={18} />}
+					>
+						Authorize
+					</Button>
+				</Collapse>
+				{loading ? (
 					<Input.Description>
 						Redirecting...
+					</Input.Description>
+				) : (
+					<Input.Description>
+						You'll be redirected to your PDS to authorize the app.
 					</Input.Description>
 				)}
 			</Stack>
