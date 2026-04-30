@@ -23,14 +23,14 @@
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
-		"@types/react": "^19.1.13",
-		"@types/react-dom": "^19.1.9",
-		"typescript": "latest"
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"typescript": "^6.0.3"
 	},
 	"dependencies": {
 		"@alan404/vec2": "workspace:*",
-		"@mantine/hooks": "^8.3.10",
-		"zustand": "^5.0.9"
+		"@mantine/hooks": "^9.1.1",
+		"zustand": "^5.0.12"
 	},
 	"peerDependencies": {
 		"react": "^19.2.0"

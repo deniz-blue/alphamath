@@ -52,7 +52,7 @@ export const useATProtoAuthStore = create<ATProtoAuthStore>((set, get) => ({
 		// flush storage updates before redirecting
 		setTimeout(() => {
 			window.location.assign(authUrl);
-		}, 0);
+		}, 200);
 
 		// never resolve since the page will be redirected
 		return new Promise(() => { });

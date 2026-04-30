@@ -11,6 +11,9 @@ const DefaultGraphTheme = {
 	secondaryTextColor: "#cccccc",
 	secondaryTextSize: 12,
 
+	groupDefaultColor: "#333333",
+	groupBackgroundOpacity: 0.2,
+
 	linkColor: "#333333",
 	linkWidth: 12,
 };

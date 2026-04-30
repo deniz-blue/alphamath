@@ -97,7 +97,7 @@ export const ViewGraphInput = ({ onViewGraph }: { onViewGraph?: (handleOrDid: Ha
 				rightSection={<IconArrowRight />}
 				leftSection={<IconAt size={18} />}
 			/>
-			<Collapse in={!!input}>
+			<Collapse expanded={!!input}>
 				<Button
 					disabled={!input || (!isHandle(input) && !isDid(input))}
 					onClick={onSubmit}
@@ -136,7 +136,7 @@ export const EditRelationshipsSection = ({ onEditRelationships }: { onEditRelati
 					leftSection={<IconAt size={18} />}
 					rightSection={<IconArrowRight size={18} />}
 				/>
-				<Collapse in={!!input}>
+				<Collapse expanded={!!input}>
 					<Button
 						disabled={!input || (!isHandle(input) && !isDid(input))}
 						loading={loading}

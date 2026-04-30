@@ -30,7 +30,7 @@ export const EditModalContent = ({
 
 			<Divider label="My Relationships" />
 
-			<Collapse in={!relationships.data && relationships.isLoading}>
+			<Collapse expanded={!relationships.data && relationships.isLoading}>
 				<Center w="100%" h="100%">
 					<Loader />
 				</Center>
@@ -172,7 +172,7 @@ export const AddRelationship = ({
 						rightSection={toIdentity.isLoading ? <Loader size={16} /> : null}
 						error={toInput && toIdentity.isError ? "Invalid handle or DID" : undefined}
 					/>
-					<Collapse in={toIdentity.isError}>
+					<Collapse expanded={toIdentity.isError}>
 						<Text c="red" fz="sm">
 							Invalid handle or DID
 						</Text>
@@ -408,7 +408,7 @@ export const Relationship = ({
 					</Menu.Dropdown>
 				</Menu>
 			</Group>
-			<Collapse in={showConfirmation}>
+			<Collapse expanded={showConfirmation}>
 				<Paper p="xs" withBorder>
 					<Stack gap={4} align="center">
 						<Text fz="sm">Are you sure you want to remove this relationship?</Text>
